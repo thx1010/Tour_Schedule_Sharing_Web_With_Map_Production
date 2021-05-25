@@ -4,6 +4,7 @@ import javax.servlet.http.*;
 
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
+import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.*;
 
@@ -47,7 +48,45 @@ public class AdminController {
 	}
 	
 	@GetMapping(value="/adminmain")
-	public ModelAndView adminmain() throws Exception {
+	public ModelAndView adminmain(Model model) throws Exception {
+		try {
+			PointDTO pointaccount = adminService.getpointAccount();
+			int membercount = adminService.getMemberCount();
+			int categorycount = adminService.getCategoryCount();
+			GradenumDTO gradenumdto = adminService.getGradenum();
+			log.info(gradenumdto.toString());
+			int grade_first_partio = gradenumdto.getGrade_first() / membercount * 100;
+			int grade_second_partio = gradenumdto.getGrade_second() / membercount * 100;
+			int grade_third_partio = gradenumdto.getGrade_third() / membercount * 100;
+			model.addAttribute("pointaccount", pointaccount);
+			model.addAttribute("membercount", membercount);
+			model.addAttribute("categorycount", categorycount);
+			model.addAttribute("grade_first_partio", grade_first_partio);
+			model.addAttribute("grade_second_partio", grade_second_partio);
+			model.addAttribute("grade_third_partio", grade_third_partio);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return new ModelAndView("adminmain");
+	}
+	
+	@GetMapping(value="/adminpoint")
+	public ModelAndView adminpoint() throws Exception {
+		return new ModelAndView("adminpoint");
+	}
+	
+	@GetMapping(value="/adminmember")
+	public ModelAndView adminmember() throws Exception {
+		return new ModelAndView("adminmember");
+	}
+	
+	@GetMapping(value="/adminarticle")
+	public ModelAndView adminarticle() throws Exception {
+		return new ModelAndView("adminarticle");
+	}
+	
+	@GetMapping(value="/admincategory")
+	public ModelAndView admincategory() throws Exception {
+		return new ModelAndView("admincategory");
 	}
 }

@@ -61,8 +61,8 @@
 			        </div>
 			        <div class="third">
 			        	<div class="scale"><a href="randomlist" class="scale"><img src = "resources/img/plane.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></a></div> <br>
-			        	<h5 style="text-align: center;">나에게 맞는 여행지 추천</h5>
-			        	<p style="text-align: center; font-size:14px; color:#878787; ">내가 좋아하는 테마만 모아서 !</p>
+			        	<h5 style="text-align: center;">랜덤 여행지 추천</h5>
+			        	<p style="text-align: center; font-size:14px; color:#878787; ">낭만을 바란다면 랜덤 여행지로 !</p>
 			        	<br>
 			        </div>
 			        <div class="forth"><br>
@@ -74,11 +74,11 @@
 						    <div class="modal-content">
 						      <div class="modal-header">
 						        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						        <h4 class="modal-title" id="myModalLabel">No One Knows</h4>
+						        <h4 class="modal-title" id="myModalLabel"></h4>
 						      </div>
 						      <div class="modal-body">
 						        <!-- 프로젝트 설명 -->
-						        프로젝트 설명
+						        No One Knows
 						      </div>
 						      <div class="modal-footer">
 						        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
@@ -97,41 +97,41 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card h-100">
                         <div class="tscale"><img class="card-img-top" src="resources/img/sample.jpeg" alt="..." /></div>
-                        <div class="card-body">
+                        <div class="card-body" style="background-color: white">
                             <h4 class="card-title">Card title</h4>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
                         </div>
-                        <div class="card-footer"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
+                        <div class="card-footer" style="background-color: white"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card h-100">
                          <div class="tscale"><img class="card-img-top" src="resources/img/sample.jpeg" alt="..." /></div>
-                        <div class="card-body">
+                        <div class="card-body" style="background-color: white">
                             <h4 class="card-title">Card title</h4>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo magni sapiente, tempore debitis beatae culpa natus architecto.</p>
                         </div>
-                        <div class="card-footer"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
+                        <div class="card-footer" style="background-color: white"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card h-100">
                          <div class="tscale"><img class="card-img-top" src="resources/img/sample.jpeg" alt="..." /></div>
-                        <div class="card-body">
+                        <div class="card-body" style="background-color: white">
                             <h4 class="card-title">Card title</h4>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
                         </div>
-                        <div class="card-footer"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
+                        <div class="card-footer" style="background-color: white"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card h-100">
                          <div class="tscale"><img class="card-img-top" src="resources/img/sample.jpeg" alt="..." /></div>
-                        <div class="card-body">
+                        <div class="card-body" style="background-color: white">
                             <h4 class="card-title">Card title</h4>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo magni sapiente, tempore debitis beatae culpa natus architecto.</p>
                         </div>
-                        <div class="card-footer"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
+                        <div class="card-footer" style="background-color: white"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
                     </div>
                 </div>
             </div>

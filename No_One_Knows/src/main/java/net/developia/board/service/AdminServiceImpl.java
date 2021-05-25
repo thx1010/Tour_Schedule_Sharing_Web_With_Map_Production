@@ -27,4 +27,48 @@ public class AdminServiceImpl implements AdminService{
 			throw e;
 		}
 	}
+
+	@Override
+	public PointDTO getpointAccount() throws Exception {
+		try {
+			PointDTO pointaccount = adminDAO.getpointAccount();
+			return pointaccount;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public int getMemberCount() throws Exception {
+		try {
+			int membercount = adminDAO.getMemberCount();
+			return membercount;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public int getCategoryCount() throws Exception {
+		try {
+			int categorycount = adminDAO.getCategoryCount();
+			return categorycount;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public GradenumDTO getGradenum() throws Exception {
+		try {
+			GradenumDTO gradenumdto = adminDAO.getGradenum();
+			return gradenumdto;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
 }
