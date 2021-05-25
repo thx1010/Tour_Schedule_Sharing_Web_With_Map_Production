@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.developia.board.dao.PointDAO">
+	<insert id="createPoint">
+	insert into t_point(point_no, user_no)
+	values(seq_point.nextval, seq_point_user.nextval)
+	</insert>
+	
+	<select id="selectUserInfo" parameterType="UserDTO" resultType="UserDTO">
+	select *
+	from   t_user
+	where  user_id=#{user_id} and user_pw=#{user_pw}
+	</select>
+	
+	<select id="selectPointInfo" parameterType="UserDTO" resultType="PointDTO">
+	select point_no, point_current, user_no
+	from   t_point
+	where  user_no=#{user_no}
+	</select>
+	
+	<update id="updateUserPointno" parameterType="PointDTO">
+	UPDATE t_user SET
+		   point_no = #{point_no}
+		   where user_no = #{userDTO.user_no}
+	</update>
+
+	<insert id="insertPointCharge" parameterType="PointChargeDTO">
+	insert into t_point_charge(point_charge_no, point_increase, point_charge_log, point_no)
+	values(seq_point_charge.nextval, #{point_increase}, #{point_charge_log}, #{pointDTO.point_no})
+	</insert>
+
+	<insert id="insertPointSpend" parameterType="PointSpendDTO">
+	insert into t_point_spend(point_spend_no, point_decrease, point_spend_log, point_no)
+	values(seq_point_spend.nextval, #{point_decrease}, #{point_spend_log}, #{pointDTO.point_no})
+	</insert>
+
+	<update id="updatePointIncrease" parameterType="PointChargeDTO">
+	UPDATE t_point SET
+		   point_current = point_current + #{point_increase}
+		   where point_no = #{pointDTO.point_no}
+	</update>
+	
+	<update id="updatePointDecrease" parameterType="PointSpendDTO">
+	UPDATE t_point SET
+		   point_current = point_current - #{point_decrease}
+		   where point_no = #{pointDTO.point_no}
+	</update>
+</mapper>

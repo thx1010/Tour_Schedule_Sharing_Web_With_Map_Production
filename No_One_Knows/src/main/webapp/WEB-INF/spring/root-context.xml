@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<bean 
+ 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		p:location="/WEB-INF/spring/database.properties" />
+
+	<bean 
+		id="dataSource"
+		class="com.zaxxer.hikari.HikariDataSource"
+		p:username="${username}"
+		p:password="${password}"
+		p:jdbcUrl="${url}"
+		p:driverClassName="${driver}"
+		p:maximumPoolSize="20"
+		/>
+		
+	<!-- userDAO start -->
+	<bean id="userSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean"
+		p:dataSource-ref="dataSource"
+		p:typeAliasesPackage="net.developia.board.dto" />
+	
+	<bean id="userDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" 
+		p:sqlSessionFactory-ref="userSqlSession"
+		p:mapperInterface="net.developia.board.dao.UserDAO" />
+	<!-- userDAO end -->
+	
+	<!-- MainDAO start -->
+	<bean id="mainSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean"
+		p:dataSource-ref="dataSource"
+		p:typeAliasesPackage="net.developia.board.dto" />
+	
+	<bean id="mainDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" 
+		p:sqlSessionFactory-ref="mainSqlSession"
+		p:mapperInterface="net.developia.board.dao.MainDAO" />
+	<!-- MainDAO end -->
+	
+	<!-- PointDAO start -->
+	<bean id="pointSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean"
+		p:dataSource-ref="dataSource"
+		p:typeAliasesPackage="net.developia.board.dto" />
+	
+	<bean id="pointDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" 
+		p:sqlSessionFactory-ref="pointSqlSession"
+		p:mapperInterface="net.developia.board.dao.PointDAO" />
+	<!-- PointDAO end -->
+	
+</beans>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.developia.board.dao.MainDAO">
+	
+	<select id="getUserList"  parameterType="UserDTO" resultType="UserDTO">
+	select  g.grade_no as "gradeDTO.grade_no",
+			g.grade_name as "gradeDTO.grade_name",
+			u.user_no, u.user_id, u.user_name, u.user_email, 
+			u.user_age, u.user_gender, u.user_phone, u.user_address, u.user_joindate
+	from    t_grade g inner join t_user u
+	on 		g.grade_no = u.grade_no	
+	where   user_no = #{user_no}
+	</select>
+	
+	<select id="getPointList"  parameterType="UserDTO" resultType="PointDTO">
+	select  point_current, point_no
+	from    t_point
+	where   user_no = #{user_no}
+	</select>
+
+</mapper>
