@@ -15,7 +15,10 @@ public class UserDTO implements Serializable{
 	private String user_pw;
 	private String user_name;
 	private String user_email;
-	private int user_age;
+	private int user_year;
+	private int user_month;
+	private int user_day;
+	private String user_photo;
 	private String user_gender;
 	private String user_joindate;
 	private String user_phone;
@@ -26,13 +29,5 @@ public class UserDTO implements Serializable{
 	
 	public void setUser_pw(String user_pw) {
 		this.user_pw = DigestUtils.sha512Hex(user_pw);
-	}
-	
-	public int getUser_age(int user_age) {
-		return this.user_age = 2021 - user_age + 1;
-	}
-	
-	public int setUser_age(int user_age) {
-		return this.user_age = 2021 - user_age + 1;
 	}
 }

@@ -46,7 +46,7 @@
 	        <div class="container">
 		       <section class="container mt-3" style="max-width: 560px;">
 					<form method="post" style="display: block; margin-top: 30px;">
-						<div class="scale"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div>
+						<div class="scale"><img src = "resources/img/signup.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div>
 						<div class="form-group">
 							<label>아이디</label>
 							<input type="text" name="user_id" class="form-control">		
@@ -70,7 +70,7 @@
 						</div>
 						<div class="form-group">
 							<label>생년월일</label><br>
-							<select name="user_age" id="user_age" style="height:30px; font-size:15px; border: 1px solid #ECEBFF; border-radius: 16%">
+							<select name="user_year" id="user_year" style="height:30px; font-size:15px; border: 1px solid #ECEBFF; border-radius: 16%">
 						        <option value="">-- 년도 --</option>
 						        <option value="1993">1993</option>
 						        <option value="1995">1994</option>
@@ -79,32 +79,32 @@
 						        <option value="1997">1997</option>
 						        <option value="1998">1998</option>
 						      </select>
-						      &nbsp;&nbsp;<select name="month" style="height:30px; font-size:15px; border: 1px solid #ECEBFF; border-radius: 16%">
+						      &nbsp;&nbsp;<select name="user_month" id="user_month" style="height:30px; font-size:15px; border: 1px solid #ECEBFF; border-radius: 16%">
 						        <option value="">-- 월 --</option>
-						        <option value="1">1</option>
-						        <option value="2">2</option>
-						        <option value="3">3</option>
-						        <option value="4">4</option>
-						        <option value="5">5</option>
-						        <option value="6">6</option>
-						        <option value="7">7</option>
-						        <option value="8">8</option>
-						        <option value="9">9</option>
+						        <option value="01">1</option>
+						        <option value="02">2</option>
+						        <option value="03">3</option>
+						        <option value="04">4</option>
+						        <option value="05">5</option>
+						        <option value="06">6</option>
+						        <option value="07">7</option>
+						        <option value="08">8</option>
+						        <option value="09">9</option>
 						        <option value="10">10</option>
 						        <option value="11">11</option>
 						        <option value="12">12</option>
 						      </select>
-						      &nbsp;&nbsp;<select name="day" style="height:30px; font-size:15px; border: 1px solid #ECEBFF; border-radius: 16%">
+						      &nbsp;&nbsp;<select name="user_day" id="user_day" style="height:30px; font-size:15px; border: 1px solid #ECEBFF; border-radius: 16%">
 						        <option value="">-- 일 --</option>
-						        <option value="1">1</option>
-						        <option value="2">2</option>
-						        <option value="3">3</option>
-						        <option value="4">4</option>
-						        <option value="5">5</option>
-						        <option value="6">6</option>
-						        <option value="7">7</option>
-						        <option value="8">8</option>
-						        <option value="9">9</option>
+						        <option value="01">1</option>
+						        <option value="02">2</option>
+						        <option value="03">3</option>
+						        <option value="04">4</option>
+						        <option value="05">5</option>
+						        <option value="06">6</option>
+						        <option value="07">7</option>
+						        <option value="08">8</option>
+						        <option value="09">9</option>
 						        <option value="10">10</option>
 						        <option value="11">11</option>
 						        <option value="12">12</option>
@@ -144,6 +144,11 @@
     						&nbsp;&nbsp;&nbsp;<input type = "radio" name = "theme_no" id="theme_no" value="30"/> 테마3
     						&nbsp;&nbsp;&nbsp;<input type = "radio" name = "theme_no" id="theme_no" value="40"/> 테마4
     						&nbsp;&nbsp;&nbsp;<input type = "radio" name = "theme_no" id="theme_no" value="50"/> 테마5
+						</div>
+						<div class="form-group">
+							<label style="color:#D5D5D5">-------------------------------------------------------------------------</label><br>
+							<label>프로필 사진 등록 : </label>
+							&nbsp;&nbsp;&nbsp;<input type = "file" name="user_photo" id="user_photo"><br>
 						</div><br>
 						<div class="tscale"><button type="submit" class="btn"  style="background: linear-gradient( to left, #FAED7D, #FFCD12 ); color:white; display: block; margin: 0px auto;">회원가입</button></div>
 					</form>

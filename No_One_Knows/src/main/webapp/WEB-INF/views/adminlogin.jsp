@@ -29,22 +29,13 @@
 <% } %>
             	</div>
             </div>
-        </nav>
-        <nav class="navbar navbar-expand-lg" style="background: white;">
-            <div class="container">
-            	<div class="row">
-            		<div class="tscale"><a class="navbar-brand" href="likepage" style="color:#878787; font-size:14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src = "resources/img/heart.png" style="width: 25px; height:25px;">&nbsp;내가 찜한 코스&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</a></div>
-            		<div class="tscale"><a class="navbar-brand" href="cartpage" style="color:#878787; font-size:14px">&nbsp;&nbsp;<img src = "resources/img/cart.png" style="width: 28px; height:28px;">&nbsp;장바구니&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</a></div>
-                    <div class="tscale"><a class="navbar-brand" href="mypage/${sessionScope.userInfo.user_no}" style="color:#878787; font-size:14px">&nbsp;&nbsp;<img src = "resources/img/user.png" style="width: 25px; height:25px;">&nbsp;마이페이지</a></div>
-            	</div>
-            </div>
         </nav><br><br>
       	
         <!-- Page Content-->
-        <header style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) );">
+        <header style="background: linear-gradient( to bottom, white, rgba( 213, 213, 213, 0.1 ) );">
 	        <section class="container mt-3" style="max-width: 560px;">
 				<form method="post" style="display: block; margin-top: 30px;">
-					<div class="scale"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div>
+					<div class="scale"><img src = "resources/img/admin.png" style="width: 90px; height:90px; display: block; margin: 0px auto;"></div>
 					<div class="form-group">
 						<label>아이디</label>
 						<input type="text" name="admin_id" class="form-control">		

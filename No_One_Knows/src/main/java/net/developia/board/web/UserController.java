@@ -68,7 +68,7 @@ public class UserController {
 			pointService.updateUserPointno(pointDTO);
 			
 			PointChargeDTO pointchargeInfo = new PointChargeDTO();
-			pointchargeInfo.setPoint_increase(1000);
+			pointchargeInfo.setPoint_increase(2000);
 			pointchargeInfo.setPoint_charge_log("회원가입 포인트 적립");
 			pointchargeInfo.setPointDTO(pointDTO);
 			log.info(pointchargeInfo.toString());
@@ -87,7 +87,7 @@ public class UserController {
 			//pointService.updatePointDecrease(pointspendInfo);
 			
 			mav.setViewName("result");
-			mav.addObject("msg", "회원가입 포인트 1000P가 적립되었어요 ! ");
+			mav.addObject("msg", "회원가입 포인트 2000P가 적립되었어요 ! ");
 			mav.addObject("url", "login");
 		} catch (Exception e) {
 			e.printStackTrace();

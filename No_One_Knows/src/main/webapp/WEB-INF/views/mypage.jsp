@@ -60,15 +60,15 @@
         <header style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) );">
 	        <div class="container">
 		        <section class="container" style="margin-top: 10px;">
-		        	<div class="scale"><img src = "${pageContext.request.contextPath}/resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
-		            <h2 style=" text-align:center; margin-bottom: 60px;">${sessionScope.userInfo.user_id} 님 환영합니다.</h2>
-				    <c:forEach items="${userlist}" var="dto">
+		        	<c:forEach items="${userlist}" var="dto">
+		        	<div class="scale"><img src = "${pageContext.request.contextPath}/resources/img/${dto.user_photo}" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
+		            <h2 style=" text-align:center; margin-bottom: 60px;">${sessionScope.userInfo.user_id} 님의 회원 정보입니다.</h2>
 					    <h4 style=" text-align:center; color:#4374D9; font-size:20px">LEVEL ${dto.gradeDTO.grade_no}.  ${dto.gradeDTO.grade_name}</h4>
 					    <br>
 					    <div style="background-color:white; border-radius: 90px; width: 380px; display: block; margin: 0px auto;">
 						    <br><br>
 						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/user_2.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_name}  (${dto.user_gender})</p>
-						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/date.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_joindate}</p>
+						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/date.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_year} . ${dto.user_month} . ${dto.user_day}</p>
 						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/email.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_email}</p>
 						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/phone.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_phone}</p>
 						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/address.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_address}</p>
@@ -77,9 +77,16 @@
 					 </c:forEach><br><br>
 					 <c:forEach items="${pointlist}" var="pdto">
 					    <div style="background-color:white; border-radius: 60px; width: 380px; display: block; margin: 0px auto;">
-						    <br><br>
-						    <p style=" text-align:center; font-size:17px"> Point Number [ ${pdto.point_no} ]</p>
-						    <p style=" text-align:center; font-size:17px"> 보유 포인트 : ${pdto.point_current}</p>
+						    <br>
+						    <p style=" text-align:center;"><img src = "${pageContext.request.contextPath}/resources/img/money.png" style="width: 40px; height:40px;"></p>
+						    <h5 style=" text-align:center; font-size:18px; color:#EDA900;"> 보유 포인트 : ${pdto.point_current} P</h5>
+						    <br>
+						</div>
+					 </c:forEach>
+					 <c:forEach items="${pointlist}" var="pdto"><br><br>
+					    <div style="background-color:white; border-radius: 60px; width: 650px; display: block; margin: 0px auto;"><br><br>
+					    	<h4 style=" text-align:center; color:#4374D9; font-size:20px">최근 포인트 적립 / 결제 내역</h4><br>
+						    <p style=" text-align:center; font-size:17px;"> 보유 포인트 : ${pdto.point_current} P</p>
 						    <br>
 						</div>
 					 </c:forEach>

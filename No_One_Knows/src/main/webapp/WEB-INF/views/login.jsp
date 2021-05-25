@@ -45,7 +45,7 @@
 	        <section class="container mt-3" style="max-width: 560px;">
 	        	<!--login content -->
 				<form method="post" style="display: block; margin-top: 30px;">
-					<div class="scale"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div>
+					<div class="scale"><img src = "resources/img/signup.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div>
 					<div class="form-group">
 						<label>아이디</label>
 						<input type="text" name="user_id" class="form-control">		

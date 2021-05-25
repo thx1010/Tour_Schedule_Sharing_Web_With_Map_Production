@@ -61,7 +61,7 @@
 	        <div class="container">
 		        <section class="container" style="margin-top: 10px;">
 		        	<div class="scale"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
-		            <h2 style=" text-align:center; margin-bottom: 60px;">당신의 결제 목록입니다</h2>
+		            <h2 style=" text-align:center; margin-bottom: 60px;">${sessionScope.userInfo.user_id}님의 결제 목록입니다</h2>
 				    <div class="row" style="margin-left: 740px; margin-bottom: 60px;">
 				    	<input type="text"  id="search" name="searchKeyword" required="required" value="" style="border-radius: 15%;" />&nbsp;&nbsp;
 						<div class="tscale"><input type="submit" id="w-button-search" value="여행지 검색하기" style="background: linear-gradient( to left, #5587ED, #8BBDFF ); color:white; font-family: 'Do Hyeon'; border-radius: 15%;"/></div>

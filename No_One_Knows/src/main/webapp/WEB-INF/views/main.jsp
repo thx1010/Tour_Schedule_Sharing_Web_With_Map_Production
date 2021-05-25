@@ -49,20 +49,20 @@
 			        	<!-- regdate 순서대로 정렬 -->
 			        	<div class="scale"><a href="newlist"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></a></div> <br>
 			        	<h5 style="text-align: center;">NEW ! 지금 뜨는 코스</h5>
-			        	<p style="text-align: center; font-size:14px; color:#878787; ">따끈따끈한 고퀄리티 로컬 소스 💛</p>
+			        	<p style="text-align: center; font-size:14px; color:#878787; ">따끈따끈한 고퀄리티 로컬 정보 💛</p>
 			        	<br><br><br>
 			        </div>
 			            <!-- 찜 갯수 순서대로 정렬 -->
 			        <div class="second">
 			        	<div class="scale"><a href="bestlist"><img src = "resources/img/sea.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></a></div> <br>
 			        	<h5 style="text-align: center;">요즘 대세 코스</h5>
-			        	<p style="text-align: center; font-size:14px; color:#878787; ">누구보다 먼저 알아가세요 ~~</p>
+			        	<p style="text-align: center; font-size:14px; color:#878787; ">N0.1 Knows 먼저 알아가기</p>
 			        	<br><br><br>
 			        </div>
 			        <div class="third">
 			        	<div class="scale"><a href="randomlist" class="scale"><img src = "resources/img/plane.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></a></div> <br>
-			        	<h5 style="text-align: center;">랜덤 추천</h5>
-			        	<p style="text-align: center; font-size:14px; color:#878787; ">낭만을 찾는다면 랜덤 여행지로 !</p>
+			        	<h5 style="text-align: center;">나에게 맞는 여행지 추천</h5>
+			        	<p style="text-align: center; font-size:14px; color:#878787; ">내가 좋아하는 테마만 모아서 !</p>
 			        	<br>
 			        </div>
 			        <div class="forth"><br>

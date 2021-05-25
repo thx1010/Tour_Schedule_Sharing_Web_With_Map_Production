@@ -7,7 +7,7 @@
 	select  g.grade_no as "gradeDTO.grade_no",
 			g.grade_name as "gradeDTO.grade_name",
 			u.user_no, u.user_id, u.user_name, u.user_email, 
-			u.user_age, u.user_gender, u.user_phone, u.user_address, u.user_joindate
+			u.user_year, u.user_month, u.user_day, u.user_photo, u.user_gender, u.user_phone, u.user_address, u.user_joindate
 	from    t_grade g inner join t_user u
 	on 		g.grade_no = u.grade_no	
 	where   user_no = #{user_no}

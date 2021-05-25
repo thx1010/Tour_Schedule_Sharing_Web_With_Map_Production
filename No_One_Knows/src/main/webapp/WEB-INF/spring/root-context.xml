@@ -49,4 +49,14 @@
 		p:mapperInterface="net.developia.board.dao.PointDAO" />
 	<!-- PointDAO end -->
 	
+	<!-- AdminDAO start -->
+	<bean id="adminSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean"
+		p:dataSource-ref="dataSource"
+		p:typeAliasesPackage="net.developia.board.dto" />
+	
+	<bean id="adminDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" 
+		p:sqlSessionFactory-ref="adminSqlSession"
+		p:mapperInterface="net.developia.board.dao.AdminDAO" />
+	<!-- AdminDAO end -->
+	
 </beans>
