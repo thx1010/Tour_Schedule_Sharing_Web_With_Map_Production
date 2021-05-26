@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
 <title>Insert title here</title>
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
@@ -55,28 +56,303 @@
             	</div>
             </div>
         </nav><br><br>
-      	
+      	<div>
+      		<label>여행제목</label><br/><input type="text" id="map_title" name="map_title"/><br/>
+      		<label>부제</label><br/><input type="text" id="map_subtitle" name="map_subtitle"/><br/>
+      		<label>테마</label>
+      		<select id="theme_no" name="theme_no">
+      			<c:forEach var="theme" items='${themeList}'>
+      				<option value="${theme.theme_no}">${theme.theme_name}</option>
+      			</c:forEach>
+      		</select><br/>
+      		<label>국가</label><br/><input type="text" id="map_country" name="map_country"/><br/>
+      		<label>주</label><br/><input type="text" id="map_state" name="map_state"/><br/>
+      		<label>도시</label><br/><input type="text" id="map_city" name="map_city"/><br/>
+      		<label>설명</label><br/><textarea id="map_content" name="map_content"></textarea><br/>
+      	</div>
         <!-- Page Content-->
         <header style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) );">
 	        <div class="container">
 		            <h2 style=" text-align:center; margin-bottom: 60px;">'</h2>
 				    <div class="parent2">
 				        <div class="first2">
-				        	<!-- 여기 맵 넣기 -->
+				        	<div id="map" style="width: 100%; height: 400px;"></div>
 				        	<h4 style="text-align: center; background-color: ">맵 공간</h4>
 				        </div>
 				        <div class="second2">
 				        	<!-- 여기 입력 폼 -->
+				        	<div id="divPlaceForm_order"></div>
+							<div id="divPlaceForm_name"></div>
+							<div id="divPlaceForm_loadaddr"></div>
+							<div id="divPlaceForm_addr"></div>
+							<div id="divPlaceForm_lat"></div>
+							<div id="divPlaceForm_lng"></div>
+							<div id="divPlaceForm_image"></div>
+							<div id="divPlaceForm_content"></div>
 				        	<h4 style="text-align: center;">입력 폼 공간</h4>
 				        </div>
 			        </div>
 			        <h2 style=" text-align:center; margin-bottom: 60px;">'</h2>
 			</div>
+			<div>
+				<button onclick="makeCourse()">지도만들기</button>
+			</div>
 	    </header>
         <!-- Bootstrap core JS-->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="resources/js/scripts.js"></script>
 	</body>
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5f99123b49282be7b5dcbc9dbff6f616&libraries=services">
+	</script>
+	<script>
+		var placeCount = 0;
+		var routeCount = 0;
+		
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+		mapOption = {
+			center : new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+			level : 3
+		// 지도의 확대 레벨
+		};
+
+		var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+		var geocoder = new kakao.maps.services.Geocoder();
+		
+		//controller
+		var mapTypeControl = new kakao.maps.MapTypeControl();
+		var zoomControl = new kakao.maps.ZoomControl();
+		
+		map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+		map.addControl(zoomControl, kakao.maps.ControlPosition.Right);
+		
+		
+		// 지도에 표시된 마커 객체를 가지고 있을 배열
+		var markers = [];
+		var markerInfos = [];
+		var placeName = [];
+		var placeAddr1 = [];
+		var placeAddr2 = [];
+		
+		
+		//맵 클릭 이벤트 추가 : 동적마커생성
+		kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+			var newPosition = mouseEvent.latLng;
+			var detailLoadAddr;
+			var detailAddr;
+			
+			var markerInfo = addMarker(newPosition);
+			
+			(async() => {
+				let response = await searchDetailAddrFromCoords(newPosition, function(result, status) {
+					if(status == kakao.maps.services.Status.OK) {
+						detailLoadAddr = !!result[0].road_address ? result[0].road_address.address_name : '';
+			            detailAddr = result[0].address.address_name;
+			            
+						//placeAddr1.push(detailLoadAddr);
+						//placeAddr2.push(detailAddr);
+						
+						markerInfo.place_loadaddr = detailLoadAddr;
+						markerInfo.place_addr = detailAddr;
+						
+						markerInfos.push(markerInfo);
+						//console.log(markerInfo);
+						console.log("도로명 : " + detailLoadAddr);
+						console.log("지번 : " + detailAddr);
+					}
+				});
+			})();
+			
+			/* $.ajax({
+				type : "POST",
+				url : "dymarker/position",
+				data : {
+					"lat" : newPosition.getLat(),
+					"lng" : newPosition.getLng()
+				},
+				dataType : "text",
+				success : function(data) {
+					console.log(data);
+				},
+				error : function() {
+					alert("ajax error");
+				}
+
+			}); */
+
+		});
+
+		
+	
+		// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+		
+		//마커생성 메서드
+		function addMarker(position) {
+		 	var marker = new kakao.maps.Marker({
+		 		position: position,
+		 		draggable: true,
+		 		clickable:true
+		 	});
+		 	
+		 	marker.setMap(map);
+		 	markers.push(marker);
+		 	
+		 	
+		 	var markerInfo = {
+		 			"obj": marker,
+		 			"place_course_no": placeCount++,
+		 			"place_name": '',
+		 			"place_lat": marker.getPosition().getLat(),
+		 			"place_lng": marker.getPosition().getLng(),
+		 			"place_name": '',
+		 			"place_loadaddr": '',
+		 			"place_addr": '',
+		 			"place_content": '',
+		 			"place_photo": '',
+		 			"created": false
+		 	};
+		 	
+		 	//markerInfos.push(markerInfo);
+		 	//console.log(markerInfo.lat);
+		 	//console.log(markerInfo.lng);
+		 	
+		 	addMarkerClickEvent(markerInfo);
+		 	
+		 	return markerInfo;
+		}
+		
+	
+		function makeCourse() {
+			var courseData;
+			var mapInfo;
+			var placeInfos = new Array();
+			
+			
+			mapInfo = {
+				"map_title": $('#map_title').val(),
+				"map_subtitle": $('#map_subtitle').val(),
+				"map_country": $('#map_country').val(),
+				"map_state": $('#map_state').val(),
+				"map_city": $('#map_city').val(),
+				"map_content": $('#map_content').val(),
+				"map_photo" : 'C:/',
+				"theme_no": $('#theme_no').val()
+			};
+			
+			for ( const key in markerInfos) {
+				var placeInfo = {
+					"place_name" : markerInfos[key].place_name,
+					"place_lat" : String(markerInfos[key].place_lat),
+					"place_lng" : String(markerInfos[key].place_lng),
+					"place_loadaddr" : markerInfos[key].place_loadaddr,
+					"place_addr" : markerInfos[key].place_addr,
+					"place_photo" : markerInfos[key].place_photo,
+					"place_content": markerInfos[key].place_content,
+					"place_course_no": markerInfos[key].place_course_no
+				};
+				placeInfos.push(placeInfo);
+			}
+			
+			courseData = {
+					"mapInfo" : mapInfo,
+					"placeInfos" : placeInfos
+			};
+			console.log(courseData);
+			$.ajax({
+				type : "POST",
+				url : "mapcontrol/coursemake",
+				//data : courseData,
+				data : JSON.stringify(courseData),
+				dataType : "text",
+				contentType : "application/json; charset=utf-8",
+				success : function(value) {
+					console.log(value);
+				},
+				error : function(request, status, error) {
+					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				}
+			});
+		}
+		
+		async function searchAddrFromCoords(coords, callback) {
+		    // 좌표로 행정동 주소 정보를 요청합니다
+		    geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback); 
+		    return 1;
+		}
+
+		async function searchDetailAddrFromCoords(coords, callback) {
+		    // 좌표로 법정동 상세 주소 정보를 요청합니다
+		    geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+		    return 1;
+		}
+		
+		
+		//마커 클릭 이벤트 추가
+		function addMarkerClickEvent(markerInfo) {
+			kakao.maps.event.addListener(markerInfo.obj, 'click', function() {
+				//console.log(markerInfo);
+				for(const key in markerInfos) {
+					if(markerInfo.place_lat == markerInfos[key].place_lat && markerInfo.place_lng == markerInfos[key].place_lng) {
+						console.log(markerInfos[key]);
+						
+						
+						//if(!markerInfos[key].created) {					
+							$('#divPlaceForm_order').html('<label>코스번호 </label><input type="text" id="place_course_no"/><br/><br/>');
+							$('#place_course_no').val(markerInfos[key].place_course_no);
+							
+							$('#divPlaceForm_name').html('<label>장소명 </label><input type="text" id="place_name"/><br/><br/>');
+							$('#place_name').val(markerInfos[key].place_name);
+							
+							$('#divPlaceForm_loadaddr').html('<label>도로명주소 </label><input type="text" id="place_loadaddr"/><br/><br/>');
+							$('#place_loadaddr').val(markerInfos[key].place_loadaddr);
+							
+							$('#divPlaceForm_addr').html('<label>지번주소 </label><input type="text" id="place_addr"/><br/><br/>');
+							$('#place_addr').val(markerInfos[key].place_addr);
+							
+							
+							
+							$('#divPlaceForm_lat').html('<label>위도 </label><input type="text" id="place_lat"/>');
+							$('#place_lat').val(markerInfos[key].place_lat);
+							
+							
+							$('#divPlaceForm_lng').html('<label>경도 </label><input type="text" id="place_lng"/>');
+							$('#place_lng').val(markerInfos[key].place_lng); 
+							
+							$('#divPlaceForm_content').html('<label>내용 </label><textarea id="place_content"></textarea><br/><br/>');
+							$('#place_content').val(markerInfos[key].place_content);
+							
+						//	markerInfos[key].created = true;
+						//} else {
+						//	break;
+						//}
+						
+						break;
+					}
+				}
+		
+				
+			});
+			
+		}
+		
+		$(document).on('keyup', '#place_name', function() {
+			var order = $('#place_course_no').val();
+			var name = $('#place_name').val();
+			markerInfos[order].place_name = name;
+			//console.log("입력된 순번 :" + order);
+			//console.log("입력된 장소명 :" + markerInfos[order].placeName);
+		});
+		
+
+		$(document).on('keyup', '#place_content', function() {
+			var order = $('#place_course_no').val();
+			var content = $('#place_content').val();
+			markerInfos[order].place_content = content;
+			
+			//console.log("입력된 내용 :" + markerInfos[order].placeContent);
+		});
+		
+	</script>
 </html>
