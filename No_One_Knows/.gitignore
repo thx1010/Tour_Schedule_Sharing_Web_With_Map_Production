@@ -1,6 +1,7 @@
 /target
 *.class
 pom.properties
+database.properties
 .springBeans
 
 # Eclipse
