@@ -1,16 +1,21 @@
 package net.developia.board.web;
 
-import java.util.*;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
-import org.springframework.ui.*;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
 
-import lombok.extern.slf4j.*;
-import net.developia.board.dto.*;
-import net.developia.board.service.*;
+import lombok.extern.slf4j.Slf4j;
+import net.developia.board.dto.PointDTO;
+import net.developia.board.dto.ThemeDTO;
+import net.developia.board.dto.UserDTO;
+import net.developia.board.service.MainService;
+import net.developia.board.service.ThemeService;
 
 @Slf4j
 @Controller
@@ -18,6 +23,9 @@ public class MainController {
 	
 	@Autowired
 	private MainService mainService;
+	
+	@Autowired
+	private ThemeService themeService;
 	
 	@GetMapping(value="/main")
 	public ModelAndView main() throws Exception {
@@ -80,6 +88,17 @@ public class MainController {
 	
 	@GetMapping(value="/coursemaker")
 	public ModelAndView coursemaker() throws Exception {
-		return new ModelAndView("coursemaker");
+		ModelAndView mav = new ModelAndView();
+		
+		List<ThemeDTO> themeList = null;
+		try {
+			themeList = themeService.getThemeList();
+		} catch (Exception e) {
+			
+		}
+		
+		mav.setViewName("coursemaker");
+		mav.addObject("themeList", themeList);
+		return mav;
 	}
 }

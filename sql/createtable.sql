@@ -197,7 +197,7 @@ CREATE TABLE t_place
 	, place_lat VARCHAR2(30) NOT NULL
 	, place_lng VARCHAR2(30) NOT NULL
 	, place_content CLOB DEFAULT ''
-	, place_image VARCHAR2(255) DEFAULT 'C:/'
+	, place_photo VARCHAR2(255) DEFAULT 'C:/'
 	, place_course_no NUMBER(2) NOT NULL
 	, map_no NUMBER(9) NOT NULL
 );
