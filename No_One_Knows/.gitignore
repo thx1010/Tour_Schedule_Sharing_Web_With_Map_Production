@@ -18,4 +18,8 @@ pom.properties
 
 # Maven
 log/
+<<<<<<< HEAD
 target/
+=======
+target/
+>>>>>>> 07cd4f11a8fd64e030e2c8b5168442c1999b7cc7
