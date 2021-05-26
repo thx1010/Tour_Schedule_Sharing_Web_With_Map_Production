@@ -1,5 +1,7 @@
 package net.developia.board.service;
 
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
@@ -22,6 +24,61 @@ public class AdminServiceImpl implements AdminService{
 				throw new RuntimeException("아이디 혹은 비밀번호가 틀립니다.");
 			}
 			return adminInfo;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public PointDTO getpointAccount() throws Exception {
+		try {
+			PointDTO pointaccount = adminDAO.getpointAccount();
+			return pointaccount;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public int getMemberCount() throws Exception {
+		try {
+			int membercount = adminDAO.getMemberCount();
+			return membercount;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public int getCategoryCount() throws Exception {
+		try {
+			int categorycount = adminDAO.getCategoryCount();
+			return categorycount;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public GradenumDTO getGradenum() throws Exception {
+		try {
+			GradenumDTO gradenumdto = adminDAO.getGradenum();
+			return gradenumdto;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<UserDTO> getUserPointList() throws Exception {
+		try {
+			List<UserDTO> userlist = adminDAO.getUserPointList();
+			return userlist;
 		} catch (Exception e) {
 			log.info(e.getMessage());
 			throw e;

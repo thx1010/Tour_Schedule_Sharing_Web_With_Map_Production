@@ -9,4 +9,42 @@
 	where  admin_id=#{admin_id} and admin_pw=#{admin_pw}
 	</select>
 	
+	<select id="getpointAccount" resultType="PointDTO">
+	select sum(point_current) as point_current 
+	from t_point
+	</select>
+	
+	<select id="getMemberCount" resultType="Int">
+	select count(*) 
+	from t_user
+	</select>
+	
+	<select id="getCategoryCount" resultType="Int">
+	select count(*) 
+	from t_theme
+	</select>
+	
+	<select id="getGradenum" resultType="GradenumDTO">
+	select unique (select count(*) 
+			    from t_user a inner join t_grade b 
+			    on a.grade_no = b.grade_no 
+    			where a.grade_no = 1) AS grade_first,
+    (select count(*)
+			    from t_user a inner join t_grade b
+			    on a.grade_no = b.grade_no
+			    where a.grade_no = 2) AS grade_second,
+    (select count(*)
+			    from t_user a inner join t_grade b
+			    on a.grade_no = b.grade_no
+			    where a.grade_no = 3) AS grade_third
+	from t_user a inner join t_grade b
+	on a.grade_no = b.grade_no
+	</select>
+	
+	<select id="getUserPointList" resultType="UserDTO">
+	select a.user_no, a.user_id, a.user_name, b.point_current as "pointDTO.point_no"
+	from t_user a inner join t_point b
+	on a.point_no = b.point_no
+	</select>
+	
 </mapper>
