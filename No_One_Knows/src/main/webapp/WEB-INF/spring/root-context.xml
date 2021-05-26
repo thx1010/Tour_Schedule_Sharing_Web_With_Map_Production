@@ -59,24 +59,4 @@
 		p:mapperInterface="net.developia.board.dao.AdminDAO" />
 	<!-- AdminDAO end -->
 	
-	<!-- MapDAO start -->
-	<bean id="mapSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean"
-		p:dataSource-ref="dataSource"
-		p:typeAliasesPackage="net.developia.board.dto" />
-	
-	<bean id="mapDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" 
-		p:sqlSessionFactory-ref="mapSqlSession"
-		p:mapperInterface="net.developia.board.dao.MapDAO" />
-	<!-- MapDAO end -->
-	
-	<!-- ThemeDAO start -->
-	<bean id="themeSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean"
-		p:dataSource-ref="dataSource"
-		p:typeAliasesPackage="net.developia.board.dto" />
-	
-	<bean id="themeDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" 
-		p:sqlSessionFactory-ref="themeSqlSession"
-		p:mapperInterface="net.developia.board.dao.ThemeDAO" />
-	<!-- ThemeDAO end -->
-	
 </beans>

@@ -59,7 +59,6 @@ public class UserController {
 		ModelAndView mav = new ModelAndView();
 		try {
 			pointService.createPoint();
-			log.info("[signup] user info : " + userDTO);
 			userService.signup(userDTO);
 			UserDTO userno = pointService.selectUserInfo(userDTO);
 			log.info(userno.toString());

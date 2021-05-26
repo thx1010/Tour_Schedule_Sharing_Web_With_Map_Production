@@ -57,11 +57,7 @@
 						</div>
 						<div class="form-group">
 							<label>비밀번호</label>
-							<input type="password" id="user_pw" name="user_pw" class="form-control"><br/>
-							
-							<label>비밀번호 확인</label>
-							<input type="password" id="user_pw_chk" name="user_pw_chk" class="form-control"><br/>
-							<font id="chkNotice" size="2"></font>
+							<input type="password" name="user_pw" class="form-control">
 						</div>
 						<div class="form-group">
 							<label>이메일</label>
@@ -161,29 +157,6 @@
 	    </header>
         <!-- Bootstrap core JS-->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script type="text/javascript">
-        var checked_id = false;
-        var checked_pw = false;
-
-        $(function(){
-        	$('#user_pw').keyup(function() {
-        		$('#chkNotice').html('');
-        	});
-        	
-        	$('#user_pw_chk').keyup(function() {
-        		if($('#user_pw').val() != $('#user_pw_chk').val()) {
-        			$('#chkNotice').html('비밀번호가 일치하지 않습니다<br/><br/>');
-        			$('#chkNotice').attr('color', '#f82a2aa3');
-        		} else {
-        			$('#chkNotice').html('비밀번호가 일치합니다<br/><br/>');
-        			$('#chkNotice').attr('color', '#199894b3');
-        			checked_pw = true;
-        		}
-        	});
-        });
-        
-        
-        </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="resources/js/scripts.js"></script>

@@ -19,9 +19,6 @@ public class MainController {
 	@Autowired
 	private MainService mainService;
 	
-	@Autowired
-	private ThemeService themeService;
-	
 	@GetMapping(value="/main")
 	public ModelAndView main() throws Exception {
 		return new ModelAndView("main");
@@ -83,17 +80,6 @@ public class MainController {
 	
 	@GetMapping(value="/coursemaker")
 	public ModelAndView coursemaker() throws Exception {
-		ModelAndView mav = new ModelAndView();
-		
-		List<ThemeDTO> themeList = null;
-		try {
-			themeList = themeService.getThemeList();
-		} catch (Exception e) {
-			
-		}
-		
-		mav.setViewName("coursemaker");
-		mav.addObject("themeList", themeList);
-		return mav;
+		return new ModelAndView("coursemaker");
 	}
 }
