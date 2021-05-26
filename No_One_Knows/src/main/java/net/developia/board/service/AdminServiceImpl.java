@@ -1,5 +1,7 @@
 package net.developia.board.service;
 
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
@@ -66,6 +68,17 @@ public class AdminServiceImpl implements AdminService{
 		try {
 			GradenumDTO gradenumdto = adminDAO.getGradenum();
 			return gradenumdto;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<UserDTO> getUserPointList() throws Exception {
+		try {
+			List<UserDTO> userlist = adminDAO.getUserPointList();
+			return userlist;
 		} catch (Exception e) {
 			log.info(e.getMessage());
 			throw e;

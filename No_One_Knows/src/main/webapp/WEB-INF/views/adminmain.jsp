@@ -10,8 +10,44 @@
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
  <!-- Custom styles for this template-->
  <link href="resources/css/sb-admin-2.min.css" rel="stylesheet" type="text/css">
- <!-- 파이 차트 다시 만들기 -->
- <!-- ${grade_first_partio} ${grade_second_partio} ${grade_third_partio} -->
+
+<!-- 파이 차트 -->
+ <script type="text/javascript">
+ window.onload = function () {
+	
+	 var myPieChart = new Chart("myPieChart", {
+	   type: 'doughnut',
+	   data: {
+	     labels: ["Level1", "Level2", "Level3"],
+	     datasets: [{
+	       data: [${grade_first_partio}, ${grade_second_partio}, ${grade_third_partio}],
+	       backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+	       hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+	       hoverBorderColor: "rgba(234, 236, 244, 1)",
+	     }],
+	   },
+	   options: {
+	     maintainAspectRatio: false,
+	     tooltips: {
+	       backgroundColor: "rgb(255,255,255)",
+	       bodyFontColor: "#858796",
+	       borderColor: '#dddfeb',
+	       borderWidth: 1,
+	       xPadding: 15,
+	       yPadding: 15,
+	       displayColors: false,
+	       caretPadding: 10,
+	     },
+	     legend: {
+	       display: false
+	     },
+	     cutoutPercentage: 80,
+	   },
+	 });
+	 myPieChart.render();
+ }
+
+ </script>
  
 </head>
         <nav class="navbar navbar-expand-lg" style="background: white;">
@@ -269,22 +305,22 @@
 			</section>
 	    </body>
 	    
-       	<!— Bootstrap core JavaScript—>
+       	<!-- Bootstrap core JavaScript-->
 	    <script src="resources/vendor/jquery/jquery.min.js"></script>
 	    <script src="resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-	    <!— Core plugin JavaScript—>
+	    <!--  Core plugin JavaScript-->
 	    <script src="resources/vendor/jquery-easing/jquery.easing.min.js"></script>
 	    
-	    <!— Custom scripts for all pages—>
+	    <!--Custom scripts for all pages-->
 	    <script src="resources/js/sb-admin-2.min.js"></script>
 	
-	    <!— Page level plugins —>
+	    <!--Page level plugins -->
 	    <script src="resources/vendor/chart.js/Chart.min.js"></script>
 	
-	    <!— Page level custom scripts —>
+	    <!--Page level custom scripts -->
 	    <script src="resources/js/demo/chart-area-demo.js"></script>
-	    <script src="resources/js/demo/chart-pie-demo.js"></script>
+	    <!--<script src="resources/js/demo/chart-pie-demo.js"></script>-->
         
         <script src="resources/js/scripts.js"></script>
 </html>

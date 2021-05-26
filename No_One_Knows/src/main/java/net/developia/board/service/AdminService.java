@@ -1,5 +1,7 @@
 package net.developia.board.service;
 
+import java.util.*;
+
 import net.developia.board.dto.*;
 
 public interface AdminService {
@@ -13,6 +15,8 @@ public interface AdminService {
 	int getCategoryCount() throws Exception;
 
 	GradenumDTO getGradenum() throws Exception;
+
+	List<UserDTO> getUserPointList() throws Exception;
 
 	
 }

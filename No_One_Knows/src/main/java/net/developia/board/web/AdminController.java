@@ -1,5 +1,7 @@
 package net.developia.board.web;
 
+import java.util.*;
+
 import javax.servlet.http.*;
 
 import org.springframework.beans.factory.annotation.*;
@@ -71,7 +73,14 @@ public class AdminController {
 	}
 	
 	@GetMapping(value="/adminpoint")
-	public ModelAndView adminpoint() throws Exception {
+	public ModelAndView adminpoint(Model model) throws Exception {
+		try {
+			List<UserDTO> userlist = adminService.getUserPointList();
+			log.info(userlist.toString());
+			model.addAttribute("userlist", userlist);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		return new ModelAndView("adminpoint");
 	}
 	

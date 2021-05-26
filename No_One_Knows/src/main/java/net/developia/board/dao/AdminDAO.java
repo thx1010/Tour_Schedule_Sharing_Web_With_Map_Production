@@ -1,5 +1,7 @@
 package net.developia.board.dao;
 
+import java.util.*;
+
 import net.developia.board.dto.*;
 
 public interface AdminDAO {
@@ -13,5 +15,7 @@ public interface AdminDAO {
 	int getCategoryCount() throws Exception;
 
 	GradenumDTO getGradenum() throws Exception;
+
+	List<UserDTO> getUserPointList() throws Exception;
 	
 }
