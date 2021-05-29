@@ -179,6 +179,7 @@
 			    </div>
 	            <div class="row text-center" >
                 <div class="col-lg-3 col-md-6 mb-4" style="margin-top: 30px;">
+                    <a href = "mapdetail">
                     <div class="card h-100">
                         <div class="tscale"><img class="card-img-top" src="resources/img/sample.jpeg" alt="..." /></div>
                         <div class="card-body" style="background-color: white">
@@ -186,6 +187,7 @@
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
                         </div>
                     </div>
+                     </a>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4"  style="margin-top: 30px;">
                     <div class="card h-100">

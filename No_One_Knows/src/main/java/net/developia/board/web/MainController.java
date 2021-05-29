@@ -81,4 +81,9 @@ public class MainController {
 		mav.addObject("themeList", themeList);
 		return mav;
 	}
+	
+	@GetMapping(value="/mapdetail")
+	public ModelAndView mapdetail() throws Exception {
+		return new ModelAndView("mapdetail");
+	}
 }
