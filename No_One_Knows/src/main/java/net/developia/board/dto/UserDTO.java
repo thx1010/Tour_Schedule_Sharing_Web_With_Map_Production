@@ -24,8 +24,12 @@ public class UserDTO implements Serializable{
 	private String user_phone;
 	private long theme_no;
 	private String user_address;
-	private GradeDTO GradeDTO;
-	private PointDTO PointDTO;
+	private long point_current;
+	private String grade_no;
+	private String grade_name;
+	private ThemeDTO themeDTO;
+	private GradeDTO gradeDTO;
+	private PointDTO pointDTO;
 	
 	public void setUser_pw(String user_pw) {
 		this.user_pw = DigestUtils.sha512Hex(user_pw);

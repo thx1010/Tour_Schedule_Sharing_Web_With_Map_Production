@@ -42,9 +42,85 @@
 	</select>
 	
 	<select id="getUserPointList" resultType="UserDTO">
-	select a.user_no, a.user_id, a.user_name, b.point_current as "pointDTO.point_no"
+	select a.user_no, a.user_id, a.user_name, b.point_current as "point_current"
 	from t_user a inner join t_point b
 	on a.point_no = b.point_no
+	</select>
+	
+	<select id="getUserDetail" parameterType="UserDTO" resultType="UserDTO">
+	select *
+	from t_user
+	where user_no = #{user_no}
+	</select>
+	
+	<select id="getUserTransactionInfo" parameterType="UserDTO" resultType="PointTransactionLogDTO">
+	select a.point_no, a.point_current,
+		   b.point_decrease,
+		   b.point_spend_log,
+		   b.point_spend_date,
+		   c.point_increase,
+		   c.point_charge_log,
+		   c.point_charge_date
+    from t_point a LEFT OUTER join t_point_spend b
+        on  a.point_no = b.point_no
+        LEFT OUTER join t_point_charge c
+        on a.point_no = c.point_no
+    where user_no = #{user_no}
+	</select>
+	
+	<select id="selectUsergradeInfo" resultType="UserDTO">
+	select a.user_no, a.user_id, a.user_name
+	,b.grade_name
+	,b.grade_no
+	from t_user a inner join t_grade b
+	on a.grade_no = b.grade_no
+	</select>
+	
+	<update id="updateUserGrade" parameterType="UserDTO">
+	update t_user set grade_no = #{grade_no}
+	where user_no = #{user_no}
+	</update>
+	
+	<delete id="deleteMember" parameterType="UserDTO">
+	delete from t_user where user_no = #{user_no}
+	</delete>
+	
+	<select id="selectCategoryList" resultType="ThemeDTO">
+	select * from t_theme
+	</select>
+	
+	<insert id="addCategory" parameterType="ThemeDTO">
+	Insert into t_theme (theme_no, theme_name, theme_content) 
+	values (seq_theme.nextval, #{theme_name}, #{theme_content})
+	</insert>
+	
+	<update id="updateCategory" parameterType="ThemeDTO">
+	update t_theme set theme_name = #{theme_name}, theme_content = #{theme_content}
+	where theme_no = #{theme_no}
+	</update>
+	
+	<delete id="deleteCategory" parameterType="ThemeDTO">
+	delete from t_theme where theme_no = #{theme_no}
+	</delete>
+	
+	<select id="getMapList" resultType="MapDTO">
+	select map_no, map_title, map_subtitle, map_content, map_photo, map_regdate, map_country, map_city
+	from t_map
+	</select>
+	
+	<select id="getMapDetail" parameterType="MapDTO" resultType="MapDTO">
+	select a.map_no, a.map_title, a.map_subtitle, a.map_content, a.map_photo, a.map_regdate, a.map_country, a.map_city
+       ,b.theme_name
+	from t_map a inner join t_theme b
+	on a.theme_no = b.theme_no
+	where a.map_no = #{map_no} 
+	</select>
+	
+	<select id="getPlaceDetail" parameterType="MapDTO" resultType="PlaceDTO">
+	select b.place_name, b.place_addr, b.place_content, b.place_photo
+	from t_map a inner join t_place b
+	on a.map_no = b.map_no
+	where a.map_no = #{map_no} 
 	</select>
 	
 </mapper>

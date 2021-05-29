@@ -265,12 +265,6 @@
 		                                    </div>
 		                                </div>
 		                            </div>
-		
-		                            <!-- Color System -->
-		                            <div class="row">
-		                                
-		                            </div>
-		
 		                        </div>
 		
 		                        <div class="col-lg-6 mb-4">
@@ -292,10 +286,7 @@
 		                            </div> 
 		                        </div>
 		                    </div>
-		
-		                </div>
-		                <!-- /.container-fluid -->
-		
+		                </div>		
 			            </div>
 			            <!-- End of Main Content -->
 			        </div>
@@ -320,7 +311,6 @@
 	
 	    <!--Page level custom scripts -->
 	    <script src="resources/js/demo/chart-area-demo.js"></script>
-	    <!--<script src="resources/js/demo/chart-pie-demo.js"></script>-->
         
         <script src="resources/js/scripts.js"></script>
 </html>

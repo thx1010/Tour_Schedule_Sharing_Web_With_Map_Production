@@ -9,47 +9,110 @@
 <title>Insert title here</title>
 <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
 <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
-<!-- Custom styles for this template-->
-<link href="resources/css/sb-admin-2.min.css" rel="stylesheet" type="text/css">
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
-	function displayUserList(data) {
-		var detailmodal = "";
-	  	$.each( data, function( key, val ) {
-	  		//이 부분 수정
-	    	detailmodal += "<tr><td> " + val['nickname'] + "</td>";
-	    	detailmodal += "<td> " + val['idea'] + "</td>";
-	    	detailmodal += "<td> " + val['memo'] + "</td>";
-	    	detailmodal += "<td> " + val['email'] + "<span class='ui-icon ui-icon-closethick btnDeleteOk' myval='" + val['idea'] + "' style='cursor:pointer' />" + "</td></tr>";
-			});
-	 
-		$('#displayUserDetail').html(mytable);
-		myCommentEvent();
-	}
-	
 	$(document).ready(function(){
-			selectComment();
-			$('#userdetailButton').click(function(){
-				$.ajax({
-					method : 'POST',
-					url : '${pageContext.request.contextPath}/adminpoint/userdetail', 
-					data : {userdetailno : $('#userdetailno').val()}
-				}).done(function( data ) {
-					displayUserList(data);
-				});
-			});
+		selectContent();
 	});
 	
-	
-	function selectComment() {
+	function selectContent() {
 		$.ajax({
 			method : 'GET',
-			url : '${pageContext.request.contextPath}/adminpoint/userdetail', 
+			url : '${pageContext.request.contextPath}/adminpoint/userinfo', 
 		}).done(function( data ) {
-		 	displayUserList(data);
+		 	displayContentList(data);
 		});
+	}
+	
+	function displayContentList(data) {
+		var mytable = "";
+	  	$.each( data, function( key, val ) {
+	    	mytable += "<tr><td> " + val['user_no'] + "</td>";
+	    	mytable += "<td> " + val['user_id'] + "</td>";
+	    	mytable += "<td> " + val['user_name'] + "</td>";
+	    	mytable += "<td> " + val['point_current']  + "</td>";
+	    	
+	    	mytable += "<td><button  class='userdetailButton' myval='" + val['user_no'] + "' data-toggle='modal' data-target='#userDetailModal' style='background-color: #8BBDFF; border-radius: 10px; color: white;'><h5><img src = 'resources/img/check.png' style='width: 20px; height:20px;'/>&nbsp;확인</h5></button></td>";
+	    	mytable += "<td><button  class='usertransactionButton' myval='" + val['user_no'] + "' style='background-color: #8BBDFF; border-radius: 10px; color: white;'><h5><img src = 'resources/img/check.png' style='width: 20px; height:20px;'>&nbsp;확인</h5></button></td>";
+	    	mytable += "<td><input class='point_increase_"+val['user_no']+"' type='text' style='border-radius: 5px; width: 70px'/>&nbsp;&nbsp;<button  class='userpointButton' myval='" + val['user_no'] + "' style='background-color: #B1DB4E; border-radius: 10px; color: white;'><h5><img src = 'resources/img/check.png' style='width: 20px; height:20px;'>&nbsp;부여</h5></button></td></tr>";
+			});
+	 
+		$('#userContentDisplay').html(mytable);
+		userDetailButtonEvent();
+		userTransactionButtonEvent();
+		userPointButtonEvent();
+	}
+	
+	function userDetailButtonEvent() {
+		$('.userdetailButton').click(function(){
+			let user_no = '${pageContext.request.contextPath}/adminpoint/userinfo/' + $(this).attr('myval'); 
+			$.ajax({
+				method : 'POST',
+				url : user_no 
+			}).done(function( data ) {
+				displayUserDetailList(data);
+			});
+		});
+	}
+	
+	function userTransactionButtonEvent() {
+		$('.usertransactionButton').click(function(){
+			let my_userid_val = '${pageContext.request.contextPath}/adminpoint/usertransaction/' + $(this).attr('myval'); 
+			$.ajax({
+				method : 'POST',
+				url : my_userid_val
+			}).done(function( data ) {
+				displayUserTransactionList(data);
+			});
+		});
+	}
+	
+	function userPointButtonEvent() {
+		$('.userpointButton').click(function(){
+			let user_val = $(this).attr('myval');
+			let my_userid_val = '${pageContext.request.contextPath}/adminpoint/userpoint/' + $(this).attr('myval') + '/' + $('.point_increase_'+user_val).val();
+			$.ajax({
+				method : 'POST',
+				url : my_userid_val
+				//data : {user_no: $(this).attr('myval'), point_increase : $('.point_increase').val()}
+			}).done(function( data ) {
+				alert('포인트 충전이 완료되었습니다.');
+				displayUserTransactionList(data);
+				$('.point_increase'+user_val).val('');
+			});
+		});
+	}
+	
+	function displayUserDetailList(data) {
+		var detailmodal = "";
+	  	$.each( data, function( key, val ) {
+	    	detailmodal += "<p style='text-align: center'> " + "<img style='width: 50px; height: 50px' src='resources/img/" + val['user_photo'] + "'></p>";
+	    	detailmodal += "<p style='text-align: center'> " + val['user_name'] + " ( " +  val['user_gender'] + " )" + "</p>";
+	    	detailmodal += "<p style='text-align: center'> " + val['user_year'] +" . " + val['user_month'] +" . " + val['user_day'] + "</p>";
+	    	detailmodal += "<p style='text-align: center'> " + val['user_email'] + "</p>";
+	    	detailmodal += "<p style='text-align: center'> " + val['user_phone'] + "</p>";
+	    	detailmodal += "<p style='text-align: center'> " + val['user_address'] + "</p>";
+	    	detailmodal += "<p style='text-align: center'> " + val['user_joindate'] + "</p>";
+			});
+	 
+		$('#displayUserDetail').html(detailmodal);
+	}
+	
+	function displayUserTransactionList(data) {
+		var transactionmodal = "";
+	  	$.each( data, function( key, val ) {
+	    	transactionmodal += "<tr><td> " + val['point_increase'] + "</td>";
+	    	transactionmodal += "<td> " + val['point_charge_log'] + "</td>";
+	    	transactionmodal += "<td> " + val['point_charge_date'] + "</td>";
+	    	transactionmodal += "<td> " + val['point_decrease'] + "</td>";
+	    	transactionmodal += "<td> " + val['point_spend_log'] + "</td>";
+	    	transactionmodal += "<td> " + val['point_spend_date'] + "</td></tr>";
+			});
+	 
+		$('#displayUserTransaction').html(transactionmodal);
 	}
 </script>
 </head>
@@ -93,65 +156,45 @@
                                             <th>회원 ID</th>
                                             <th>회원 이름</th>
                                             <th>현재 포인트</th>
-                                            <th>상세 정보</th>
+                                            <th>회원 상세 정보</th>
                                             <th>거래 정보</th>
                                             <th>이벤트 포인트</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                    	<c:forEach var="dto" items= "${userlist}">
-	                                        <tr>
-	                                            <td>${dto.user_no}</td>
-	                                            <td>${dto.user_id}</td>
-	                                            <td>${dto.user_name}</td>
-	                                            <td>${dto.pointDTO.point_no}</td>
-	                                            
-	                                            <input type="hidden" value="${dto.user_no}" name="userdetailno" id="userdetailno">
-	                                            <input type="hidden" value="${dto.user_no}" name="usertransactionno" id="usertransactionno">
-	                                            <input type="hidden" value="${dto.user_no}" name="userpointno" id="userpointno">
-	                                            <td><button  id="userdetailButton" data-toggle="modal" data-target="#userDetailModal" style="background-color: #8BBDFF; border-radius: 10px; color: white;"><h5><img src = "resources/img/check.png" style="width: 20px; height:20px;">&nbsp;확인</h5></button></td>
-	                                            <td><button  id="usertransactionButton" data-toggle="modal" data-target="#userTransactionModal" style="background-color: #8BBDFF; border-radius: 10px; color: white;"><h5><img src = "resources/img/check.png" style="width: 20px; height:20px;">&nbsp;확인</h5></button></td>
-	                                            <td><button id="userpointButton" style="background-color: #B1DB4E; border-radius: 10px; color: white;"><h5><img src = "resources/img/check.png" style="width: 20px; height:20px;">&nbsp;부여</h5></button></td>
-	                                            <!-- user detail Modal -->
-	                                            <div class="modal fade" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel">
-												  <div class="modal-dialog" role="document">
-												    <div class="modal-content">
-												      <div class="modal-header">
-												        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-												        <h4 class="modal-title" id="userDetailModalLabel"></h4>
-												      </div>
-												      <div class="modal-body" id = "displayUserDetail">
-												        <!-- 프로젝트 설명 -->
-														유저 디테일 출력 테스트
-												      </div>
-												      <div class="modal-footer">
-												        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-												      </div>
-												    </div>
-												  </div>
-				                                </div>
-				                                <!-- user transaction Modal -->
-				                                <div class="modal fade" id="userTransactionModal" tabindex="-1" role="dialog" aria-labelledby="userTransactionModalLabel">
-												  <div class="modal-dialog" role="document">
-												    <div class="modal-content">
-												      <div class="modal-header">
-												        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-												        <h4 class="modal-title" id="userTransactionModalLabel"></h4>
-												      </div>
-												      <div class="modal-body" id = "displayUserTransaction">
-												        <!-- 프로젝트 설명 -->
-														유저 포인트 거래 출력 테스트
-												      </div>
-												      <div class="modal-footer">
-												        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-												      </div>
-												    </div>
-												  </div>
-				                                </div>
-	                                        </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
+                                    <tbody id="userContentDisplay">
+                                    	
+	                                </tbody>
+	                                </table>
+                                        <!-- user detail Modal -->
+	                                     <div class="modal fade" id="userDetailModal" tabindex="-1" role="dialog" aria-labelledby="userDetailModalLabel">
+							     		  <div class="modal-dialog" role="document">
+										    <div class="modal-content">
+										      <div class="modal-header">
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+											        <h4 class="modal-title" id="userDetailModalLabel"></h4>
+	   								 	      </div>
+										      <div class="modal-body" id = "displayUserDetail">
+										      </div>
+										      <div class="modal-footer">
+										        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+										      </div>
+										    </div>
+										  </div>
+		                                </div> 
+                                        <table class="table" style="text-align:center; border: 1px solid #ddddd">
+											<thead>
+												<tr>
+												<th style="background-color: #fafafa; text-align:center">충전 금액</th>
+												<th style="background-color: #fafafa; text-align:center">충전 사유</th>
+												<th style="background-color: #fafafa; text-align:center">충전 날짜</th>
+												<th style="background-color: #fafafa; text-align:center">소비 금액</th>
+												<th style="background-color: #fafafa; text-align:center">소비 사유</th>
+												<th style="background-color: #fafafa; text-align:center">소비 날짜</th>
+												</tr>
+											</thead>
+											<tbody id = "displayUserTransaction">
+											</tbody>
+										</table> 
                             </div>
                         </div>
                     </div>
@@ -160,24 +203,7 @@
             <!-- End of Main Content -->
 		</section>
 	    </body>
-	    
-	      <!-- Bootstrap core JavaScript-->
-	    <script src="vendor/jquery/jquery.min.js"></script>
-	    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-	
-	    <!-- Core plugin JavaScript-->
-	    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-	
-	    <!-- Custom scripts for all pages-->
-	    <script src="js/sb-admin-2.min.js"></script>
-	
-	    <!-- Page level plugins -->
-	    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-	    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
-	
-	    <!-- Page level custom scripts -->
-	    <script src="js/demo/datatables-demo.js"></script>
-           
+	         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="resources/js/scripts.js"></script>
 </html>

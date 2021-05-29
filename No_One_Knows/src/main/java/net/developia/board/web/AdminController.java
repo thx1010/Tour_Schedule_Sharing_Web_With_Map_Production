@@ -21,6 +21,9 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 	
+	@Autowired
+	private PointService pointService;
+	
 	
 	@GetMapping(value="/adminlogin")
 	public ModelAndView adminlogin() throws Exception {
@@ -57,9 +60,9 @@ public class AdminController {
 			int categorycount = adminService.getCategoryCount();
 			GradenumDTO gradenumdto = adminService.getGradenum();
 			log.info(gradenumdto.toString());
-			int grade_first_partio = gradenumdto.getGrade_first() / membercount * 100;
-			int grade_second_partio = gradenumdto.getGrade_second() / membercount * 100;
-			int grade_third_partio = gradenumdto.getGrade_third() / membercount * 100;
+			float grade_first_partio = (float)gradenumdto.getGrade_first() / (float)membercount * 100;
+			float grade_second_partio = (float)gradenumdto.getGrade_second() / (float)membercount * 100;
+			float grade_third_partio = (float)gradenumdto.getGrade_third() / (float)membercount * 100;
 			model.addAttribute("pointaccount", pointaccount);
 			model.addAttribute("membercount", membercount);
 			model.addAttribute("categorycount", categorycount);
@@ -73,29 +76,258 @@ public class AdminController {
 	}
 	
 	@GetMapping(value="/adminpoint")
-	public ModelAndView adminpoint(Model model) throws Exception {
-		try {
-			List<UserDTO> userlist = adminService.getUserPointList();
-			log.info(userlist.toString());
-			model.addAttribute("userlist", userlist);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+	public ModelAndView adminpoint() throws Exception {
 		return new ModelAndView("adminpoint");
 	}
 	
+	@GetMapping(value = "/adminpoint/userinfo", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<UserDTO> content_list() throws Exception {
+		List<UserDTO> userlist = adminService.getUserPointList();
+		log.info("유저 정보 값 받아옴");
+		log.info(userlist.toString());
+		return userlist;
+	}
+	
+	@RequestMapping(value="/adminpoint/userinfo/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<UserDTO> adminpoint_userdetailprint(
+			@ModelAttribute UserDTO userDTO) throws Exception {
+		try {
+			log.info("userDTO_print()메소드 수행");
+			log.info(userDTO.toString());
+			List<UserDTO> userdetailinfo = adminService.getUserDetail(userDTO);
+			log.info(userdetailinfo.toString());
+			 return userdetailinfo;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@RequestMapping(value="/adminpoint/usertransaction/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<PointTransactionLogDTO> adminpoint_usertransactionprint(
+			@ModelAttribute UserDTO userDTO) throws Exception {
+		try {
+			log.info("userDTO_print()메소드 수행");
+			log.info(userDTO.toString());
+			List<PointTransactionLogDTO> usertransactioninfo = adminService.getUserTransactionInfo(userDTO);
+			log.info(usertransactioninfo.toString());
+			 return usertransactioninfo;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@RequestMapping(value="/adminpoint/userpoint/{user_no}/{point_increase}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<PointTransactionLogDTO> adminpoint_userpoint(
+			@ModelAttribute UserDTO userDTO,
+			@ModelAttribute PointChargeDTO pointchargeDTO
+			) throws Exception {
+		try {
+			log.info("userDTO_print()메소드 수행");
+			log.info(userDTO.toString());
+			
+			//포인트제 루틴
+			UserDTO userno = pointService.getUserInfobyNo(userDTO);
+			log.info(userno.toString());
+			PointDTO pointDTO = pointService.selectPointInfo(userno);
+			pointDTO.setUserDTO(userno);
+			log.info(pointDTO.toString());
+			pointService.updateUserPointno(pointDTO);
+			
+			log.info(pointchargeDTO.toString());
+			long increase = pointchargeDTO.getPoint_increase();
+			PointChargeDTO pointchargeInfo = new PointChargeDTO();
+			pointchargeInfo.setPoint_increase(increase);
+			pointchargeInfo.setPoint_charge_log("관리자 권한 이벤트 포인트");
+			pointchargeInfo.setPointDTO(pointDTO);
+			log.info(pointchargeInfo.toString());
+			
+			pointService.insertPointCharge(pointchargeInfo);
+			pointService.updatePointIncrease(pointchargeInfo);
+			
+			return adminService.getUserTransactionInfo(userDTO);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	@GetMapping(value="/adminmember")
 	public ModelAndView adminmember() throws Exception {
 		return new ModelAndView("adminmember");
 	}
 	
-	@GetMapping(value="/adminarticle")
-	public ModelAndView adminarticle() throws Exception {
-		return new ModelAndView("adminarticle");
+	
+	//멤버 관리 : 기본 정보 불러오기
+	@GetMapping(value = "/adminmember/userinfo", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<UserDTO> usercontent_list() throws Exception {
+		List<UserDTO> userlist = adminService.selectUsergradeInfo();
+		log.info("유저 정보 값 받아옴");
+		log.info(userlist.toString());
+		return userlist;
+	}
+	
+	//멤버 관리 : 상세 정보 불러오기
+	@RequestMapping(value="/adminmember/userinfo/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<UserDTO> adminmember_userdetailprint(
+			@ModelAttribute UserDTO userDTO) throws Exception {
+		try {
+			log.info("userDTO_print()메소드 수행");
+			log.info(userDTO.toString());
+			List<UserDTO> userdetailinfo = adminService.getUserDetail(userDTO);
+			log.info(userdetailinfo.toString());
+			 return userdetailinfo;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//멤버 관리 : 등급 변경
+	@RequestMapping(value="/adminmember/altergrade/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<UserDTO> adminmember_usergrade(
+			@ModelAttribute UserDTO userDTO
+			) throws Exception { //grade_no로 전달
+		try {
+			log.info("userDTO_print()메소드 수행");
+			log.info(userDTO.toString());
+			adminService.updateUserGrade(userDTO);
+			return adminService.selectUsergradeInfo();
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//멤버 관리 : 탈퇴
+	@DeleteMapping(value = "/adminmember/out/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<UserDTO> user_delete(
+			@ModelAttribute UserDTO userDTO) throws Exception {
+		
+		log.info("user_delete() 메소드 수행");
+		log.info(userDTO.toString());
+		
+		adminService.deleteMember(userDTO);
+		return adminService.selectUsergradeInfo();
 	}
 	
 	@GetMapping(value="/admincategory")
 	public ModelAndView admincategory() throws Exception {
 		return new ModelAndView("admincategory");
+	}
+	
+	//카테고리 관리 : 기본 정보 불러오기
+	@GetMapping(value = "/admincategory/categoryinfo", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ThemeDTO> themecategory_list() throws Exception {
+		List<ThemeDTO> categorylist = adminService.selectCategoryList();
+		log.info(categorylist.toString());
+		return categorylist;
+	}
+	
+	//카테고리 관리 : 카테고리 추가
+	@RequestMapping(value="/admincategory/newcategory", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ThemeDTO> themecategory_addtheme(
+			@ModelAttribute ThemeDTO themeDTO
+			) throws Exception { 
+		try {
+			log.info("themeDTO_print()메소드 수행");
+			log.info(themeDTO.toString());
+			adminService.addCategory(themeDTO);
+			return adminService.selectCategoryList();
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//카테고리 관리 : 카테고리 수정
+	@RequestMapping(value="/admincategory/updatecategory", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ThemeDTO> themecategory_updatetheme(
+			@ModelAttribute ThemeDTO themeDTO
+			) throws Exception { //grade_no로 전달
+		try {
+			log.info("themeDTO_update_print()메소드 수행");
+			log.info(themeDTO.toString());
+			adminService.updateCategory(themeDTO);
+			return adminService.selectCategoryList();
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//카테고리 관리 : 카테고리 삭제
+	@DeleteMapping(value = "/admincategory/deletecategory/{theme_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ThemeDTO> category_delete(
+			@ModelAttribute ThemeDTO themeDTO) throws Exception {
+			
+		log.info("theme_delete() 메소드 수행");
+		log.info(themeDTO.toString());
+			
+		adminService.deleteCategory(themeDTO);
+		return adminService.selectCategoryList();
+	}
+	
+	// 맵 아티클 관리
+	@GetMapping(value="/adminarticle")
+	public ModelAndView adminarticle() throws Exception {
+		return new ModelAndView("adminarticle");
+	}
+	
+	//맵 정보 받아오기 (리스트)
+	@GetMapping(value = "/adminarticle/mapinfo", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> map_list() throws Exception {
+		List<MapDTO> maplist = adminService.getMapList();
+		log.info("유저 정보 값 받아옴");
+		log.info(maplist.toString());
+		return maplist;
+	}
+	
+	// 관리 : 상세 정보 불러오기
+	@RequestMapping(value="/adminarticle/mapinfo/{map_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> map_list_detailprint(
+			@ModelAttribute MapDTO mapDTO) throws Exception {
+		try {
+			log.info("mapDTO_print()메소드 수행");
+			log.info(mapDTO.toString());
+			List<MapDTO> mapdetailinfo = adminService.getMapDetail(mapDTO);
+			log.info(mapdetailinfo.toString());
+			 return mapdetailinfo;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//장소 상세 정보 불러오기
+	@RequestMapping(value="/adminarticle/mapinfo/placeinfo/{map_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<PlaceDTO> place_list_detailprint(
+			@ModelAttribute MapDTO mapDTO) throws Exception {
+		try {
+			log.info("mapDTO_print()메소드 수행");
+			log.info(mapDTO.toString());
+			List<PlaceDTO> placedetailinfo = adminService.getPlaceDetail(mapDTO);
+			log.info(placedetailinfo.toString());
+			 return placedetailinfo;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

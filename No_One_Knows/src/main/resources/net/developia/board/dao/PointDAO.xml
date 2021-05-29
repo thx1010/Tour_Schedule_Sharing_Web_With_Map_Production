@@ -7,6 +7,12 @@
 	values(seq_point.nextval, seq_point_user.nextval)
 	</insert>
 	
+	<select id="getUserInfobyNo" parameterType="UserDTO" resultType="UserDTO">
+	select *
+	from   t_user
+	where  user_no=#{user_no}
+	</select>
+	
 	<select id="selectUserInfo" parameterType="UserDTO" resultType="UserDTO">
 	select *
 	from   t_user

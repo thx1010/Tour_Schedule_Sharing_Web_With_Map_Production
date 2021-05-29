@@ -18,5 +18,28 @@ public interface AdminService {
 
 	List<UserDTO> getUserPointList() throws Exception;
 
+	List<UserDTO> getUserDetail(UserDTO userDTO) throws Exception;
+
+	List<PointTransactionLogDTO> getUserTransactionInfo(UserDTO userDTO) throws Exception;
+
+	List<UserDTO> selectUsergradeInfo() throws Exception;
+
+	void updateUserGrade(UserDTO userDTO) throws Exception;
+
+	void deleteMember(UserDTO userDTO) throws Exception;
+
+	List<ThemeDTO> selectCategoryList() throws Exception;
+
+	void addCategory(ThemeDTO themeDTO) throws Exception;
+
+	void updateCategory(ThemeDTO themeDTO) throws Exception;
+
+	void deleteCategory(ThemeDTO themeDTO) throws Exception;
+
+	List<MapDTO> getMapList() throws Exception;
+
+	List<MapDTO> getMapDetail(MapDTO mapDTO) throws Exception;
+
+	List<PlaceDTO> getPlaceDetail(MapDTO mapDTO) throws Exception;
 	
 }

@@ -84,4 +84,132 @@ public class AdminServiceImpl implements AdminService{
 			throw e;
 		}
 	}
+
+	@Override
+	public List<UserDTO> getUserDetail(UserDTO userDTO) throws Exception {
+		try {
+			List<UserDTO> userinfo = adminDAO.getUserDetail(userDTO);
+			return userinfo;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<PointTransactionLogDTO> getUserTransactionInfo(UserDTO userDTO) throws Exception {
+		try {
+			List<PointTransactionLogDTO> usertransactioninfo = adminDAO.getUserTransactionInfo(userDTO);
+			return usertransactioninfo;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<UserDTO> selectUsergradeInfo() throws Exception {
+		try {
+			List<UserDTO>  usergradeinfo = adminDAO.selectUsergradeInfo();
+			return usergradeinfo;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public void updateUserGrade(UserDTO userDTO) throws Exception {
+		try {
+			adminDAO.updateUserGrade(userDTO);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public void deleteMember(UserDTO userDTO) throws Exception {
+		try {
+			adminDAO.deleteMember(userDTO);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<ThemeDTO> selectCategoryList() throws Exception {
+		try {
+			List<ThemeDTO>  themeinfo = adminDAO.selectCategoryList();
+			return themeinfo;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public void addCategory(ThemeDTO themeDTO) throws Exception {
+		try {
+			adminDAO.addCategory(themeDTO);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public void updateCategory(ThemeDTO themeDTO) throws Exception {
+		try {
+			adminDAO.updateCategory(themeDTO);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public void deleteCategory(ThemeDTO themeDTO) throws Exception {
+		try {
+			adminDAO.deleteCategory(themeDTO);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<MapDTO> getMapList() throws Exception {
+		try {
+			List<MapDTO> maplist = adminDAO.getMapList();
+			return maplist;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<MapDTO> getMapDetail(MapDTO mapDTO) throws Exception {
+		try {
+			List<MapDTO> maplist = adminDAO.getMapDetail(mapDTO);
+			return maplist;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<PlaceDTO> getPlaceDetail(MapDTO mapDTO) throws Exception {
+		try {
+			List<PlaceDTO> placelist = adminDAO.getPlaceDetail(mapDTO);
+			return placelist;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
 }

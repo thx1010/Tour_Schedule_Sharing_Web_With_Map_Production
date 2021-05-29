@@ -20,4 +20,6 @@ public interface PointDAO {
 
 	void updatePointDecrease(PointSpendDTO pointspendDTO) throws Exception;
 
+	UserDTO getUserInfobyNo(UserDTO userDTO) throws Exception;
+
 }

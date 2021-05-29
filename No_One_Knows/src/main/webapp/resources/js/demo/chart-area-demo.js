@@ -32,7 +32,7 @@ var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ["05/25", "05/26", "05/27", "05/28", "05/29", "05/30", "05/31", "06/01", "06/02", "06/03", "06/04"],
+    labels: ["05/27", "05/28", "05/29", "05/30", "05/31", "06/01", "06/02", "06/03", "06/04"],
     datasets: [{
       label: "Earnings",
       lineTension: 0.3,
@@ -46,7 +46,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: [1, 3, 2, 1, 1, 1, 6, 2, 1, 1, 1],
+      data: [1, 3, 2, 1, 1, 1, 6, 2, 1],
     }],
   },
   options: {

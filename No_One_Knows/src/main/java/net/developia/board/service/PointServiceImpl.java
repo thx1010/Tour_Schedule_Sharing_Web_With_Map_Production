@@ -93,4 +93,14 @@ public class PointServiceImpl implements PointService{
 		}
 	}
 
+	@Override
+	public UserDTO getUserInfobyNo(UserDTO userDTO) throws Exception {
+		try {
+			return pointDAO.getUserInfobyNo(userDTO);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
 }
