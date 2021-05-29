@@ -9,11 +9,64 @@ FROM DUAL
 
 <insert id="addMap" parameterType="MapDTO">
 INSERT INTO t_map(map_no, map_title, map_subtitle, map_content, map_photo, map_country, map_state, map_city, map_placett, theme_no)
-VALUES(#{map_no}, #{map_title}, #{map_subtitle}, #{map_content}, #{map_photo}, #{map_country}, #{map_state}, #{map_city}, #{map_placett}, #{ThemeDTO.theme_no})
+VALUES(#{map_no}, #{map_title}, #{map_subtitle}, #{map_content}, #{map_photo}, #{map_country}, #{map_state}, #{map_city}, #{map_placett}, #{themeDTO.theme_no})
 </insert>
 
 <insert id="addPlace" parameterType="PlaceDTO">
 INSERT INTO t_place(place_no, place_name, place_load_addr, place_addr, place_lat, place_lng, place_content, place_photo, place_course_no, map_no)
 VALUES(seq_place.NEXTVAL, #{place_name}, #{place_loadaddr}, #{place_addr}, #{place_lat}, #{place_lng}, #{place_content}, #{place_photo}, #{place_course_no}, #{map_no})
 </insert>
+
+<insert id="addRoute" parameterType="RouteDTO">
+INSERT INTO t_route(route_no, route_name, route_type, route_path, route_content, route_option, route_course_no, map_no)
+VALUES(seq_route.NEXTVAL, #{route_name}, #{route_type}, #{route_path}, #{route_content}, #{route_option}, #{route_course_no}, #{map_no})
+</insert>
+
+<insert id="register" parameterType="HashMap">
+INSERT INTO t_map_register(register_no, map_no, user_no)
+VALUES(seq_map_register.NEXTVAL, #{mapInfo.map_no}, #{userInfo.user_no})
+</insert>
+
+
+<resultMap id="mapInfo" type="MapDTO">
+	<id property="map_no" column="map_no"></id>
+	<id property="map_title" column="map_title"></id>
+	<id property="map_subtitle" column="map_subtitle"></id>
+	<id property="map_content" column="map_content"></id>
+	<id property="map_photo" column="map_photo"></id>
+	<id property="map_like" column="map_like"></id>
+	<id property="map_regdate" column="map_regdate"></id>
+	<id property="map_status" column="map_status"></id>
+	<id property="map_country" column="map_country"></id>
+	<id property="map_city" column="map_city"></id>
+	<id property="map_state" column="map_state"></id>
+	<id property="map_placett" column="map_placett"></id>
+	<association property="themeDTO" javaType="ThemeDTO">
+		<result property="theme_no" column="theme_no"></result>
+		<result property="theme_name" column="theme_name"></result>
+		<result property="theme_content" column="theme_content"></result>
+	</association>
+</resultMap>
+
+<select id="getMapForMapNo" parameterType="long" resultType="MapDTO" resultMap="mapInfo">
+select m.*, t.*
+from (select *
+      from t_map
+      where map_no=#{mapno}
+      ) m
+LEFT OUTER JOIN t_theme t ON m.theme_no = t.theme_no
+</select>
+
+<select id="getPlaceListForMapNo" parameterType="long" resultType="PlaceDTO">
+select *
+from t_place
+where map_no=#{mapno}
+</select>
+
+<select id="getRouteListForMapNo" parameterType="long" resultType="RouteDTO">
+select *
+from t_route
+where map_no=#{mapno}
+</select>
+
 </mapper>

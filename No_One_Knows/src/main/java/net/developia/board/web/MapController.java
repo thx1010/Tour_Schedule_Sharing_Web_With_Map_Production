@@ -1,15 +1,34 @@
 package net.developia.board.web;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.json.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
-import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpSession;
 
-import lombok.extern.slf4j.*;
-import net.developia.board.dto.*;
-import net.developia.board.service.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import lombok.extern.slf4j.Slf4j;
+import net.developia.board.dto.MapDTO;
+import net.developia.board.dto.PlaceDTO;
+import net.developia.board.dto.RouteDTO;
+import net.developia.board.dto.ThemeDTO;
+import net.developia.board.dto.UserDTO;
+import net.developia.board.service.MapService;
+import net.developia.board.service.ThemeService;
 
 @Slf4j
 @Controller
@@ -37,16 +56,19 @@ public class MapController {
 	
 	@RequestMapping(value="/coursemake", method=RequestMethod.POST)
 	@ResponseBody
-	public String getAllData(@RequestBody String mapData) {
+	public String getAllData(@RequestBody String mapData, HttpSession session) {
 		//log.info(mapData);
 		
 		JSONObject jObject = new JSONObject(mapData);
 		log.info("[jObject] :: " + jObject.toString());
 		List<PlaceDTO> placeList = new ArrayList<PlaceDTO>();
-		
+		List<RouteDTO> routeList = new ArrayList<RouteDTO>();
 		JSONArray jPlaceInfos = jObject.getJSONArray("placeInfos");
+		JSONArray jRouteInfos = jObject.getJSONArray("routeInfos");
 		JSONObject jMapInfo = jObject.getJSONObject("mapInfo");
+		
 		log.info("[jPlaceInfos] :: " + jPlaceInfos.toString());
+		log.info("[jRouteInfos] :: " + jRouteInfos.toString());
 		log.info("[mapInfo] : " + jMapInfo.toString());
 				
 		MapDTO mapDTO = new MapDTO();
@@ -81,9 +103,9 @@ public class MapController {
 			 * [2] : 등록거절상태
 			 * [3] : 신고누적상태
 			 */
-			
+			log.info("맵등록시작");
 			mapService.addMap(mapDTO);
-			
+			log.info("맵등록끝");
 			for(int i=0; i<jPlaceInfos.length(); i++) {
 				JSONObject obj = jPlaceInfos.getJSONObject(i);
 				PlaceDTO placeDTO = new PlaceDTO();
@@ -99,11 +121,38 @@ public class MapController {
 				
 				placeList.add(placeDTO);
 				log.info("[" + i + "번째place]" + placeDTO.toString());
+				
+				
 			}
 			
+			for(int i=0; i<jRouteInfos.length(); i++) {
+				JSONObject obj = jRouteInfos.getJSONObject(i);
+				RouteDTO routeDTO = new RouteDTO();
+				routeDTO.setRoute_name(obj.getString("route_name"));
+				routeDTO.setRoute_path(obj.getString("route_path"));
+				routeDTO.setRoute_type(obj.getString("route_type"));
+				routeDTO.setRoute_course_no(obj.getLong("route_course_no"));
+				routeDTO.setRoute_content(obj.getString("route_content"));
+				routeDTO.setRoute_option(obj.getString("route_option"));
+				routeDTO.setMap_no(mapNo);
+				
+				routeList.add(routeDTO);
+				log.info("[" + i + "번째route]" + routeDTO.toString());
+			}
 			for(PlaceDTO place : placeList) {
 				mapService.addPlace(place);
 			}
+			
+			for(RouteDTO route : routeList) {
+				mapService.addRoute(route);
+			}
+			
+			
+			Map<String, Object> register = new HashMap<String, Object>();
+			UserDTO userDTO = (UserDTO)session.getAttribute("userInfo");
+			register.put("userInfo", userDTO);
+			register.put("mapInfo", mapDTO);
+			mapService.addRegister(register);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -111,7 +160,7 @@ public class MapController {
 		}
 		
 		//redirect할 url넘겨주기
-		return "success";
+		return Long.toString(mapDTO.getMap_no());
 	}
 
 	
@@ -148,6 +197,41 @@ public class MapController {
 		return "success";
 	}
 	*/
+	
+	@GetMapping("/coursedraw/{mapno}")
+	public ModelAndView courseDraw(@PathVariable("mapno") String mapno, HttpSession session) {
+		ModelAndView mav = new ModelAndView();
+		log.info("[drawer map번호] : " + mapno);
+		
+		UserDTO userDTO = (UserDTO)session.getAttribute("userInfo");
+		if(userDTO == null) {
+			mav.setViewName("result");
+			mav.addObject("msg", "로그인하세요");
+			mav.addObject("url", "/board/login");
+			return mav;
+		} //else 맵 구매자 혹은 등록자인지 검증 필수
+		
+		
+		try {
+			MapDTO mapDTO = mapService.getMapForMapNo(Long.parseLong(mapno));
+			log.info(mapDTO.toString());
+			List<PlaceDTO> placeList = mapService.getPlaceListForMapNo(Long.parseLong(mapno));
+			List<RouteDTO> routeList = mapService.getRouteListForMapNo(Long.parseLong(mapno));
+			mav.setViewName("coursedrawer");
+			mav.addObject("mapInfo", mapDTO);
+			mav.addObject("placeList", placeList);
+			mav.addObject("routeList", routeList);
+			log.info(placeList.toString());
+			log.info(routeList.toString());
+		} catch(Exception e) {
+			log.info(e.getMessage());
+			mav.setViewName("result");
+			mav.addObject("msg", "맵정보를 불러오는데 실패했습니다");
+			mav.addObject("url", "redirect:main");
+		}
+	
+		return mav;
+	}
 	
 	
 }
