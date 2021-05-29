@@ -31,21 +31,28 @@
             <ul class="dropdown-menu extended tasks-bar">
               <div class="notify-arrow notify-arrow-green"></div>
               <li>
-                <p class="green">카테고리 별로 구경하기</p>
+                <p class="green"></p>
               </li>
               <li>
               <!-- 첫번째 토글 -->
                 <a href="#">
                   <div class="task-info">
-                    <div class="desc">Dashio Admin Panel</div>
+                    <div class="desc"> 여행지 전체 보기</div>
                   </div>
                 </a>
               </li>
               <li>
-              <!-- 첫번째 토글 -->
+              <!-- 페이지 내 이동시키기 -->
                 <a href="#">
                   <div class="task-info">
-                    <div class="desc">Dashio Admin Panel</div>
+                    <div class="desc">테마 별로 구경하기</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <div class="task-info">
+                    <div class="desc">공지 사항 확인하기</div>
                   </div>
                 </a>
               </li>
@@ -138,21 +145,21 @@
 		        <div class="parent">
 			        <div class="first">
 			        	<!-- regdate 순서대로 정렬 -->
-			        	<div class="scale"><a href="newlist"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></a></div> <br>
+			        	<div class="scale" id='newlist'><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
 			        	<h5 style="text-align: center; color:#5D5D5D;">NEW ! 지금 뜨는 코스</h5>
 			        	<!-- <p style="text-align: center; font-size:14px; color:#878787; ">따끈따끈한 고퀄리티 로컬 정보 💛</p> -->
 			        	<br><br><br>
 			        </div>
 			            <!-- 찜 갯수 순서대로 정렬 -->
 			        <div class="second">
-			        	<div class="scale"><a href="bestlist"><img src = "resources/img/sea.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></a></div> <br>
+			        	<div class="scale" id='bestlist'><img src = "resources/img/sea.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div> <br>
 			        	<h5 style="text-align: center; color:#5D5D5D;">요즘 대세 코스</h5>
 			        	<!--<p style="text-align: center; font-size:14px; color:#878787; ">N0.1 Knows 먼저 알아가기</p> -->
 			        	<br><br><br>
 			        </div>
 			        <div class="third">
-			        	<div class="scale"><a href="randomlist" class="scale"><img src = "resources/img/plane.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></a></div> <br>
-			        	<h5 style="text-align: center; color:#5D5D5D;">랜덤 여행지 추천</h5>
+			        	<div class="scale" id='mylist'><img src = "resources/img/plane.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div> <br>
+			        	<h5 style="text-align: center; color:#5D5D5D;">나에게 딱 맞는 여행지 추천</h5>
 			        	<!--<p style="text-align: center; font-size:14px; color:#878787; ">낭만을 바란다면 랜덤 여행지로 !</p> -->
 			        	<br>
 			        </div>
@@ -186,7 +193,6 @@
                             <h4 class="card-title">Card title</h4>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
                         </div>
-                        <div class="card-footer" style="background-color: white"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4"  style="margin-top: 30px;">
@@ -196,7 +202,6 @@
                             <h4 class="card-title">Card title</h4>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo magni sapiente, tempore debitis beatae culpa natus architecto.</p>
                         </div>
-                        <div class="card-footer" style="background-color: white"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4"  style="margin-top: 30px;">
@@ -206,7 +211,6 @@
                             <h4 class="card-title">Card title</h4>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
                         </div>
-                        <div class="card-footer" style="background-color: white"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 mb-4"  style="margin-top: 30px;">
@@ -216,17 +220,20 @@
                             <h4 class="card-title">Card title</h4>
                             <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo magni sapiente, tempore debitis beatae culpa natus architecto.</p>
                         </div>
-                        <div class="card-footer" style="background-color: white"><a class="btn btn-primary" href="#!">Find Out More!</a></div>
                     </div>
                 </div>
-                 <section class="container" style="margin-top: 10px;">
-				    <div class="row" style="margin-left: 420px; margin-bottom: 60px;">
-				    	<input type="text"  id="search" name="searchKeyword" required="required" value="" style="border-radius: 15%;" />&nbsp;&nbsp;
-						<div class="tscale"><input type="submit" id="w-button-search" value="여행지 검색하기" style="background: linear-gradient( to left, #5587ED, #8BBDFF ); color:white; font-family: 'Do Hyeon'; border-radius: 15%;"/></div>
-				    </div>
-			    </section>
             </div>
-        </div>
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="margin-top: 50px; width: 730px; margin-left: 210px; background-color: white">
+		       <tr>
+		         <th><h5>공지사항</h5></th>
+		        </tr>
+		        <tr>
+		          <td><p style="text-size: 17px;"><b>공지사항 1 제목</b></p>
+		          <p style="text-size: 15px;">관리자 이름</p>
+		          </td>
+		        </tr>
+		     </table>
+        </div><br><br><br><br>
 	    </div>
         <!-- Bootstrap core JS-->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

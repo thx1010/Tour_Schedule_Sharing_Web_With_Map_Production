@@ -252,7 +252,6 @@ input {
   overflow: visible;
 }
 
-button,
 select {
   text-transform: none;
 }

@@ -18,7 +18,7 @@
 	 var myPieChart = new Chart("myPieChart", {
 	   type: 'doughnut',
 	   data: {
-	     labels: ["Level1", "Level2", "Level3"],
+	     labels: ["초보 방랑가", "낭만 여행가", "여행 배테랑"],
 	     datasets: [{
 	       data: [${grade_first_partio}, ${grade_second_partio}, ${grade_third_partio}],
 	       backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
@@ -207,13 +207,13 @@
 		                                    </div>
 		                                    <div class="mt-4 text-center small">
 		                                        <span class="mr-2">
-		                                            <i class="fas fa-circle text-primary"></i> Level 1
+		                                            <i class="fas fa-circle text-primary"></i> 초보 방랑자
 		                                        </span>
 		                                        <span class="mr-2">
-		                                            <i class="fas fa-circle text-success"></i> Level 2
+		                                            <i class="fas fa-circle text-success"></i> 낭만 여행가
 		                                        </span>
 		                                        <span class="mr-2">
-		                                            <i class="fas fa-circle text-info"></i> Level 3
+		                                            <i class="fas fa-circle text-info"></i> 여행 배테랑
 		                                        </span>
 		                                    </div>
 		                                </div>
@@ -230,39 +230,21 @@
 		                            <!-- Project Card Example -->
 		                            <div class="card shadow mb-4" >
 		                                <div class="card-header py-3"  style="background-color: white;">
-		                                    <h6 class="m-0 font-weight-bold text-primary">Best 5 게시물</h6>
+		                                    <h6 class="m-0 font-weight-bold text-primary">관리자 공지 사항</h6>
 		                                </div>
-		                                <div class="card-body" style="height:390px; background-color: white;"><br>
-		                                    <h4 class="small font-weight-bold">[게시물 제목] <span
-		                                            class="float-right"><img src = "resources/img/heart.png" style="width: 20px; height:20px;">&nbsp;20</span></h4>
-		                                    <div class="progress mb-4">
-		                                        <div class="progress-bar" role="progressbar" style="width: 100%; background-color: #FFA7A7 "
-		                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-		                                    </div>
-		                                    <h4 class="small font-weight-bold">[게시물 제목] <span
-		                                            class="float-right"><img src = "resources/img/heart.png" style="width: 20px; height:20px;">&nbsp;18</span></h4>
-		                                    <div class="progress mb-4">
-		                                        <div class="progress-bar" role="progressbar" style="width: 90%; background-color: #D9E5FF"
-		                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-		                                    </div>
-		                                    <h4 class="small font-weight-bold">[게시물 제목] <span
-		                                            class="float-right"><img src = "resources/img/heart.png" style="width: 20px; height:20px;">&nbsp;13</span></h4>
-		                                    <div class="progress mb-4">
-		                                        <div class="progress-bar" role="progressbar" style="width: 75%; background-color: #D9E5FF"
-		                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-		                                    </div>
-		                                    <h4 class="small font-weight-bold">[게시물 제목] <span
-		                                            class="float-right"><img src = "resources/img/heart.png" style="width: 20px; height:20px;">&nbsp;11</span></h4>
-		                                    <div class="progress mb-4">
-		                                        <div class="progress-bar" role="progressbar" style="width: 70%; background-color: #D9E5FF"
-		                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-		                                    </div>
-		                                    <h4 class="small font-weight-bold">[게시물 제목] <span
-		                                            class="float-right"><img src = "resources/img/heart.png" style="width: 20px; height:20px;">&nbsp;8</span></h4>
-		                                    <div class="progress">
-		                                        <div class="progress-bar" role="progressbar" style="width: 60%; background-color: #D9E5FF"
-		                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-		                                    </div>
+		                                <div class="card-body" style="height:390px; background-color: white;">
+		                                    -- 작성 버튼
+		                                    -- 리스트
+		                                     <div style="width : 360px;">
+		                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+		                                     	<tr>
+		                                     		<th>리스트 1 제목</th>
+		                                     	</tr>
+		                                     	<tr>
+		                                     		<td>신고 내용</td>
+		                                     	</tr>
+		                                     </table>
+		                                     </div>
 		                                </div>
 		                            </div>
 		                        </div>
@@ -272,16 +254,20 @@
 		                            <!-- Illustrations -->
 		                            <div class="card shadow mb-4">
 		                                <div class="card-header py-3" style="background-color: white;">
-		                                    <h6 class="m-0 font-weight-bold text-primary">이용률 1위 회원</h6>
+		                                    <h6 class="m-0 font-weight-bold text-danger">게시물 신고 현황</h6>
 		                                </div>
-		                                <div class="card-body" style="background-color: white;">
-		                                    <div class="text-center">
-		                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="height: 200px;"
-		                                            src="resources/img/test.png">
-		                                    </div>
-		                                    <p style="text-align: center">회원 넘버</p>
-		                                    <p style="text-align: center">회원 아이디</p>
-		                                    <p style="text-align: center">게시물 등록 횟수</p>
+		                                <div class="card-body" style="height:390px; background-color: white;">
+		                                    -- 리스트
+		                                     <div style="width : 360px;">
+		                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+		                                     	<tr>
+		                                     		<th>리스트 1 제목</th>
+		                                     	</tr>
+		                                     	<tr>
+		                                     		<td>신고 내용</td>
+		                                     	</tr>
+		                                     </table>
+		                                     </div>
 		                                </div>
 		                            </div> 
 		                        </div>

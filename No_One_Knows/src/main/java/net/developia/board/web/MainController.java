@@ -1,21 +1,16 @@
 package net.developia.board.web;
 
-import java.util.List;
+import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+import org.springframework.ui.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.*;
 
-import lombok.extern.slf4j.Slf4j;
-import net.developia.board.dto.PointDTO;
-import net.developia.board.dto.ThemeDTO;
-import net.developia.board.dto.UserDTO;
-import net.developia.board.service.MainService;
-import net.developia.board.service.ThemeService;
+import lombok.extern.slf4j.*;
+import net.developia.board.dto.*;
+import net.developia.board.service.*;
 
 @Slf4j
 @Controller
@@ -30,21 +25,6 @@ public class MainController {
 	@GetMapping(value="/main")
 	public ModelAndView main() throws Exception {
 		return new ModelAndView("main");
-	}
-	
-	@GetMapping(value="/newlist")
-	public ModelAndView newlist() throws Exception {
-		return new ModelAndView("newlist");
-	}
-	
-	@GetMapping(value="/bestlist")
-	public ModelAndView bestlist() throws Exception {
-		return new ModelAndView("bestlist");
-	}
-	
-	@GetMapping(value="/randomlist")
-	public ModelAndView randomlist() throws Exception {
-		return new ModelAndView("randomlist");
 	}
 	
 	@GetMapping(value="/likepage")

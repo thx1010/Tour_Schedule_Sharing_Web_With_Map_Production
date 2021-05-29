@@ -61,6 +61,7 @@
 	    	mytable += "<p> " + val['map_city'] + "</p>";
 	    	mytable += "<p> " + val['map_subtitle'] + "</p>";
 	    	mytable += "<p> " + val['map_content'] + "</p>";
+	    	mytable += "<p> " + val['theme_name'] + "</p>";
 	    	mytable += "<p> " + val['map_regdate'] + "</p>";
 	    	mytable += "<p><button class='placedetailButton' myval='"+ val['map_no'] +"' style='background-color: #8BBDFF; border-radius: 10px; color: white;'><h5><img src = 'resources/img/check.png' style='width: 20px; height:20px;'>&nbsp;확인</h5></button></p>";
 			mytable += "<div id ='placeInfoDisplay'></div>";
@@ -127,7 +128,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3" style="background-color: white">
-                            <h6 class="m-0 font-weight-bold text-primary">테마 카테고리 관리</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">게시글 관리</h6>
                         </div>
                         <div class="card-body" style="background-color: white">
                             <div class="table-responsive">
