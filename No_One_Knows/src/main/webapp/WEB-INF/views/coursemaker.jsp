@@ -7,7 +7,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
+<!-- <style>
+.modes { position: absolute; top: 10px; left: 10px; z-index: 1;}
+</style> -->
 <title>Insert title here</title>
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
@@ -77,18 +79,35 @@
 				    <div class="parent2">
 				        <div class="first2">
 				        	<div id="map" style="width: 100%; height: 400px;"></div>
+				        	<div>
+					        	<p>
+					        		<button onclick="selectOverlay('ARROW')">화살표</button>
+								    <button onclick="selectOverlay('POLYLINE')">선</button>
+								    <button onclick="selectOverlay('CIRCLE')">원</button>
+								    <button onclick="selectOverlay('RECTANGLE')">사각형</button>
+								    <button onclick="getDataFromDrawingMap()">가져오기</button>
+								</p>
+				        	</div>
 				        	<h4 style="text-align: center; background-color: ">맵 공간</h4>
 				        </div>
 				        <div class="second2">
 				        	<!-- 여기 입력 폼 -->
-				        	<div id="divPlaceForm_order"></div>
-							<div id="divPlaceForm_name"></div>
-							<div id="divPlaceForm_loadaddr"></div>
-							<div id="divPlaceForm_addr"></div>
-							<div id="divPlaceForm_lat"></div>
-							<div id="divPlaceForm_lng"></div>
-							<div id="divPlaceForm_image"></div>
-							<div id="divPlaceForm_content"></div>
+				        	<div id="divRoute">
+				        		<div id="divRouteForm_order"></div>
+				        		<div id="divRouteForm_name"></div>
+				        		<div id="divRouteForm_type"></div>
+				        		<div id="divRouteForm_content"></div>
+				        	</div>
+				        	<div id="divPlace">
+					        	<div id="divPlaceForm_order"></div>
+								<div id="divPlaceForm_name"></div>
+								<div id="divPlaceForm_loadaddr"></div>
+								<div id="divPlaceForm_addr"></div>
+								<div id="divPlaceForm_lat"></div>
+								<div id="divPlaceForm_lng"></div>
+								<div id="divPlaceForm_image"></div>
+								<div id="divPlaceForm_content"></div>
+							</div>
 				        	<h4 style="text-align: center;">입력 폼 공간</h4>
 				        </div>
 			        </div>
@@ -105,16 +124,22 @@
         <script src="resources/js/scripts.js"></script>
 	</body>
 	<script type="text/javascript"
-		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5f99123b49282be7b5dcbc9dbff6f616&libraries=services">
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5f99123b49282be7b5dcbc9dbff6f616&libraries=services,drawing">
 	</script>
 	<script>
 		var placeCount = 0;
 		var routeCount = 0;
+		// 지도에 표시된 마커 객체를 가지고 있을 배열
+		var markers = [];
+		var markerInfos = [];
+		//var route = [];
+		var lineInfos = [];
+		var routeInfos = [];
 		
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 		mapOption = {
-			center : new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-			level : 3
+			center : new kakao.maps.LatLng(37.57594644036231, 126.97685536561725), // 지도의 중심좌표(광화문)
+			level : 11
 		// 지도의 확대 레벨
 		};
 
@@ -125,20 +150,101 @@
 		var mapTypeControl = new kakao.maps.MapTypeControl();
 		var zoomControl = new kakao.maps.ZoomControl();
 		
+		var options = {
+				map: map, // Drawing Manager로 그리기 요소를 그릴 map 객체입니다
+			    drawingMode: [ // Drawing Manager로 제공할 그리기 요소 모드입니다
+			    	kakao.maps.Drawing.OverlayType.ARROW,
+			        kakao.maps.drawing.OverlayType.POLYLINE,
+			        kakao.maps.drawing.OverlayType.RECTANGLE,
+			        kakao.maps.drawing.OverlayType.CIRCLE
+			    ],
+			    // 사용자에게 제공할 그리기 가이드 툴팁입니다
+			    // 사용자에게 도형을 그릴때, 드래그할때, 수정할때 가이드 툴팁을 표시하도록 설정합니다
+			    guideTooltip: ['draw', 'drag', 'edit'],
+			    arrowOptions: {
+			    	draggable: true,
+			    	removable: true,
+			    	strokeColor: '#39f',
+			    	hintStrokeStyle: 'dash'
+			    },
+			    polylineOptions: { // 선 옵션입니다
+			        draggable: true, // 그린 후 드래그가 가능하도록 설정합니다
+			        removable: true, // 그린 후 삭제 할 수 있도록 x 버튼이 표시됩니다
+			        editable: true, // 그린 후 수정할 수 있도록 설정합니다 
+			        strokeColor: '#39f', // 선 색
+			        hintStrokeStyle: 'dash', // 그리중 마우스를 따라다니는 보조선의 선 스타일
+			        hintStrokeOpacity: 0.5  // 그리중 마우스를 따라다니는 보조선의 투명도
+			    },
+			    rectangleOptions: {
+			        draggable: true,
+			        removable: true,
+			        editable: true,
+			        strokeColor: '#39f', // 외곽선 색
+			        fillColor: '#39f', // 채우기 색
+			        fillOpacity: 0.5 // 채우기색 투명도
+			    },
+			    circleOptions: {
+			        draggable: true,
+			        removable: true,
+			        editable: true,
+			        strokeColor: '#39f',
+			        fillColor: '#39f',
+			        fillOpacity: 0.5
+			    }
+		};
+		
+		var manager = new kakao.maps.drawing.DrawingManager(options);
+		
+		
+		//drawing event
+		manager.addListener('drawstart', function(mouseEvent) {
+			
+			//draw start log
+		    console.log('drawstart', mouseEvent.overlayType);
+		});
+		
+		manager.addListener('drawend', function(data) {
+			//draw end log
+			console.log(data);
+		    console.log(data.overlayType);
+		    console.log(data.coords.La);
+		    kakao.maps.event.addListener(map, 'click', mapClickHandler);
+		    
+		    var lineInfo = {
+		    		"obj" : data.target,
+	   				"route_course_no" : routeCount++,
+	   				"route_name" : '',
+	   				"route_type" : data.overlayType, //polyLine or arrow
+	   				"route_path" : '',
+	   				"route_content" : '',
+	   				"route_option" : '',
+	   				"route_idf_La" : data.coords.La,
+	   				"route_idf_Ma" : data.coords.Ma
+	   			
+	   		};
+		    lineInfos.push(lineInfo);
+		    addRouteClickEvent(lineInfo);
+		    
+
+		});
+		
 		map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 		map.addControl(zoomControl, kakao.maps.ControlPosition.Right);
 		
 		
-		// 지도에 표시된 마커 객체를 가지고 있을 배열
-		var markers = [];
-		var markerInfos = [];
-		var placeName = [];
-		var placeAddr1 = [];
-		var placeAddr2 = [];
 		
 		
 		//맵 클릭 이벤트 추가 : 동적마커생성
-		kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+		
+		
+
+		
+		var mapClickHandler = function(mouseEvent) {
+			if(confirm("마커를 찍으시겠습니까?") == true) {
+				
+			} else {
+				return;
+			}
 			var newPosition = mouseEvent.latLng;
 			var detailLoadAddr;
 			var detailAddr;
@@ -164,26 +270,11 @@
 					}
 				});
 			})();
-			
-			/* $.ajax({
-				type : "POST",
-				url : "dymarker/position",
-				data : {
-					"lat" : newPosition.getLat(),
-					"lng" : newPosition.getLng()
-				},
-				dataType : "text",
-				success : function(data) {
-					console.log(data);
-				},
-				error : function() {
-					alert("ajax error");
-				}
-
-			}); */
-
-		});
-
+		
+		};
+		
+		kakao.maps.event.addListener(map, 'click', mapClickHandler);
+		
 		
 	
 		// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
@@ -255,9 +346,13 @@
 				placeInfos.push(placeInfo);
 			}
 			
+			
+			getDataFromDrawingMap();
+			console.log(lineInfos);
 			courseData = {
 					"mapInfo" : mapInfo,
-					"placeInfos" : placeInfos
+					"placeInfos" : placeInfos,
+					"routeInfos" : routeInfos
 			};
 			console.log(courseData);
 			$.ajax({
@@ -268,10 +363,17 @@
 				dataType : "text",
 				contentType : "application/json; charset=utf-8",
 				success : function(value) {
+					alert("지도등록에 성공했습니다!!");
 					console.log(value);
+					location.href="main";
+					/* $.ajax({
+						type : "POST",
+						url : "mapcontrol/coursedraw/"+value
+					}) */
 				},
 				error : function(request, status, error) {
-					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					//alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					alert("지도등록에 실패했습니다!!");
 				}
 			});
 		}
@@ -288,6 +390,40 @@
 		    return 1;
 		}
 		
+		//루트 클릭 이벤트 추가
+		function addRouteClickEvent(lineInfo) {
+			//console.log("[addRouteClickEvent]" + lineInfo.route_type);
+			kakao.maps.event.addListener(lineInfo.obj, 'click', function() {
+				//console.log("[addRouteClickEvent lineInfos length]" + lineInfos.length)
+				//console.log("[lineInfo idf_La]" + lineInfo.route_idf_Ma);
+				//console.log("[lineInfos idf_La]" + lineInfos[0].route_idf_Ma);
+				for(const key in lineInfos) {
+					//console.log("[listener Loop]" + lineInfos);
+					if(lineInfo.route_idf_La == lineInfos[key].route_idf_La && lineInfo.route_idf_Ma == lineInfos[key].route_idf_Ma) {
+                        //console.log("[lineInfo]" + lineInfos[key].route_course_no);
+						$('#divPlace').hide();
+                        $('#divRoute').show();
+                        
+	                    $('#divRouteForm_order').html('<label>경로번호 </label><input type="text" id="route_course_no"/><br/><br/>');
+	                    $('#route_course_no').val(lineInfos[key].route_course_no);
+	                    
+			        	$('#divRouteForm_name').html('<label>경로이름 </label><input type="text" id="route_name"/><br/><br/>');
+			        	$('#route_name').val(lineInfos[key].route_name); 
+			        	
+			        	$('#divRouteForm_type').html('<label>경로타입 </label><input type="text" id="route_type"/><br/><br/>');
+			        	$('#route_type').val(lineInfos[key].route_type);
+			        	
+			        	$('#divRouteForm_content').html('<label>경로내용 </label><textarea id="route_content"></textarea><br/><br/>');
+			        	$('#route_content').val(lineInfos[key].route_content);
+			        	
+			        	break;
+
+                    }
+				}
+			});
+		
+		   	  
+	    }
 		
 		//마커 클릭 이벤트 추가
 		function addMarkerClickEvent(markerInfo) {
@@ -297,9 +433,11 @@
 					if(markerInfo.place_lat == markerInfos[key].place_lat && markerInfo.place_lng == markerInfos[key].place_lng) {
 						console.log(markerInfos[key]);
 						
+						$("#divRoute").hide();
+						$("#divPlace").show();
 						
 						//if(!markerInfos[key].created) {					
-							$('#divPlaceForm_order').html('<label>코스번호 </label><input type="text" id="place_course_no"/><br/><br/>');
+							$('#divPlaceForm_order').html('<label>장소번호 </label><input type="text" id="place_course_no"/><br/><br/>');
 							$('#place_course_no').val(markerInfos[key].place_course_no);
 							
 							$('#divPlaceForm_name').html('<label>장소명 </label><input type="text" id="place_name"/><br/><br/>');
@@ -311,11 +449,8 @@
 							$('#divPlaceForm_addr').html('<label>지번주소 </label><input type="text" id="place_addr"/><br/><br/>');
 							$('#place_addr').val(markerInfos[key].place_addr);
 							
-							
-							
 							$('#divPlaceForm_lat').html('<label>위도 </label><input type="text" id="place_lat"/>');
 							$('#place_lat').val(markerInfos[key].place_lat);
-							
 							
 							$('#divPlaceForm_lng').html('<label>경도 </label><input type="text" id="place_lng"/>');
 							$('#place_lng').val(markerInfos[key].place_lng); 
@@ -338,8 +473,8 @@
 		}
 		
 		$(document).on('keyup', '#place_name', function() {
-			var order = $('#place_course_no').val();
-			var name = $('#place_name').val();
+			let order = $('#place_course_no').val();
+			let name = $('#place_name').val();
 			markerInfos[order].place_name = name;
 			//console.log("입력된 순번 :" + order);
 			//console.log("입력된 장소명 :" + markerInfos[order].placeName);
@@ -347,12 +482,70 @@
 		
 
 		$(document).on('keyup', '#place_content', function() {
-			var order = $('#place_course_no').val();
-			var content = $('#place_content').val();
+			let order = $('#place_course_no').val();
+			let content = $('#place_content').val();
 			markerInfos[order].place_content = content;
 			
 			//console.log("입력된 내용 :" + markerInfos[order].placeContent);
 		});
 		
+		$(document).on('keyup', '#route_name', function() {
+			let order = $('#route_course_no').val();
+			let name = $('#route_name').val();
+			lineInfos[order].route_name = name;
+		});
+		
+		$(document).on('keyup', '#route_content', function() {
+			let order = $('#route_course_no').val();
+			let content = $('#route_content').val();
+			lineInfos[order].route_content = content;
+		});
+		
+		
+		function selectOverlay(type) {
+			kakao.maps.event.removeListener(map, 'click', mapClickHandler);
+		    // 그리기 중이면 그리기를 취소합니다
+		    manager.cancel();
+
+		    // 클릭한 그리기 요소 타입을 선택합니다
+		    manager.select(kakao.maps.drawing.OverlayType[type]);
+		}
+		
+		function getDataFromDrawingMap() {
+		    // Drawing Manager에서 그려진 데이터 정보를 가져옵니다 
+		    var drawingData = manager.getData();
+		    var routeInfo;
+		    
+		    console.log(drawingData.polyline.length);
+		    for(var i = 0; i<drawingData.polyline.length; i++) {
+		    	lineInfos[i].route_path = '{"latlng" : [';
+		    	console.log(drawingData);
+		    	//console.log(drawingData.polyline[i].points.length);
+		    	//console.log(drawingData.polyline[i].points);
+		    	for(var j = 0; j<drawingData.polyline[i].points.length; j++) {
+		    		if(j == drawingData.polyline[i].points.length -1) {
+		    			lineInfos[i].route_path += '{"lat" : ' + '"' + drawingData.polyline[i].points[j].y + '"' + " , " + '"lng" : ' + '"' + drawingData.polyline[i].points[j].x + '"}';
+		    		} else {
+		    			lineInfos[i].route_path += '{"lat" : ' + '"' + drawingData.polyline[i].points[j].y + '"' + " , " + '"lng" : ' + '"' + drawingData.polyline[i].points[j].x + '"}, ';
+		    		}
+		    		//console.log(drawingData.polyline[i].points[j].x); //x : 경도
+		    		//console.log(drawingData.polyline[i].points[j].y); //y : 위도
+		    		
+		    	}
+		    	lineInfos[i].route_path += "]}";
+		    	lineInfos[i].route_option = JSON.stringify(drawingData.polyline[i].options);
+		    	routeInfo = {
+	   				"route_course_no" : lineInfos[i].route_course_no,
+	   				"route_name" : lineInfos[i].route_name,
+	   				"route_type" : lineInfos[i].route_type,
+	   				"route_path" : lineInfos[i].route_path,
+	   				"route_content" : lineInfos[i].route_content,
+		    		"route_option" : lineInfos[i].route_option
+		    	};
+		    	routeInfos.push(routeInfo);
+		    	console.log("options::" + lineInfos[i].route_option);
+		    }
+		    	
+		}
 	</script>
 </html>
