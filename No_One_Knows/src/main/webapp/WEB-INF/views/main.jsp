@@ -42,14 +42,6 @@
                 </a>
               </li>
               <li>
-              <!-- 페이지 내 이동시키기 -->
-                <a href="#">
-                  <div class="task-info">
-                    <div class="desc">테마 별로 구경하기</div>
-                  </div>
-                </a>
-              </li>
-              <li>
                 <a href="#">
                   <div class="task-info">
                     <div class="desc">공지 사항 확인하기</div>
