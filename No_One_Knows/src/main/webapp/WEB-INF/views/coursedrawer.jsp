@@ -339,6 +339,7 @@
 				lines[i].obj = polyline;
 				addRouteClickEvent(lines[i]);
 				console.log("[polyline] : " + polyline);
+				console.log("[polyline] : " + polyline);
 			}
 			
 		}
