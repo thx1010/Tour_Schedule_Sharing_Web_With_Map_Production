@@ -139,7 +139,7 @@
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 		mapOption = {
 			center : new kakao.maps.LatLng(37.57594644036231, 126.97685536561725), // 지도의 중심좌표(광화문)
-			level : 13
+			level : 11
 		// 지도의 확대 레벨
 		};
 
