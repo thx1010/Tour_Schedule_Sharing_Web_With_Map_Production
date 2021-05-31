@@ -18,5 +18,62 @@
 	from    t_point
 	where   user_no = #{user_no}
 	</select>
-
+	
+	<select id="getMapList" resultType="MapRegisterDTO">
+	select a.map_no, a.map_title, a.map_subtitle, a.map_photo, a.map_content, a.map_country, a.map_state, a.map_city, a.map_like,
+       b.register_regdate, b.user_no, c.user_id, c.user_photo
+	from t_map a left join t_map_register b
+	on a.map_no = b.map_no left join t_user c
+	on b.user_no = c.user_no
+	</select>
+	
+	<select id="getMapNewList" resultType="MapRegisterDTO">
+	select a.map_title, a.map_subtitle, a.map_photo, a.map_content, a.map_country, a.map_state, a.map_city, a.map_like,
+       b.register_regdate, b.user_no, c.user_id, c.user_photo
+	from t_map a left join t_map_register b
+	on a.map_no = b.map_no left join t_user c
+	on b.user_no = c.user_no 
+	order by b.register_regdate desc
+	</select>
+	
+	<select id="getImageSlide" parameterType="MapDTO" resultType="PlaceDTO">
+	select place_photo
+	from t_place
+	where map_no = #{map_no}
+	</select>
+	
+	<select id="getMapData" parameterType="MapDTO" resultType="MapRegisterDTO">
+	select a.map_no, a.map_title, a.map_subtitle, a.map_photo, a.map_content, a.map_country, a.map_state, a.map_city, a.map_like,
+       b.register_regdate, b.user_no, c.user_id, c.user_photo
+	from t_map a left join t_map_register b
+	on a.map_no = b.map_no left join t_user c
+	on b.user_no = c.user_no
+	where a.map_no = #{map_no}
+	</select>
+	
+	<insert id="addtoCart" parameterType="MapRegisterDTO">
+	insert into t_cart(cart_no, map_no, user_no)
+	values(seq_cart.nextval, #{map_no}, #{user_no})
+	</insert>
+	
+	<insert id="addtoLike" parameterType="MapRegisterDTO">
+	insert into t_like(like_no, map_no, user_no)
+	values(seq_like.nextval, #{map_no}, #{user_no})
+	</insert>
+	
+	<select id="getLikeContent" parameterType="UserDTO" resultType="MapDTO">
+	select a.*
+	from t_map a inner join t_like b
+	on a.map_no = b.map_no
+	where b.user_no = #{user_no}
+	order by b.like_regdate desc
+	</select>
+	
+	<select id="getCartContent" parameterType="UserDTO" resultType="MapDTO">
+	select a.*
+	from t_map a inner join t_cart b
+	on a.map_no = b.map_no
+	where b.user_no = 10
+	order by b.cart_regdate desc
+	</select>
 </mapper>

@@ -60,10 +60,13 @@ public class UserController {
 		try {
 			pointService.createPoint();
 			log.info("[signup] user info : " + userDTO);
+			
 			userService.signup(userDTO);
 			UserDTO userno = pointService.selectUserInfo(userDTO);
-			log.info(userno.toString());
+			
+			log.info("유저 인포 불러옴"+ userno.toString());
 			PointDTO pointDTO = pointService.selectPointInfo(userno);
+			
 			pointDTO.setUserDTO(userno);
 			log.info(pointDTO.toString());
 			pointService.updateUserPointno(pointDTO);

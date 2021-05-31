@@ -8,6 +8,7 @@
 <title>Insert title here</title>
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" /> 
+ <link href="resources/css/jquery-sakura.css" rel="stylesheet" type="text/css" />
 </head>
         <nav class="navbar navbar-expand-lg" style="background: white;">
             <div class="container">
@@ -45,7 +46,7 @@
 	        <section class="container mt-3" style="max-width: 560px;">
 	        	<!--login content -->
 				<form method="post" style="display: block; margin-top: 30px;">
-					<div class="scale"><img src = "resources/img/signup.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div>
+					<div class="scale"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div>
 					<div class="form-group">
 						<label>아이디</label>
 						<input type="text" name="user_id" class="form-control">		
@@ -58,9 +59,16 @@
 				</form>
 			</section><br><br><br><br><br><br><br><br><br>
 	    </header>
+	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	    <script>
+		$(window).load(function () {
+		    $('body').sakura();
+		});
+		</script>
         <!-- Bootstrap core JS-->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="resources/js/jquery-sakura.js"></script>
         <!-- Core theme JS-->
         <script src="resources/js/scripts.js"></script>
 </html>

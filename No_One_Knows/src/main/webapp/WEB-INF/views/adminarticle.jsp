@@ -54,8 +54,8 @@
 		var mytable = "";
 	  	$.each( data, function( key, val ) {
 	    	mytable += "<p style='text-align: center'>맵 디테일 <br></p>";
-	    	mytable += "<p> " + val['map_no'] + "</p>";
-	    	mytable += "<p> " + val['map_photo'] + "</p>";	
+	    	mytable += "<p style='text-align: center'>" + val['map_no'] + "<p/>";
+	    	mytable += "<img src='${pageContext.request.contextPath}/resources/img/"  + val['map_photo'] + "'/>";	
 	    	mytable += "<p> " + val['map_title'] + "</p>";
 	    	mytable += "<p> " + val['map_country'] + "</p>";
 	    	mytable += "<p> " + val['map_city'] + "</p>";
@@ -87,11 +87,10 @@
 	function displayPlaceDetailList(data) {
 		var mytable = "";
 	  	$.each( data, function( key, val ) {
-	    	mytable += "<p style='text-align: center'>장소 디테일 <br></p>";
+	  		mytable += "<img src='${pageContext.request.contextPath}/resources/img/" + val['place_photo'] + "'/>";
 	    	mytable += "<p> " + val['place_name'] + "</p>";
 	    	mytable += "<p> " + val['place_addr'] + "</p>";	
 	    	mytable += "<p> " + val['place_content'] + "</p>";
-	    	mytable += "<p> " + val['place_photo'] + "</p>";
 	  		});
 	 
 			$('#placeInfoDisplay').html(mytable);
@@ -147,7 +146,7 @@
                                     </tbody>
                                 </table> 
 		                        <div class="modal fade" id = "displaymapForm" tabindex="-1" role="dialog" aria-labelledby="displayCategoryModalLabel">
-							     	<div class="modal-dialog" role="document">
+							     	<div class="modal-dialog modal-lg" role="document">
 										<div class="modal-content">
 										    <div class="modal-header">
 										        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

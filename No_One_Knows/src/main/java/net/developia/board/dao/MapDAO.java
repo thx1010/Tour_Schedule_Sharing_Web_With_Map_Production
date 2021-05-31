@@ -1,12 +1,9 @@
 package net.developia.board.dao;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
+import java.sql.*;
+import java.util.*;
 
-import net.developia.board.dto.MapDTO;
-import net.developia.board.dto.PlaceDTO;
-import net.developia.board.dto.RouteDTO;
+import net.developia.board.dto.*;
 
 public interface MapDAO {
 
@@ -25,5 +22,9 @@ public interface MapDAO {
 	public void addRoute(RouteDTO route) throws SQLException;
 
 	public List<RouteDTO> getRouteListForMapNo(long mapno) throws SQLException;
+
+	public UserDTO getUserno(MapDTO mapNo) throws SQLException;
+
+	public UserDTO getUserList(UserDTO userno) throws SQLException;
 
 }

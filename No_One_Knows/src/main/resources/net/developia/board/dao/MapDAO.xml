@@ -69,4 +69,16 @@ from t_route
 where map_no=#{mapno}
 </select>
 
+<select id="getUserno" parameterType="MapDTO" resultType="UserDTO">
+select user_no 
+from t_map_register
+where map_no=#{map_no}
+</select>
+
+<select id="getUserList" parameterType="UserDTO" resultType="UserDTO">
+select user_photo, user_id
+from t_user
+where user_no = #{user_no}
+</select>
+
 </mapper>
