@@ -48,7 +48,8 @@
 	    	mytable += '<h4 class="card-title">'+val['map_title']+'</h4>';
 	    	mytable += '<p class="card-text">'+val['map_country']+'&nbsp;'+val['map_state']+'&nbsp;'+val['map_city']+'</p>';
 	    	mytable += '<p class="card-text"><img src="resources/img/'+val['user_photo']+'" style="width: 22px; height: 22px"/>&nbsp;&nbsp;'+val['user_id']+'</p>';
-	    	mytable += '<p class="card-title">'+val['register_regdate']+'</p>';
+	    	mytable += '<p class="card-text">'+val['register_regdate']+'</p>';
+	    	mytable += '<p class="card-text">'+val['map_like']+'</p>';
 	    	mytable += '<button class="detailmodalButton" myval="' + val['map_no'] + '"style="background-color: white; border-radius: 10px;" data-toggle="modal" data-target="#detailModal">자세히 보기</button>';
 	    	mytable += '</div></div></div></div>';
 	  		});
@@ -112,6 +113,7 @@
 	  		mytable += '<div style="text-align: center"><img src="resources/img/'+val['user_photo']+'" style=" width: 25px; height: 25px;"></div>';
 	  		mytable += '<p style="text-align: center">'+val['user_id']+'</p><br>';
 	  		mytable += '<p style="text-align: center">'+val['register_regdate']+'</p><br>';
+	  		mytable += '<p style="text-align: center">'+val['map_like']+'</p><br>';
 	  		mytable += '<br><div class="row" style="margin-left: 290px"><button class="tocart" style="background-color: white; border-radius: 10px;" mapval="'+val['map_no']+'" userval="'+val['user_no']+'"><img src="resources/img/cart.png" style="width: 30px; height: 30px">&nbsp;장바구니</button>&nbsp;&nbsp;<button class="tolike" style="background-color: white; border-radius: 10px;" mapval="'+val['map_no']+'" userval="'+val['user_no']+'"><img src="resources/img/heart.png" style="width: 30px; height: 30px">&nbsp;찜하기</button></div><br>';
 	  		});
 		$('#mapdata').html(mytable);
@@ -280,13 +282,11 @@
 			        <div class="second">
 			        	<button class="bestlist" style="background-color: transparent; border: none"><div class="scale"><img src = "resources/img/sea.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div> <br>
 			        	<h5 style="text-align: center; color:#5D5D5D;">요즘 대세 코스</h5></button>
-			        	<!--<p style="text-align: center; font-size:14px; color:#878787; ">N0.1 Knows 먼저 알아가기</p> -->
 			        	<br><br><br>
 			        </div>
 			        <div class="third">
 			        	<button class="mylist" style="background-color: transparent; border: none"><div class="scale"><img src = "resources/img/plane.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div> <br>
 			        	<h5 style="text-align: center; color:#5D5D5D;">나에게 딱 맞는 여행지 추천</h5></button>
-			        	<!--<p style="text-align: center; font-size:14px; color:#878787; ">낭만을 바란다면 랜덤 여행지로 !</p> -->
 			        	<br>
 			        </div>
 			        <div class="forth"><br>

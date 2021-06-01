@@ -70,6 +70,7 @@ public class MainController {
 	public ModelAndView main_addtolike(
 			@ModelAttribute MapRegisterDTO mapregisterDTO) throws Exception {
 		mainService.addtoLike(mapregisterDTO);
+		mainService.updateLikeCount(mapregisterDTO);
 		return new ModelAndView("main");
 	}
 	
@@ -84,6 +85,40 @@ public class MainController {
 			@ModelAttribute UserDTO userno) throws Exception {
 		List<MapDTO> mainInfoList = mainService.getLikeContent(userno);
 		return mainInfoList;
+	}
+	
+	@RequestMapping(value = "/likepage/category", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ThemeDTO> likepage_addCategory() throws Exception {
+		List<ThemeDTO> categoryList = mainService.getCategoryContent();
+		return categoryList;
+	}
+	
+	@RequestMapping(value = "/likepage/category/{theme_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> likepage_selectCategory(
+			@ModelAttribute MapRegisterDTO categoryno) throws Exception {
+		 List<MapDTO> categoryList = mainService.classifyCategory(categoryno);
+		return categoryList;
+	}
+	
+	@RequestMapping(value = "/likepage/delete/{map_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> likepage_delete(
+			@ModelAttribute MapRegisterDTO likeinfo) throws Exception {
+		 mainService.deleteLike(likeinfo);
+		 List<MapDTO> mainInfoList = mainService.getLikedeleteContent(likeinfo);
+		 return mainInfoList;
+	}
+	
+	@RequestMapping(value = "/likepage/gotocart/{map_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> likepage_gotocart(
+			@ModelAttribute MapRegisterDTO likeinfo) throws Exception {
+		 mainService.deleteLike(likeinfo);
+		 mainService.addtoCart(likeinfo);
+		 List<MapDTO> mainInfoList = mainService.getLikedeleteContent(likeinfo);
+		 return mainInfoList;
 	}
 	
 	@GetMapping(value="/mypage/")
@@ -142,10 +177,5 @@ public class MainController {
 		mav.setViewName("coursemaker");
 		mav.addObject("themeList", themeList);
 		return mav;
-	}
-	
-	@GetMapping(value="/entirecourselist")
-	public ModelAndView entirecourselist() throws Exception {
-		return new ModelAndView("entirecourselist");
 	}
 }

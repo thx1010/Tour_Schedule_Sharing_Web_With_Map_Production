@@ -123,4 +123,57 @@ public class MainServiceImpl implements MainService{
 			}
 	}
 
+	@Override
+	public List<ThemeDTO> getCategoryContent() throws Exception {
+		try {
+			List<ThemeDTO> categorydata = mainDAO.getCategoryContent();
+			return categorydata;
+			}catch (Exception e) {
+				log.info(e.getMessage());
+				throw e;
+			}
+	}
+
+	@Override
+	public List<MapDTO> classifyCategory(MapRegisterDTO categoryno) throws Exception {
+		try {
+			List<MapDTO>  categorydata = mainDAO.classifyCategory(categoryno);
+			return categorydata;
+			}catch (Exception e) {
+				log.info(e.getMessage());
+				throw e;
+			}
+	}
+
+	@Override
+	public void updateLikeCount(MapRegisterDTO mapregisterDTO) throws Exception {
+		try {
+			mainDAO.updateLikeCount(mapregisterDTO);
+			}catch (Exception e) {
+				log.info(e.getMessage());
+				throw e;
+			}
+	}
+
+	@Override
+	public void deleteLike(MapRegisterDTO likeinfo) throws Exception {
+		try {
+			mainDAO.deleteLike(likeinfo);
+			}catch (Exception e) {
+				log.info(e.getMessage());
+				throw e;
+			}
+	}
+
+	@Override
+	public List<MapDTO> getLikedeleteContent(MapRegisterDTO likeinfo) throws Exception {
+		try {
+			List<MapDTO> likedata = mainDAO.getLikedeleteContent(likeinfo);
+			return likedata;
+			}catch (Exception e) {
+				log.info(e.getMessage());
+				throw e;
+			}
+	}
+
 }

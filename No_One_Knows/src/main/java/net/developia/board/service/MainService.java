@@ -26,4 +26,14 @@ public interface MainService {
 
 	List<MapDTO> getCartContent(UserDTO userno) throws Exception;
 
+	List<ThemeDTO> getCategoryContent() throws Exception;
+
+	List<MapDTO> classifyCategory(MapRegisterDTO categoryno) throws Exception;
+
+	void updateLikeCount(MapRegisterDTO mapregisterDTO) throws Exception;
+
+	void deleteLike(MapRegisterDTO likeinfo) throws Exception;
+
+	List<MapDTO> getLikedeleteContent(MapRegisterDTO likeinfo) throws Exception;
+
 }

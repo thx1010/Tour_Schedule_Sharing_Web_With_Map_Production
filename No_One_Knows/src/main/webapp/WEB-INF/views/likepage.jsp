@@ -30,6 +30,7 @@
 
 	$(document).ready(function(){
 		selectContent();
+		selectCategory();
 	});
 	
 	function selectContent() {
@@ -42,6 +43,16 @@
 		});
 	}
 	
+	function selectCategory() {
+		$.ajax({
+			method : 'GET',
+			url : '${pageContext.request.contextPath}/likepage/category', 
+		}).done(function( data ) {
+		 	displayCategoryList(data); //만들기
+		});
+	}
+	
+	
 	function displayContentList(data) {
 		var mytable = "";
 	  	$.each( data, function( key, val ) {
@@ -53,22 +64,60 @@
 	    	mytable += '<p class="card-text">'+val['map_country']+'&nbsp;'+val['map_state']+'&nbsp;'+val['map_city']+'</p>';
 	    	mytable += '<p class="card-text">'+val['map_placett']+'</p>';
 	    	mytable += '<p class="card-text">'+val['map_like']+'</p>';
-	    	mytable += '<a class="btn btn-primary" href="#">삭제</a>&nbsp;&nbsp;';
-	    	mytable += '<a class="btn btn-primary" href="#">장바구니로 이동</a></div>';
+	    	mytable += '<button class="deleteLikeButton" myval="'+val['map_no']+'" style="background-color: white; border-radius: 10px"><h5>삭제</h5></button>&nbsp;&nbsp;';
+	    	mytable += '<button class="gotoCartButton" myval="'+val['map_no']+'" style="background-color: white; border-radius: 10px"><h5>장바구니로 이동</h5></button></div>';
 	    	mytable += '<div class="card-footer text-muted" style="background-color: white">';
 	    	mytable += '<p class="card-text">'+val['map_regdate']+'</p>';
 	    	mytable += '</div></div>';
 	  		});
 		$('#displayLikeContent').html(mytable);
-		//newlistButtonEvent(); --여기도 수정
+		deleteLikeButtonEvent();
+		gotoCartButtonEvent();
 	}
 	
-	//카테고리별 분류 이벤트 추가 (수정하기)
-	function newlistButtonEvent() {
-		$('.newlist').click(function(){
+	function deleteLikeButtonEvent(){
+		$('.deleteLikeButton').click(function(){
+			var user_no = "${sessionScope.userInfo.user_no}";
 			$.ajax({
 				method : 'GET',
-				url :'${pageContext.request.contextPath}/main/newlist'
+				url :'${pageContext.request.contextPath}/likepage/delete/' + $(this).attr('myval') +'/' + user_no 
+			}).done(function( data ) {
+				alert('삭제가 완료되었습니다.');
+				displayContentList(data);
+			});
+		});
+	}
+	
+	function gotoCartButtonEvent(){
+		$('.gotoCartButton').click(function(){
+			var user_no = "${sessionScope.userInfo.user_no}";
+			$.ajax({
+				method : 'GET',
+				url :'${pageContext.request.contextPath}/likepage/gotocart/' + $(this).attr('myval') +'/' + user_no 
+			}).done(function( data ) {
+				alert('장바구니로 이동이 완료되었습니다.');
+				displayContentList(data);
+			});
+		});
+	}
+	
+	function displayCategoryList(data) {
+		var mytable = "";
+	  	$.each( data, function( key, val ) {
+	  		mytable += '<li><div class="row">&nbsp;&nbsp;<button class="categoryButton" myval="'+val['theme_no']+'" style="background-color: transparent; border: none"><h5 style="color: #6799FF">'+val['theme_name']+'</h5></button>&nbsp;&nbsp;<small>'+val['theme_content']+'</small></div></li>';
+	  		});
+		$('#displayCategory').html(mytable);
+		categoryButtonEvent(); 
+	}
+	
+	
+	//카테고리별 분류 이벤트 추가
+	function categoryButtonEvent() {
+		$('.categoryButton').click(function(){
+			var user_no = "${sessionScope.userInfo.user_no}";
+			$.ajax({
+				method : 'GET',
+				url :'${pageContext.request.contextPath}/likepage/category/' + $(this).attr('myval') +'/' + user_no 
 			}).done(function( data ) {
 				displayContentList(data);
 			});
@@ -141,16 +190,9 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-lg-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">JavaScript</a></li>
-                                        <li><a href="#!">CSS</a></li>
-                                        <li><a href="#!">Tutorials</a></li>
+                                    	<div id="displayCategory">
+                                        <!-- 카테고리 디스플레이 -->
+                                        </div>
                                     </ul>
                                 </div>
                             </div>

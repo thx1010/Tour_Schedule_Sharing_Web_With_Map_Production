@@ -73,7 +73,39 @@
 	select a.*
 	from t_map a inner join t_cart b
 	on a.map_no = b.map_no
-	where b.user_no = 10
+	where b.user_no = #{user_no}
 	order by b.cart_regdate desc
+	</select>
+	
+	<select id="getCategoryContent" resultType="ThemeDTO">
+	select * from t_theme
+	</select>
+	
+	<select id="classifyCategory"  parameterType="MapRegisterDTO" resultType="MapDTO">
+	select a.*
+	from t_map a inner join t_like b
+	on a.map_no = b.map_no
+	where b.user_no = #{user_no}
+    and a.theme_no = #{theme_no}
+	order by b.like_regdate desc
+	</select>
+	
+	<update id="updateLikeCount" parameterType="MapRegisterDTO">
+	UPDATE t_map SET
+		   map_like = map_like + 1
+		   where map_no = #{map_no}
+	</update>
+	
+	<update id="deleteLike" parameterType="MapRegisterDTO">
+	delete from t_like
+	where user_no = #{user_no} and map_no = #{map_no}
+	</update>
+	
+	<select id="getLikedeleteContent" parameterType="MapRegisterDTO" resultType="MapDTO">
+	select a.*
+	from t_map a inner join t_like b
+	on a.map_no = b.map_no
+	where b.user_no = #{user_no}
+	order by b.like_regdate desc
 	</select>
 </mapper>

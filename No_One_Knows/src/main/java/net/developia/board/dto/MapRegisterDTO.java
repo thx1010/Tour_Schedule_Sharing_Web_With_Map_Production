@@ -19,4 +19,5 @@ public class MapRegisterDTO {
 	long user_no;
 	String user_id;
 	String user_photo;
+	long theme_no;
 }
