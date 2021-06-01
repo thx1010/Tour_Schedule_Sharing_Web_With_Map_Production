@@ -8,6 +8,7 @@
 <title>Insert title here</title>
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
+  <link href="resources/css/jquery-sakura.css" rel="stylesheet" type="text/css" />
 </head>
 	<body>
         <nav class="navbar navbar-expand-lg" style="background: white;">
@@ -46,7 +47,7 @@
 	        <div class="container">
 		       <section class="container mt-3" style="max-width: 560px;">
 					<form method="post" style="display: block; margin-top: 30px;">
-						<div class="scale"><img src = "resources/img/signup.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div>
+						<div class="scale"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div>
 						<div class="form-group">
 							<label>아이디</label>
 							<input type="text" name="user_id" class="form-control">		
@@ -151,8 +152,13 @@
 						</div>
 						<div class="form-group">
 							<label style="color:#D5D5D5">-------------------------------------------------------------------------</label><br>
-							<label>프로필 사진 등록 : </label>
-							&nbsp;&nbsp;&nbsp;<input type = "file" name="user_photo" id="user_photo"><br>
+							<div class="filebox preview-image"><br>
+							  <input class="upload-name" value="파일선택" disabled="disabled" >
+							
+							  <label for="user_photo" class="bs3-primary">업로드</label> 
+							  <input type="file" name="user_photo" id="user_photo" class="upload-hidden" style="opacity: 0.0"> 
+							</div>
+
 						</div><br>
 						<div class="tscale"><button type="submit" class="btn"  style="background: linear-gradient( to left, #FAED7D, #FFCD12 ); color:white; display: block; margin: 0px auto;">회원가입</button></div>
 					</form>
@@ -181,11 +187,46 @@
         		}
         	});
         });
-        
-        
+		
+      //preview image 
+        var imgTarget = $('.preview-image .upload-hidden');
+
+        imgTarget.on('change', function(){
+            var parent = $(this).parent();
+            parent.children('.upload-display').remove();
+
+            if(window.FileReader){
+                //image 파일만
+                if (!$(this)[0].files[0].type.match(/image\//)) return;
+                
+                var reader = new FileReader();
+                reader.onload = function(e){
+                    var src = e.target.result;
+                    parent.prepend('<div class="upload-display"><div class="upload-thumb-wrap"><img src="'+src+'" class="upload-thumb"></div></div>');
+                }
+                reader.readAsDataURL($(this)[0].files[0]);
+            }
+
+            else {
+                $(this)[0].select();
+                $(this)[0].blur();
+                var imgSrc = document.selection.createRange().text;
+                parent.prepend('<div class="upload-display"><div class="upload-thumb-wrap"><img class="upload-thumb"></div></div>');
+
+                var img = $(this).siblings('.upload-display').find('img');
+                img[0].style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(enable='true',sizingMethod='scale',src=\""+imgSrc+"\")";        
+            }
+        });
         </script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script>
+		$(window).load(function () {
+		    $('body').sakura();
+		});
+		</script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="resources/js/scripts.js"></script>
+        <script src="resources/js/jquery-sakura.js"></script>
 	</body>
 </html>

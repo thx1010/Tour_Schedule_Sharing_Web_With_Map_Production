@@ -61,13 +61,13 @@
 	        <div class="container">
 		        <section class="container" style="margin-top: 10px;">
 		        	<c:forEach items="${userlist}" var="dto">
-		        	<div class="scale"><img src = "${pageContext.request.contextPath}/resources/img/${dto.user_photo}" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
+		        	<div class="scale"><img src = "${pageContext.request.contextPath}/resources/img/${sessionScope.userInfo.user_photo}" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
 		            <h2 style=" text-align:center; margin-bottom: 60px;">${sessionScope.userInfo.user_id} 님의 회원 정보입니다.</h2>
 					    <h4 style=" text-align:center; color:#4374D9; font-size:20px">LEVEL ${dto.gradeDTO.grade_no}.  ${dto.gradeDTO.grade_name}</h4>
 					    <br>
 					    <div style="background-color:white; border-radius: 90px; width: 380px; display: block; margin: 0px auto;">
 						    <br><br>
-						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/user_2.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_name}  (${dto.user_gender})</p>
+						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/admin.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_name}  (${dto.user_gender})</p>
 						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/date.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_year} . ${dto.user_month} . ${dto.user_day}</p>
 						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/email.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_email}</p>
 						    <p style=" text-align:center; font-size:17px"><img src = "${pageContext.request.contextPath}/resources/img/phone.png" style="width: 28px; height:28px;">&nbsp;&nbsp;${dto.user_phone}</p>

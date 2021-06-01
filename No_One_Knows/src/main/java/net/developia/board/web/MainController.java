@@ -27,9 +27,98 @@ public class MainController {
 		return new ModelAndView("main");
 	}
 	
+	@GetMapping(value = "/main/origin", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapRegisterDTO> main_origin() throws Exception {
+		List<MapRegisterDTO> mainInfoList = mainService.getMapList();
+		return mainInfoList;
+	}
+	
+	@GetMapping(value = "/main/newlist", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapRegisterDTO> main_new() throws Exception {
+		List<MapRegisterDTO> mainInfoList = mainService.getMapNewList();
+		return mainInfoList;
+	}
+	
+	@RequestMapping(value = "/main/detailmodal/{map_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<PlaceDTO> main_detailmodal(
+			@ModelAttribute MapDTO mapDTO) throws Exception {
+		List<PlaceDTO> imageslide = mainService.getImageSlide(mapDTO);
+		return imageslide;
+	}
+	
+	@RequestMapping(value = "/main/mapdata/{map_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapRegisterDTO> main_mapdata(
+			@ModelAttribute MapDTO mapDTO) throws Exception {
+		List<MapRegisterDTO> mapdata = mainService.getMapData(mapDTO);
+		return mapdata;
+	}
+	
+	@RequestMapping(value = "/main/cart/{map_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public ModelAndView main_addtocart(
+			@ModelAttribute MapRegisterDTO mapregisterDTO) throws Exception {
+		mainService.addtoCart(mapregisterDTO);
+		return new ModelAndView("main");
+	}
+	
+	@RequestMapping(value = "/main/like/{map_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public ModelAndView main_addtolike(
+			@ModelAttribute MapRegisterDTO mapregisterDTO) throws Exception {
+		mainService.addtoLike(mapregisterDTO);
+		mainService.updateLikeCount(mapregisterDTO);
+		return new ModelAndView("main");
+	}
+	
 	@GetMapping(value="/likepage")
 	public ModelAndView likepage() throws Exception {
 		return new ModelAndView("likepage");
+	}
+	
+	@RequestMapping(value = "/likepage/likelist/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> likepage_addContent(
+			@ModelAttribute UserDTO userno) throws Exception {
+		List<MapDTO> mainInfoList = mainService.getLikeContent(userno);
+		return mainInfoList;
+	}
+	
+	@RequestMapping(value = "/likepage/category", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ThemeDTO> likepage_addCategory() throws Exception {
+		List<ThemeDTO> categoryList = mainService.getCategoryContent();
+		return categoryList;
+	}
+	
+	@RequestMapping(value = "/likepage/category/{theme_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> likepage_selectCategory(
+			@ModelAttribute MapRegisterDTO categoryno) throws Exception {
+		 List<MapDTO> categoryList = mainService.classifyCategory(categoryno);
+		return categoryList;
+	}
+	
+	@RequestMapping(value = "/likepage/delete/{map_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> likepage_delete(
+			@ModelAttribute MapRegisterDTO likeinfo) throws Exception {
+		 mainService.deleteLike(likeinfo);
+		 List<MapDTO> mainInfoList = mainService.getLikedeleteContent(likeinfo);
+		 return mainInfoList;
+	}
+	
+	@RequestMapping(value = "/likepage/gotocart/{map_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> likepage_gotocart(
+			@ModelAttribute MapRegisterDTO likeinfo) throws Exception {
+		 mainService.deleteLike(likeinfo);
+		 mainService.addtoCart(likeinfo);
+		 List<MapDTO> mainInfoList = mainService.getLikedeleteContent(likeinfo);
+		 return mainInfoList;
 	}
 	
 	@GetMapping(value="/mypage/")
@@ -66,6 +155,14 @@ public class MainController {
 		return new ModelAndView("cartpage");
 	}
 	
+	@RequestMapping(value = "/cartpage/cartlist/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> cartpage_addContent(
+			@ModelAttribute UserDTO userno) throws Exception {
+		List<MapDTO> mainInfoList = mainService.getCartContent(userno);
+		return mainInfoList;
+	}
+	
 	@GetMapping(value="/coursemaker")
 	public ModelAndView coursemaker() throws Exception {
 		ModelAndView mav = new ModelAndView();
@@ -80,5 +177,10 @@ public class MainController {
 		mav.setViewName("coursemaker");
 		mav.addObject("themeList", themeList);
 		return mav;
+	}
+	
+	@GetMapping(value="/mapdetail")
+	public ModelAndView mapdetail() throws Exception {
+		return new ModelAndView("mapdetail");
 	}
 }

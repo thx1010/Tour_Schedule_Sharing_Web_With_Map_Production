@@ -7,12 +7,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<!-- <style>
-.modes { position: absolute; top: 10px; left: 10px; z-index: 1;}
-</style> -->
 <title>Insert title here</title>
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" href="resources/css/main.css" />
+ <noscript><link rel="stylesheet" href="resources/css/noscript.css" /></noscript>
 <%
 	//유저가 접속 중인 상태
 	if(session.getAttribute("userInfo") != null){
@@ -58,64 +57,163 @@
             	</div>
             </div>
         </nav><br><br>
-      	<div>
-      		<label>여행제목</label><br/><input type="text" id="map_title" name="map_title"/><br/>
-      		<label>부제</label><br/><input type="text" id="map_subtitle" name="map_subtitle"/><br/>
-      		<label>테마</label>
-      		<select id="theme_no" name="theme_no">
-      			<c:forEach var="theme" items='${themeList}'>
-      				<option value="${theme.theme_no}">${theme.theme_name}</option>
-      			</c:forEach>
-      		</select><br/>
-      		<label>국가</label><br/><input type="text" id="map_country" name="map_country"/><br/>
-      		<label>주</label><br/><input type="text" id="map_state" name="map_state"/><br/>
-      		<label>도시</label><br/><input type="text" id="map_city" name="map_city"/><br/>
-      		<label>설명</label><br/><textarea id="map_content" name="map_content"></textarea><br/>
-      	</div>
         <!-- Page Content-->
+   
         <header style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) );">
-	        <div class="container">
-		            <h2 style=" text-align:center; margin-bottom: 60px;">'</h2>
-				    <div class="parent2">
-				        <div class="first2">
-				        	<div id="map" style="width: 100%; height: 400px;"></div>
-				        	<div>
-					        	<p>
-					        		<button onclick="selectOverlay('ARROW')">화살표</button>
-								    <button onclick="selectOverlay('POLYLINE')">선</button>
-								    <button onclick="selectOverlay('CIRCLE')">원</button>
-								    <button onclick="selectOverlay('RECTANGLE')">사각형</button>
-								    <button onclick="getDataFromDrawingMap()">가져오기</button>
-								</p>
-				        	</div>
-				        	<h4 style="text-align: center; background-color: ">맵 공간</h4>
-				        </div>
-				        <div class="second2">
-				        	<!-- 여기 입력 폼 -->
-				        	<div id="divRoute">
-				        		<div id="divRouteForm_order"></div>
-				        		<div id="divRouteForm_name"></div>
-				        		<div id="divRouteForm_type"></div>
-				        		<div id="divRouteForm_content"></div>
-				        	</div>
-				        	<div id="divPlace">
-					        	<div id="divPlaceForm_order"></div>
-								<div id="divPlaceForm_name"></div>
-								<div id="divPlaceForm_loadaddr"></div>
-								<div id="divPlaceForm_addr"></div>
-								<div id="divPlaceForm_lat"></div>
-								<div id="divPlaceForm_lng"></div>
-								<div id="divPlaceForm_image"></div>
-								<div id="divPlaceForm_content"></div>
-							</div>
-				        	<h4 style="text-align: center;">입력 폼 공간</h4>
-				        </div>
-			        </div>
-			        <h2 style=" text-align:center; margin-bottom: 60px;">'</h2>
-			</div>
-			<div>
-				<button onclick="makeCourse()">지도만들기</button>
-			</div>
+	        <div class="container" style="width: 750px">
+		        <div class="col-sm-12 pt-3">
+		            <div class="card">
+		                <div class="card-header card-header-primary" style="background-color: white">
+		                    <h4 class="card-title" style="color:#6799FF;"> 기본 정보 입력</h4>
+		                    <p class="card-catagory"></p>
+		                </div>
+		                <div class="card-body" style="background-color: white">
+		                    <div class="table-responsive">
+		                        <table class="table">
+		                            <tbody>
+		                            <tr>
+		                                <td>
+		                                	<label><h5>여행 제목</h5></label>
+		                                    <input type="text" id="map_title" name="map_title" class="form-control" value="" style="width: 620px">
+		                                </td>                        
+		                            </tr>
+		                            <tr>
+		                                <td>
+		                                	<label><h5>부제</h5></label>
+		                                    <input type="text" id="map_subtitle" name="map_subtitle" class="form-control" value="" style="width: 620px">                                    
+		                                </td>
+		                            </tr>  
+		                            <tr>
+		                                <td>
+		                                	<div class="form-row">
+											<div class="form-group col-sm-6">
+													<label><h5>국가</h5></label>
+													<input type="text" id="map_country" name="map_country" class="form-control" maxlength=20>
+											</div>
+											<div class="form-group col-sm-6">
+													<label><h5>테마 카테고리</h5></label>
+													<select id="theme_no" name="theme_no" class="form-control">
+										      			<c:forEach var="theme" items='${themeList}'>
+										      				<option value="${theme.theme_no}">${theme.theme_name}</option>
+										      			</c:forEach>
+										      		</select>
+											</div>
+											</div>                                    
+		                                </td>
+		                            </tr>
+		                            <tr>
+		                                <td>
+		                                	<div class="form-row">
+											<div class="form-group col-sm-6">
+													<label><h5>주</h5></label>
+													<input type="text"  id="map_state" name="map_state" class="form-control" maxlength=20>
+											</div>
+											<div class="form-group col-sm-6">
+													<label><h5>도시</h5></label>
+													<input type="text" id="map_city" name="map_city" class="form-control" maxlength=20>
+											</div>
+											</div>                                    
+		                                </td>
+		                            </tr>
+		                            <tr>
+		                                <td>
+		                                    <div class="form-group">
+												<label><h5>내용</h5></label>
+												<textarea  id="map_content" name="map_content" class="form-control" maxlength="500" style="height:180px;"></textarea>
+											</div>                            
+		                                </td>
+		                            </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+		                </div>
+		            </div>
+		        </div><br><br>
+		        <div class="col-sm-12 pt-3">
+		            <div class="card">
+		                <div class="card-header card-header-primary" style="background-color: white">
+		                    <h4 class="card-title" style="color:#6799FF;"> 썸네일 등록</h4>
+		                    <p class="card-catagory"></p>
+		                </div>
+		                <div class="card-body" style="background-color: white">
+		                    <div class="table-responsive">
+		                        <table class="table">
+		                            <tbody>
+		                            <tr>
+		                                <td>
+		                                   <div class="filebox preview-image"><br><br>
+											  <input class="upload-name" value="파일선택" disabled="disabled" >
+											
+											  <label for="map_photo" class="bs3-primary">업로드</label> 
+											  <input type="file" name="map_photo" id="map_photo" class="upload-hidden" style="opacity: 0.0"> 
+											</div>
+		                                </td>                        
+		                            </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+		                </div>
+		            </div>
+		        </div><br><br>
+		        <div class="col-sm-12 pt-3">
+		            <div class="card">
+		                <div class="card-header card-header-primary" style="background-color: white">
+		                    <h4 class="card-title" style="color:#6799FF;"> 코스 정보 입력</h4>
+		                    <p class="card-catagory"></p>
+		                </div>
+		                <div class="card-body" style="background-color: white">
+		                    <div class="table-responsive">
+		                        <table class="table">
+		                            <tbody>
+		                            <tr>
+		                                <td>
+		                                  <div id="map" style="width: 100%; height: 400px;"></div>
+		                                  <div><br>
+									        	<p>
+									        		<button onclick="selectOverlay('ARROW')" style="background-color:#EBF7FF; border-radius: 15px">화살표</button>
+												    <button onclick="selectOverlay('POLYLINE')" style="background-color:#EBF7FF; border-radius: 15px">선</button>
+												    <button onclick="selectOverlay('CIRCLE')" style="background-color: #EBF7FF; border-radius: 15px">원</button>
+												    <button onclick="selectOverlay('RECTANGLE')" style="background-color:#EBF7FF; border-radius: 15px">사각형</button>
+												    <button onclick="getDataFromDrawingMap()" style="background-color:#EBF7FF; border-radius: 15px">가져오기</button>
+												</p>
+								        	</div>
+		                                </td>                        
+		                            </tr>
+		                            <tr>
+		                                <td>
+		                                  <div class="form-group">
+												<div id="divRoute">
+								        		<div id="divRouteForm_order"></div>
+								        		<div id="divRouteForm_name"></div>
+								        		<div id="divRouteForm_type"></div>
+								        		<div id="divRouteForm_content"></div>
+				        					</div>
+				        					<div id="divPlace">
+									        	<div id="divPlaceForm_order"></div>
+												<div id="divPlaceForm_name"></div>
+												<div id="divPlaceForm_loadaddr"></div>
+												<div id="divPlaceForm_addr"></div>
+												<div id="divPlaceForm_lat"></div>
+												<div id="divPlaceForm_lng"></div>
+												<div id="divPlaceForm_image"></div>
+												<div id="divPlaceForm_content"></div>
+												<div id="divPlaceForm_photo"></div>
+											</div>
+										  </div> 
+		                                </td>                        
+		                            </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+ 
+			    <div class="text-center mt-3">
+			        <button type="button" onclick="makeCourse()" class="btn btn-info"><h5>지도 만들기</h5></button>
+			        <a href="main" style="text-decoration: none"><button type="button" class="btn btn-info"><h5>돌아가기</h5></button></a><br><br>
+			    </div><br><br>
+	        </div>
 	    </header>
         <!-- Bootstrap core JS-->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -126,6 +224,38 @@
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5f99123b49282be7b5dcbc9dbff6f616&libraries=services,drawing">
 	</script>
+	<script>
+		//preview image 
+	    var imgTarget = $('.preview-image .upload-hidden');
+	
+	    imgTarget.on('change', function(){
+	        var parent = $(this).parent();
+	        parent.children('.upload-display').remove();
+	
+	        if(window.FileReader){
+	            //image 파일만
+	            if (!$(this)[0].files[0].type.match(/image\//)) return;
+	            
+	            var reader = new FileReader();
+	            reader.onload = function(e){
+	                var src = e.target.result;
+	                parent.prepend('<div class="upload-display"><div class="upload-thumb-wrap"><img src="'+src+'" class="upload-thumb"></div></div>');
+	            }
+	            reader.readAsDataURL($(this)[0].files[0]);
+	        }
+	
+	        else {
+	            $(this)[0].select();
+	            $(this)[0].blur();
+	            var imgSrc = document.selection.createRange().text;
+	            parent.prepend('<div class="upload-display"><div class="upload-thumb-wrap"><img class="upload-thumb"></div></div>');
+	
+	            var img = $(this).siblings('.upload-display').find('img');
+	            img[0].style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(enable='true',sizingMethod='scale',src=\""+imgSrc+"\")";        
+	        }
+	    });
+	</script>
+	
 	<script>
 		var placeCount = 0;
 		var routeCount = 0;
@@ -319,7 +449,8 @@
 			var courseData;
 			var mapInfo;
 			var placeInfos = new Array();
-			
+			var map_photo_value = $('#map_photo').val().split("\\");
+			var map_photo_name = map_photo_value[map_photo_value.length-1]; 
 			
 			mapInfo = {
 				"map_title": $('#map_title').val(),
@@ -328,7 +459,7 @@
 				"map_state": $('#map_state').val(),
 				"map_city": $('#map_city').val(),
 				"map_content": $('#map_content').val(),
-				"map_photo" : 'C:/',
+				"map_photo" : map_photo_name,
 				"theme_no": $('#theme_no').val()
 			};
 			
@@ -363,7 +494,7 @@
 				dataType : "text",
 				contentType : "application/json; charset=utf-8",
 				success : function(value) {
-					alert("지도등록에 성공했습니다!!");
+					alert("게시물이 등록 포인트 5000P가 추가되었습니다 !");
 					console.log(value);
 					location.href="main";
 					/* $.ajax({
@@ -404,16 +535,16 @@
 						$('#divPlace').hide();
                         $('#divRoute').show();
                         
-	                    $('#divRouteForm_order').html('<label>경로번호 </label><input type="text" id="route_course_no"/><br/><br/>');
+	                    $('#divRouteForm_order').html('<label><h5>경로번호</h5></label><input type="text" id="route_course_no" class="form-control" value="" style="width: 620px" readonly/><br/><br/>');
 	                    $('#route_course_no').val(lineInfos[key].route_course_no);
 	                    
-			        	$('#divRouteForm_name').html('<label>경로이름 </label><input type="text" id="route_name"/><br/><br/>');
+			        	$('#divRouteForm_name').html('<label><h5>경로이름</h5></label><input type="text" id="route_name" class="form-control" value="" style="width: 620px"/><br/><br/>');
 			        	$('#route_name').val(lineInfos[key].route_name); 
 			        	
-			        	$('#divRouteForm_type').html('<label>경로타입 </label><input type="text" id="route_type"/><br/><br/>');
+			        	$('#divRouteForm_type').html('<label><h5>경로타입</h5></label><input type="text" id="route_type" class="form-control" value="" style="width: 620px" readonly/><br/><br/>');
 			        	$('#route_type').val(lineInfos[key].route_type);
 			        	
-			        	$('#divRouteForm_content').html('<label>경로내용 </label><textarea id="route_content"></textarea><br/><br/>');
+			        	$('#divRouteForm_content').html('<label><h5>경로내용</h5></label><textarea id="route_content" class="form-control" value="" style="width: 620px"></textarea><br/><br/>');
 			        	$('#route_content').val(lineInfos[key].route_content);
 			        	
 			        	break;
@@ -437,27 +568,29 @@
 						$("#divPlace").show();
 						
 						//if(!markerInfos[key].created) {					
-							$('#divPlaceForm_order').html('<label>장소번호 </label><input type="text" id="place_course_no"/><br/><br/>');
+							$('#divPlaceForm_order').html('<label><h5>장소번호</h5></label><input type="text" id="place_course_no" class="form-control"  style="width: 620px" readonly/><br/><br/>');
 							$('#place_course_no').val(markerInfos[key].place_course_no);
 							
-							$('#divPlaceForm_name').html('<label>장소명 </label><input type="text" id="place_name"/><br/><br/>');
+							$('#divPlaceForm_name').html('<label><h5>장소명</h5></label><input type="text" id="place_name" class="form-control"  style="width: 620px"/><br/><br/>');
 							$('#place_name').val(markerInfos[key].place_name);
 							
-							$('#divPlaceForm_loadaddr').html('<label>도로명주소 </label><input type="text" id="place_loadaddr"/><br/><br/>');
+							$('#divPlaceForm_loadaddr').html('<label><h5>도로명주소</h5></label><input type="text" id="place_loadaddr" class="form-control"  style="width: 620px" readonly/><br/><br/>');
 							$('#place_loadaddr').val(markerInfos[key].place_loadaddr);
 							
-							$('#divPlaceForm_addr').html('<label>지번주소 </label><input type="text" id="place_addr"/><br/><br/>');
+							$('#divPlaceForm_addr').html('<label><h5>지번주소</h5></label><input type="text" id="place_addr" class="form-control"  style="width: 620px" readonly/><br/><br/>');
 							$('#place_addr').val(markerInfos[key].place_addr);
 							
-							$('#divPlaceForm_lat').html('<label>위도 </label><input type="text" id="place_lat"/>');
+							$('#divPlaceForm_lat').html('<label><h5>위도</h5></label><input type="text" id="place_lat" class="form-control"  style="width: 620px" readonly/><br>');
 							$('#place_lat').val(markerInfos[key].place_lat);
 							
-							$('#divPlaceForm_lng').html('<label>경도 </label><input type="text" id="place_lng"/>');
+							$('#divPlaceForm_lng').html('<label><h5>경도</h5></label><input type="text" id="place_lng" class="form-control"  style="width: 620px" readonly/><br>');
 							$('#place_lng').val(markerInfos[key].place_lng); 
 							
-							$('#divPlaceForm_content').html('<label>내용 </label><textarea id="place_content"></textarea><br/><br/>');
+							$('#divPlaceForm_content').html('<label><h5>내용</h5></label><textarea id="place_content" class="form-control"  style="width: 620px" ></textarea><br/>');
 							$('#place_content').val(markerInfos[key].place_content);
 							
+							$('#divPlaceForm_photo').html('<label><h5>장소 사진 업로드</h5></label><br/><input type="file" name="place_photo" id="place_photo" onchange="uploadFile()"></div><br/>');
+							$('#place_photo').val(markerInfos[key].place_photo);
 						//	markerInfos[key].created = true;
 						//} else {
 						//	break;
@@ -488,6 +621,22 @@
 			
 			//console.log("입력된 내용 :" + markerInfos[order].placeContent);
 		});
+		
+		
+		//$(document).on('change', '#place_photo', function(){ 
+		//	uploadFile(); 
+		//	let order = $('#place_course_no').val();
+		//	let place_photo_value = $('#place_photo').val().split("\\");
+		//	let photo = place_photo_value[place_photo_value.length-1]; 
+		//	markerInfos[order].place_photo = photo;
+		//});
+		
+		function uploadFile(){
+			let order = $('#place_course_no').val();
+			let place_photo_value = $('#place_photo').val().split("\\");
+			let photo = place_photo_value[place_photo_value.length-1]; 
+			markerInfos[order].place_photo = photo;
+		}
 		
 		$(document).on('keyup', '#route_name', function() {
 			let order = $('#route_course_no').val();

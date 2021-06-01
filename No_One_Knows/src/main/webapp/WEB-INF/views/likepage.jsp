@@ -10,6 +10,9 @@
 <title>Insert title here</title>
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <%
 	//유저가 접속 중인 상태
 	if(session.getAttribute("userInfo") != null){
@@ -23,6 +26,104 @@
 		script.close();
 	}
 %>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		selectContent();
+		selectCategory();
+	});
+	
+	function selectContent() {
+		var user_no = "${sessionScope.userInfo.user_no}";
+		$.ajax({
+			method : 'GET',
+			url : '${pageContext.request.contextPath}/likepage/likelist/'+user_no, 
+		}).done(function( data ) {
+		 	displayContentList(data);
+		});
+	}
+	
+	function selectCategory() {
+		$.ajax({
+			method : 'GET',
+			url : '${pageContext.request.contextPath}/likepage/category', 
+		}).done(function( data ) {
+		 	displayCategoryList(data); //만들기
+		});
+	}
+	
+	
+	function displayContentList(data) {
+		var mytable = "";
+	  	$.each( data, function( key, val ) {
+	  		mytable += '<div class="card mb-4">';
+	  		mytable += '<img class="card-img-top" src="resources/img/'+val['map_photo']+'"/>';
+	  		mytable += '<div class="card-body" style="background-color: white">';
+	  		mytable += '<h2 class="card-title">'+val['map_title']+'</h2>';
+	  		mytable += '<h5 class="card-text">'+val['map_subtitle']+'</h5>';
+	    	mytable += '<p class="card-text">'+val['map_country']+'&nbsp;'+val['map_state']+'&nbsp;'+val['map_city']+'</p>';
+	    	mytable += '<p class="card-text">'+val['map_placett']+'</p>';
+	    	mytable += '<p class="card-text">'+val['map_like']+'</p>';
+	    	mytable += '<button class="deleteLikeButton" myval="'+val['map_no']+'" style="background-color: white; border-radius: 10px"><h5>삭제</h5></button>&nbsp;&nbsp;';
+	    	mytable += '<button class="gotoCartButton" myval="'+val['map_no']+'" style="background-color: white; border-radius: 10px"><h5>장바구니로 이동</h5></button></div>';
+	    	mytable += '<div class="card-footer text-muted" style="background-color: white">';
+	    	mytable += '<p class="card-text">'+val['map_regdate']+'</p>';
+	    	mytable += '</div></div>';
+	  		});
+		$('#displayLikeContent').html(mytable);
+		deleteLikeButtonEvent();
+		gotoCartButtonEvent();
+	}
+	
+	function deleteLikeButtonEvent(){
+		$('.deleteLikeButton').click(function(){
+			var user_no = "${sessionScope.userInfo.user_no}";
+			$.ajax({
+				method : 'GET',
+				url :'${pageContext.request.contextPath}/likepage/delete/' + $(this).attr('myval') +'/' + user_no 
+			}).done(function( data ) {
+				alert('삭제가 완료되었습니다.');
+				displayContentList(data);
+			});
+		});
+	}
+	
+	function gotoCartButtonEvent(){
+		$('.gotoCartButton').click(function(){
+			var user_no = "${sessionScope.userInfo.user_no}";
+			$.ajax({
+				method : 'GET',
+				url :'${pageContext.request.contextPath}/likepage/gotocart/' + $(this).attr('myval') +'/' + user_no 
+			}).done(function( data ) {
+				alert('장바구니로 이동이 완료되었습니다.');
+				displayContentList(data);
+			});
+		});
+	}
+	
+	function displayCategoryList(data) {
+		var mytable = "";
+	  	$.each( data, function( key, val ) {
+	  		mytable += '<li><div class="row">&nbsp;&nbsp;<button class="categoryButton" myval="'+val['theme_no']+'" style="background-color: transparent; border: none"><h5 style="color: #6799FF">'+val['theme_name']+'</h5></button>&nbsp;&nbsp;<small>'+val['theme_content']+'</small></div></li>';
+	  		});
+		$('#displayCategory').html(mytable);
+		categoryButtonEvent(); 
+	}
+	
+	
+	//카테고리별 분류 이벤트 추가
+	function categoryButtonEvent() {
+		$('.categoryButton').click(function(){
+			var user_no = "${sessionScope.userInfo.user_no}";
+			$.ajax({
+				method : 'GET',
+				url :'${pageContext.request.contextPath}/likepage/category/' + $(this).attr('myval') +'/' + user_no 
+			}).done(function( data ) {
+				displayContentList(data);
+			});
+		});
+	}
+</script>
 </head>
 	<body>
         <nav class="navbar navbar-expand-lg" style="background: white;">
@@ -60,53 +161,15 @@
         <header style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) );">
 	        <div class="container">
 		        <section class="container" style="margin-top: 10px;">
-		        	<div class="scale"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
+		        	<div class="scale"><img src = "${pageContext.request.contextPath}/resources/img/${sessionScope.userInfo.user_photo}"  style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
 		            <h2 style=" text-align:center; margin-bottom: 60px;">${sessionScope.userInfo.user_id}님의 찜 목록입니다</h2>
 			    </section>
 			    <div class="row">
                 <!-- Blog entries-->
                 <div class="col-md-8">
-                    <!-- Blog post-->
-                    <div class="card mb-4">
-                        <img class="card-img-top" src="resources/img/sample.jpeg" alt="Card image cap" />
-                        <div class="card-body" style="background-color: white">
-                            <h2 class="card-title">Post Title</h2>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                            <a class="btn btn-primary" href="#!">Read More →</a>
-                        </div>
-                        <div class="card-footer text-muted" style="background-color: white">
-                            Posted on January 1, 2021 by
-                        </div>
+                    <div id="displayLikeContent">
+                    	 
                     </div>
-                    <!-- Blog post-->
-                    <div class="card mb-4">
-                        <img class="card-img-top" src="resources/img/sample.jpeg" alt="Card image cap" />
-                        <div class="card-body" style="background-color: white">
-                            <h2 class="card-title">Post Title</h2>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                            <a class="btn btn-primary" href="#!">Read More →</a>
-                        </div>
-                        <div class="card-footer text-muted" style="background-color: white">
-                            Posted on January 1, 2021 by
-                        </div>
-                    </div>
-                    <!-- Blog post-->
-                    <div class="card mb-4">
-                        <img class="card-img-top" src="resources/img/sample.jpeg" alt="Card image cap" />
-                        <div class="card-body" style="background-color: white">
-                            <h2 class="card-title">Post Title</h2>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                            <a class="btn btn-primary" href="#!">Read More →</a>
-                        </div>
-                        <div class="card-footer text-muted" style="background-color: white">
-                            Posted on January 1, 2021 by
-                        </div>
-                    </div>
-                    <!-- Pagination-->
-                    <ul class="pagination justify-content-center mb-4">
-                        <li class="page-item"><a class="page-link" href="#!">Previous</a></li>
-                        <li class="page-item disabled"><a class="page-link" href="#!">Next</a></li>
-                    </ul>
                 </div>
                 <!-- Side widgets-->
                 <div class="col-md-4">
@@ -122,37 +185,24 @@
                     </div>
                     <!-- Categories widget-->
                     <div class="card my-4">
-                        <h5 class="card-header" style="background-color: white">Categories</h5>
+                        <h5 class="card-header" style="background-color: white">테마별 분류</h5>
                         <div class="card-body" style="background-color: white">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-lg-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">JavaScript</a></li>
-                                        <li><a href="#!">CSS</a></li>
-                                        <li><a href="#!">Tutorials</a></li>
+                                    	<div id="displayCategory">
+                                        <!-- 카테고리 디스플레이 -->
+                                        </div>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Side widget-->
-                    <div class="card my-4">
-                        <h5 class="card-header" style="background-color: white">Side Widget</h5>
-                        <div class="card-body" style="background-color: white">You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!</div>
                     </div>
                 </div>
             </div>
 	        </div>
 	    </header>
         <!-- Bootstrap core JS-->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="resources/js/scripts.js"></script>
