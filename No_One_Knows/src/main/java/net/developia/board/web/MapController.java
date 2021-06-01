@@ -10,9 +10,21 @@ import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.*;
 
+<<<<<<< HEAD
+import lombok.extern.slf4j.Slf4j;
+import net.developia.board.dto.MapDTO;
+import net.developia.board.dto.PlaceDTO;
+import net.developia.board.dto.RouteDTO;
+import net.developia.board.dto.ThemeDTO;
+import net.developia.board.dto.UserDTO;
+import net.developia.board.service.ChatService;
+import net.developia.board.service.MapService;
+import net.developia.board.service.ThemeService;
+=======
 import lombok.extern.slf4j.*;
 import net.developia.board.dto.*;
 import net.developia.board.service.*;
+>>>>>>> 39518d9d1ba616cd55e0c0493815b864cd2c9c26
 
 @Slf4j
 @Controller
@@ -20,6 +32,9 @@ import net.developia.board.service.*;
 public class MapController {
 	@Autowired
 	private MapService mapService;
+	
+	@Autowired
+	private ChatService chatService;
 	
 	@Autowired
 	private ThemeService themeService;
@@ -94,6 +109,7 @@ public class MapController {
 			 */
 			log.info("맵등록시작");
 			mapService.addMap(mapDTO);
+			chatService.addChatRoom(mapDTO);
 			log.info("맵등록끝");
 			for(int i=0; i<jPlaceInfos.length(); i++) {
 				JSONObject obj = jPlaceInfos.getJSONObject(i);
