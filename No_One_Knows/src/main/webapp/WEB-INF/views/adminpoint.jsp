@@ -81,7 +81,7 @@
 			}).done(function( data ) {
 				alert('포인트 충전이 완료되었습니다.');
 				displayUserTransactionList(data);
-				$('.point_increase'+user_val).val('');
+				$('.point_increase').val('');
 			});
 		});
 	}

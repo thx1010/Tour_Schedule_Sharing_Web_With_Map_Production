@@ -19,5 +19,5 @@ public class MapDTO {
 	long map_placett;
 	long map_status;
 	String theme_name;
-	ThemeDTO ThemeDTO;
+	ThemeDTO themeDTO;
 }

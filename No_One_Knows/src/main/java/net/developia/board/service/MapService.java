@@ -1,11 +1,8 @@
 package net.developia.board.service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import net.developia.board.dto.MapDTO;
-import net.developia.board.dto.PlaceDTO;
-import net.developia.board.dto.RouteDTO;
+import net.developia.board.dto.*;
 
 public interface MapService {
 	public long getNextMapNo() throws Exception;
@@ -23,6 +20,10 @@ public interface MapService {
 	public List<RouteDTO> getRouteListForMapNo(long mapno) throws Exception;
 	
 	public void addRoute(RouteDTO route) throws Exception;
+
+	public UserDTO getUserno(MapDTO mapDTO) throws Exception;
+
+	public UserDTO getUserList(UserDTO userno) throws Exception;
 
 	
 }

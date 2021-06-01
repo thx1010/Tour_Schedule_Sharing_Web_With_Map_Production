@@ -13,6 +13,7 @@
 <title>Insert title here</title>
  <link href="${pageContext.request.contextPath}/resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="${pageContext.request.contextPath}/resources/css/custom.css" rel="stylesheet" type="text/css" />
+
 <%
 	//유저가 접속 중인 상태
 	if(session.getAttribute("userInfo") != null){
@@ -58,34 +59,49 @@
             	</div>
             </div>
         </nav><br><br>
-      	<div>
-      		<label>등록번호</label>${mapInfo.map_no}<br/>
-      		<label>여행제목</label><br/>${mapInfo.map_title}<br/>
-      		<label>부제</label><br/>${mapInfo.map_subtitle}<br/>
-      		<label>테마</label><br/>${mapInfo.themeDTO.theme_name}<br/>
-      		<label>국가</label><br/>${mapInfo.map_country}<br/>
-      		<label>주</label><br/>${mapInfo.map_state}<br/>
-      		<label>도시</label><br/>${mapInfo.map_city}<br/>
-      		<label>설명</label><br/>${mapInfo.map_content}<br/>
-      	</div>
         <!-- Page Content-->
-        <header style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) );">
+        <header style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) );"><br>
 	        <div class="container">
-		            <h2 style=" text-align:center; margin-bottom: 60px;">'</h2>
-				    <div class="parent2">
-				        <div class="first2">
-				        	<div id="map" style="width: 100%; height: 400px;"></div>
-				        	<h4 style="text-align: center; background-color: ">맵 공간</h4>
-				        </div>
-				        <div class="second2">
-				        	<!-- 여기 입력 폼 -->
-				        	<div id="divRoute">
+		       <div class = "container" style="width: 800px; background-color: white; box-shadow: 1px 1px 1px 1px #E7E7E7; border-radius: 15px">
+		       		<br><br>
+		       		<h1 style="text-align: center">${mapInfo.map_title}</h1><br>
+		       		<h5 style="text-align: center">${mapInfo.map_subtitle}</h5><br><br>
+		       		<img src = "${pageContext.request.contextPath}/resources/img/${userInfo.user_photo}" style="width: 45px; height: 45px; display: block; margin: 0px auto;">
+		       		<p style="text-align: center"><small>${userInfo.user_id}님의 게시글</small></p><br>
+		       		<div class="row" style="margin-left: 690px">
+			       			<button style="background-color: white; border: none"><h5 style="text-align: right; color: #DF4D4D; opacity: 0.9; font-size: 16px">&nbsp;&nbsp;신고하기</h5></button>
+		       		</div>
+		       		<div class="card mt-3" style="background-color: white">
+						<div class="card-header" style="background-color: white">
+							<br>
+							<img src = "${pageContext.request.contextPath}/resources/img/${mapInfo.map_photo}" style="display: block; margin: 0px auto;">
+							<br>
+							<h5 class="card-title" style="text-align:center"><br>
+									${mapInfo.map_country}&nbsp;&nbsp;${mapInfo.map_state}&nbsp;&nbsp;${mapInfo.map_city}
+							</h5><br>
+							<p class="card-title" style="text-align:center">
+									${mapInfo.map_content}
+							</p><br>
+							<p class="card-title" style="text-align:center">
+									${mapInfo.themeDTO.theme_name}
+							</p><br>	
+						</div><br>
+						<div class="card-body" style="text-align:center"><br>
+						<div id="map" style="width: 100%; height: 400px;"></div>
+						<br>
+						</div>
+						<div class="col-9 text-left">
+							<button onclick="setBounds()" style="background-color:white; border-radius: 10px; margin-left: 330px">한눈에보기</button>
+						</div><br>
+						<p class="card-title" style="padding-left:10px">
+							<div id="divRoute">
 				        		<div id="divRouteForm_order"></div>
 				        		<div id="divRouteForm_name"></div>
 				        		<div id="divRouteForm_type"></div>
 				        		<div id="divRouteForm_content"></div>
 				        	</div>
 				        	<div id="divPlace">
+				        	    <div id="divPlaceForm_photo"></div>
 					        	<div id="divPlaceForm_order"></div>
 								<div id="divPlaceForm_name"></div>
 								<div id="divPlaceForm_loadaddr"></div>
@@ -95,14 +111,16 @@
 								<div id="divPlaceForm_image"></div>
 								<div id="divPlaceForm_content"></div>
 							</div>
-				        	<h4 style="text-align: center;">입력 폼 공간</h4>
-				        </div>
-			        </div>
-			        <h2 style=" text-align:center; margin-bottom: 60px;">'</h2>
-			</div>
-			<div>
-				<button onclick="setBounds()">한눈에보기</button>
-			</div>
+						</p> 
+						<br>
+						</div>
+					</br>
+					<a href = "update?no=${dto.no}"><button type="button" style="background-color: #EBF7FF; border-radius: 15%;">수정</button></a>
+					<a href = "delete?no=${dto.no}"><button type="button" style="background-color: #EBF7FF; border-radius: 15%;">삭제</button></a>
+					<a href = "list"><button type="button" style="background-color: #EBF7FF; border-radius: 15%;">리스트</button></a>
+			   <br><br>
+			   </div>	
+			</div><br><br>
 	    </header>
         <!-- Bootstrap core JS-->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -228,18 +246,13 @@
                        //console.log("[lineInfo]" + lineInfos[key].route_course_no);
 						$('#divPlace').hide();
                         $('#divRoute').show();
-                        
-	                    $('#divRouteForm_order').html('<label>경로번호 </label><input type="text" id="route_course_no"/><br/><br/>');
-	                    $('#route_course_no').val(routeList[key].route_course_no);
+	                    $('#divRouteForm_order').html('<h5 style="text-align: center">'+routeList[key].route_course_no+'번 루트</h5><br/><br/>');
 	                    
-			        	$('#divRouteForm_name').html('<label>경로이름 </label><input type="text" id="route_name"/><br/><br/>');
-			        	$('#route_name').val(routeList[key].route_name); 
+			        	$('#divRouteForm_name').html('<h2 style="text-align: center">'+routeList[key].route_name+'</h5><br/><br/>');
 			        	
-			        	$('#divRouteForm_type').html('<label>경로타입 </label><input type="text" id="route_type"/><br/><br/>');
-			        	$('#route_type').val(routeList[key].route_type);
+			        	$('#divRouteForm_type').html('<h5 style="text-align: center">'+routeList[key].route_type+'</h5><br/><br/>');
 			        	
-			        	$('#divRouteForm_content').html('<label>경로내용 </label><textarea id="route_content"></textarea><br/><br/>');
-			        	$('#route_content').val(routeList[key].route_content);
+			        	$('#divRouteForm_content').html('<h5 style="text-align: center">'+routeList[key].route_content+'</h5><br/><br/>');
 			        	
 			        	break
 
@@ -252,6 +265,7 @@
 		
 		//마커 클릭 이벤트 추가
 		function addMarkerClickEvent(marker) {
+			sessionStorage.setItem("contextpath", "${pageContext.request.contextPath}");
 			kakao.maps.event.addListener(marker, 'click', function() {
 				//console.log(markerInfo);
 				for(const key in placeList) {
@@ -262,29 +276,23 @@
 						$("#divPlace").show();
 					
 					//if(!markerInfos[key].created) {					
-						$('#divPlaceForm_order').html('<label>코스번호 </label><input type="text" id="place_course_no"/><br/><br/>');
-						$('#place_course_no').val(placeList[key].place_course_no);
+						$('#divPlaceForm_order').html('<h5 style="text-align: center">'+placeList[key].place_course_no+'</h5><br/><br/>');
 						
-						$('#divPlaceForm_name').html('<label>장소명 </label><input type="text" id="place_name"/><br/><br/>');
-						$('#place_name').val(placeList[key].place_name);
+						$('#divPlaceForm_name').html('<h2 style="text-align: center">'+placeList[key].place_name+'</h5><br/><br/>');
 						
-						$('#divPlaceForm_loadaddr').html('<label>도로명주소 </label><input type="text" id="place_loadaddr"/><br/><br/>');
-						$('#place_loadaddr').val(placeList[key].place_loadaddr);
+						$('#divPlaceForm_loadaddr').html('<h5 style="text-align: center">'+placeList[key].place_loadaddr+'</h5><br/><br/>');
 						
-						$('#divPlaceForm_addr').html('<label>지번주소 </label><input type="text" id="place_addr"/><br/><br/>');
-						$('#place_addr').val(placeList[key].place_addr);
+						$('#divPlaceForm_addr').html('<h5 style="text-align: center">'+placeList[key].place_addr+'</h5><br/><br/>');
+
+						var photo = placeList[key].place_photo;
+						console.log(photo);
+						$('#divPlaceForm_photo').html('<img src="'+sessionStorage.getItem("contextpath")+'/resources/img/'+photo+'" style="display: block; margin: 0px auto;"/><br/><br/>');
 						
+						$('#divPlaceForm_lat').html('<p style="text-align: center">'+placeList[key].place_lat+'</p>');
 						
+						$('#divPlaceForm_lng').html('<p style="text-align: center">'+placeList[key].place_lng+'</p>');
 						
-						$('#divPlaceForm_lat').html('<label>위도 </label><input type="text" id="place_lat"/>');
-						$('#place_lat').val(placeList[key].place_lat);
-						
-						
-						$('#divPlaceForm_lng').html('<label>경도 </label><input type="text" id="place_lng"/>');
-						$('#place_lng').val(placeList[key].place_lng); 
-						
-						$('#divPlaceForm_content').html('<label>내용 </label><textarea id="place_content"></textarea><br/><br/>');
-						$('#place_content').val(placeList[key].place_content);
+						$('#divPlaceForm_content').html('<h5 style="text-align: center">'+placeList[key].place_content+'</h5><br/><br/>');
 						
 					//	markerInfos[key].created = true;
 					//} else {

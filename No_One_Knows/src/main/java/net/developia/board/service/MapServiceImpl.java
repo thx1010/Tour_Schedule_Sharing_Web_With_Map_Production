@@ -1,16 +1,13 @@
 package net.developia.board.service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
-import lombok.extern.slf4j.Slf4j;
-import net.developia.board.dao.MapDAO;
-import net.developia.board.dto.MapDTO;
-import net.developia.board.dto.PlaceDTO;
-import net.developia.board.dto.RouteDTO;
+import lombok.extern.slf4j.*;
+import net.developia.board.dao.*;
+import net.developia.board.dto.*;
 
 @Slf4j
 @Service
@@ -108,5 +105,27 @@ public class MapServiceImpl implements MapService {
 			throw e;
 		}
 		return routeList;
+	}
+
+	@Override
+	public UserDTO getUserno(MapDTO mapNo) throws Exception {
+		try {
+			UserDTO userno = mapDAO.getUserno(mapNo);
+			return userno;
+		} catch(Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public UserDTO getUserList(UserDTO userno) throws Exception {
+		try {
+			UserDTO userinfo = mapDAO.getUserList(userno);
+			return userinfo;
+		} catch(Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
 	}
 }

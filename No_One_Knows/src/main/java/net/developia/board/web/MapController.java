@@ -1,34 +1,18 @@
 package net.developia.board.web;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+import org.json.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.*;
 
-import lombok.extern.slf4j.Slf4j;
-import net.developia.board.dto.MapDTO;
-import net.developia.board.dto.PlaceDTO;
-import net.developia.board.dto.RouteDTO;
-import net.developia.board.dto.ThemeDTO;
-import net.developia.board.dto.UserDTO;
-import net.developia.board.service.MapService;
-import net.developia.board.service.ThemeService;
+import lombok.extern.slf4j.*;
+import net.developia.board.dto.*;
+import net.developia.board.service.*;
 
 @Slf4j
 @Controller
@@ -39,6 +23,9 @@ public class MapController {
 	
 	@Autowired
 	private ThemeService themeService;
+	
+	@Autowired
+	private PointService pointService;
 	
 	@RequestMapping(value="", method=RequestMethod.GET)
 	public String dynamicMarker() {
@@ -80,6 +67,7 @@ public class MapController {
 		mapDTO.setMap_content(jMapInfo.getString("map_content"));
 		mapDTO.setMap_photo(jMapInfo.getString("map_photo"));
 		mapDTO.setMap_placett(jPlaceInfos.length());
+		log.info("[mapInfoverify] : " + mapDTO.toString());
 		try {
 			ThemeDTO themeDTO = themeService.getThemeForThemeNo(jMapInfo.getLong("theme_no"));
 			mapDTO.setThemeDTO(themeDTO);
@@ -95,6 +83,7 @@ public class MapController {
 	
 		try {
 			long mapNo = mapService.getNextMapNo();
+			
 			mapDTO.setMap_no(mapNo);
 			/*
 			 * map_status
@@ -153,6 +142,22 @@ public class MapController {
 			register.put("userInfo", userDTO);
 			register.put("mapInfo", mapDTO);
 			mapService.addRegister(register);
+			/*포인트 추가*/
+			UserDTO userno = mapService.getUserno(mapDTO);
+			PointDTO pointDTO = pointService.selectPointInfo(userno);
+			pointDTO.setUserDTO(userno);
+			log.info(pointDTO.toString());
+			pointService.updateUserPointno(pointDTO);
+			
+			PointChargeDTO pointchargeInfo = new PointChargeDTO();
+			pointchargeInfo.setPoint_increase(5000);
+			pointchargeInfo.setPoint_charge_log("[ 게시물 등록 ] 추가 포인트");
+			pointchargeInfo.setPointDTO(pointDTO);
+			log.info(pointchargeInfo.toString());
+			
+			pointService.insertPointCharge(pointchargeInfo);
+			pointService.updatePointIncrease(pointchargeInfo);
+			/*포인트 추가 끝*/
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -217,7 +222,12 @@ public class MapController {
 			log.info(mapDTO.toString());
 			List<PlaceDTO> placeList = mapService.getPlaceListForMapNo(Long.parseLong(mapno));
 			List<RouteDTO> routeList = mapService.getRouteListForMapNo(Long.parseLong(mapno));
+			
+			UserDTO userno = mapService.getUserno(mapDTO);
+			UserDTO userInfo = mapService.getUserList(userno);
+			log.info(userInfo.toString());
 			mav.setViewName("coursedrawer");
+			mav.addObject("userInfo", userInfo);
 			mav.addObject("mapInfo", mapDTO);
 			mav.addObject("placeList", placeList);
 			mav.addObject("routeList", routeList);

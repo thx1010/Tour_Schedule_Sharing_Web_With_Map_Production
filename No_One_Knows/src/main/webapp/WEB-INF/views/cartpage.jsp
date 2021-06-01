@@ -10,6 +10,9 @@
 <title>Insert title here</title>
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <%
 	//유저가 접속 중인 상태
 	if(session.getAttribute("userInfo") != null){
@@ -23,6 +26,56 @@
 		script.close();
 	}
 %>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		selectContent();
+	});
+	
+	function selectContent() {
+		var user_no = "${sessionScope.userInfo.user_no}";
+		$.ajax({
+			method : 'GET',
+			url : '${pageContext.request.contextPath}/cartpage/cartlist/'+user_no, 
+		}).done(function( data ) {
+		 	displayContentList(data);
+		});
+	}
+	
+	function displayContentList(data) {
+		var mytable = "";
+	  	$.each( data, function( key, val ) {
+	  		mytable += '<div class="card bg-light mt-3">';
+	  		mytable += '<div class="card-header bg-light">';
+	  		mytable += '<div class="card-body" style="background-color: white"; border-radius: 15px;>';
+	  		mytable += '<h4 class="card-title">'+val['map_title']+'</h4></div>';
+	  		mytable += '<div class="card-body">';
+	    	mytable += '<p class="card-text">'+val['map_subtitle']+'</p>';
+	    	mytable += '<p class="card-text">'+val['map_country']+'&nbsp;'+val['map_state']+'&nbsp;'+val['map_city']+'</p>';
+	    	mytable += '<p class="card-text">'+val['map_placett']+'</p>	';
+	    	mytable += '<p class="card-text">'+val['map_like']+'</p>';
+	    	mytable += '<p class="card-text">'+val['map_regdate']+'</p>';
+	    	mytable += '<div class="row">';
+	    	mytable += '<div class="tscale"><a href = "#" style="text-decoration:none"><button style="background: linear-gradient( to left, #FAED7D, #FFCD12 ); color:white; border-radius: 15%; display: block; margin-top: 10px auto; "><h5><img src = "resources/img/check.png" style="width: 20px; height:20px;">&nbsp;결제하기</h5></button></a></div>';
+	    	mytable += '&nbsp;&nbsp;<div class="tscale"><a href = "#" style="text-decoration:none"><button style="background: linear-gradient( to left, #FAED7D, #FFCD12 ); color:white; border-radius: 15%; display: block; margin-top: 10px auto; "><h5><img src = "resources/img/check.png" style="width: 20px; height:20px;">&nbsp;삭제</h5></button></a></div>';
+	    	mytable += '</div></div></div>';
+	  		});
+		$('#cartlist').html(mytable);
+		//newlistButtonEvent(); --여기도 수정
+	}
+	
+	//검색 이벤트 추가 (수정하기)
+	function newlistButtonEvent() {
+		$('.newlist').click(function(){
+			$.ajax({
+				method : 'GET',
+				url :'${pageContext.request.contextPath}/main/newlist'
+			}).done(function( data ) {
+				displayContentList(data);
+			});
+		});
+	}
+</script>
 </head>
 	<body>
         <nav class="navbar navbar-expand-lg" style="background: white;">
@@ -60,44 +113,19 @@
         <header style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) );">
 	        <div class="container">
 		        <section class="container" style="margin-top: 10px;">
-		        	<div class="scale"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
+		        	<div class="scale"><img src = "${pageContext.request.contextPath}/resources/img/${sessionScope.userInfo.user_photo}"  style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
 		            <h2 style=" text-align:center; margin-bottom: 60px;">${sessionScope.userInfo.user_id}님의 장바구니 목록입니다</h2>
 				    <div class="row" style="margin-left: 740px; margin-bottom: 60px;">
 				    	<input type="text"  id="search" name="searchKeyword" required="required" value="" style="border-radius: 15%;" />&nbsp;&nbsp;
 						<div class="tscale"><input type="submit" id="w-button-search" value="여행지 검색하기" style="background: linear-gradient( to left, #5587ED, #8BBDFF ); color:white; font-family: 'Do Hyeon'; border-radius: 15%;"/></div>
 				    </div>
 			    </section>
-			    <!--카드 시작-->
-			    <div class="card bg-light mt-3">
-				<div class="card-header bg-light">
-					<h4 class="card-title">
-						<a href="detail?no=${dto.no}">제목 </a>
-					</h4>
-				</div>
-				<div class="card-body">
-				<h5 class="card-title">
-					&nbsp;
-					<small>
-						(<c:choose>
-							<c:when test="${dto.regdate.getYear() == tyear && dto.regdate.getMonth() == tmonth && dto.regdate.getDate() == tdate }">
-								<f:formatDate value="${dto.regdate}" pattern="HH:mm:ss"/>
-							</c:when>
-							<c:otherwise>
-								<f:formatDate value="${dto.regdate}" pattern="yyyy/MM/dd"/>
-							</c:otherwise>
-						</c:choose>)
-					</small>
-				</h5>
-				<p class="card-text">${dto.subtitle} 클릭하면 디테일</p>
-				<p class="card-text">구분 : ${dto.divide}</p>	
-				<p class="card-text">조회수 : ${dto.readcount}</p>
-				<div class="tscale"><a href = "#" style="text-decoration:none"><button style="background: linear-gradient( to left, #FAED7D, #FFCD12 ); color:white; border-radius: 15%; display: block; margin-top: 10px auto; "><h5><img src = "resources/img/check.png" style="width: 20px; height:20px;">&nbsp;결제하기</h5></button></a></div>
-				</div>
-			</div>
-	        </div>
+			   <div id="cartlist">
+			    
+			   </div>
+	        </div><br><br>
 	    </header>
         <!-- Bootstrap core JS-->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="resources/js/scripts.js"></script>
