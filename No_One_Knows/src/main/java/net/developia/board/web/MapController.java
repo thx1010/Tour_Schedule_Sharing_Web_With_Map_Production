@@ -27,6 +27,7 @@ import net.developia.board.dto.PlaceDTO;
 import net.developia.board.dto.RouteDTO;
 import net.developia.board.dto.ThemeDTO;
 import net.developia.board.dto.UserDTO;
+import net.developia.board.service.ChatService;
 import net.developia.board.service.MapService;
 import net.developia.board.service.ThemeService;
 
@@ -36,6 +37,9 @@ import net.developia.board.service.ThemeService;
 public class MapController {
 	@Autowired
 	private MapService mapService;
+	
+	@Autowired
+	private ChatService chatService;
 	
 	@Autowired
 	private ThemeService themeService;
@@ -105,6 +109,7 @@ public class MapController {
 			 */
 			log.info("맵등록시작");
 			mapService.addMap(mapDTO);
+			chatService.addChatRoom(mapDTO);
 			log.info("맵등록끝");
 			for(int i=0; i<jPlaceInfos.length(); i++) {
 				JSONObject obj = jPlaceInfos.getJSONObject(i);

@@ -1,6 +1,8 @@
 package net.developia.board.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -19,5 +21,5 @@ public class MapDTO {
 	long map_placett;
 	long map_status;
 	String theme_name;
-	ThemeDTO ThemeDTO;
+	ThemeDTO themeDTO;
 }
