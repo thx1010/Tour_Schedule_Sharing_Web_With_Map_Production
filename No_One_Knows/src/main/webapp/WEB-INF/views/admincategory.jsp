@@ -8,7 +8,8 @@
 <title>Insert title here</title>
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -86,42 +87,41 @@
 	
 	function displayCategoryUpdateList() {
 		var detailmodal = "";
-	  	detailmodal += "<p style='text-align: center'>카테고리 수정 <br></p>";
-	  	detailmodal += "<p style='text-align: center'>테마 카테고리 이름 : <input class='theme_update_name' type='text' style='border-radius: 5px; width: 150px' /></p><br>";
-	  	detailmodal += "<p style='text-align: center'>테마 카테고리 설명 : <input class='theme_update_content' type='text' style='border-radius: 5px; width: 150px' /></p><br>";
-	  	detailmodal += "<p style='text-align: center'><button type='button' class='updateCategoryButton' data-dismiss='modal'>확인</button></p>";
+	  	detailmodal += "<h4 style='text-align: center'>카테고리 수정 <br></h4><br>";
+	  	detailmodal += "<p style='text-align: center'>테마 이름  <input class='theme_update_name' type='text' style='border-radius: 5px; width: 150px' /></p><br>";
+	  	detailmodal += "<p style='text-align: center'>테마 설명  <input class='theme_update_content' type='text' style='border-radius: 5px; width: 150px' /></p><br>";
+	  	detailmodal += "<p style='text-align: center'><button type='button' style='background-color: white; border-radius: 10px' class='updateCategoryButton' data-dismiss='modal'>확인</button></p>";
 		$('#displayUpdateList').html(detailmodal);
 	}
 	//여기 updateval 수정
 	
 	function displayCategoryInsertList() {
 		var detailmodal = "";
-	  	detailmodal += "<p style='text-align: center'>카테고리 추가 <br></p>";
-	  	detailmodal += "<p style='text-align: center'>테마 카테고리 이름 : <input class='theme_name' type='text' style='border-radius: 5px; width: 150px' /></p><br>";
-	  	detailmodal += "<p style='text-align: center'>테마 카테고리 설명 : <input class='theme_content' type='text' style='border-radius: 5px; width: 150px' /></p><br>";
-	  	detailmodal += "<p style='text-align: center'><button type='button' class='newCategoryButton'  data-dismiss='modal'></p>";
+	  	detailmodal += "<h4 style='text-align: center'>카테고리 추가 <br></h4><br>";
+	  	detailmodal += "<p style='text-align: center'>테마 이름  <input class='theme_name' type='text' style='border-radius: 5px; width: 150px' /></p><br>";
+	  	detailmodal += "<p style='text-align: center'>테마 설명  <input class='theme_content' type='text' style='border-radius: 5px; width: 150px' /></p><br>";
+	  	detailmodal += "<p style='text-align: center'><button type='button' style='background-color: white; border-radius: 10px' class='newCategoryButton'  data-dismiss='modal'>확인</button></p>";
 		$('#displayCategoryList').html(detailmodal);
 	}
 	
 </script>
 </head>
-        <nav class="navbar navbar-expand-lg" style="background: white;">
+         <nav class="navbar navbar-expand-lg" style="background: white;">
             <div class="container">
-            	<div class="row"><br><br>
-            		<a class="navbar-brand" href="adminmain"><b><h3 style="font-size:25px; color: black;">&nbsp;&nbsp;&nbsp;&nbsp;NO</h3></b></a>
-            		<a class="navbar-brand" href="adminmain"><b><h3 style="font-size:25px;">One</h3></b></a>
-            		<a class="navbar-brand" href="adminmain"><b><h3 style="font-size:25px; color: black;">Knows&nbsp;&nbsp;&nbsp;&nbsp;</h3></b></a>
+            	<div class="row" style="margin-left: 80px; margin-top: 45px"><br><br>
+            		<a class="navbar-brand" href="adminmain"><b><h3 style="font-size:25px; background: linear-gradient( to right, #1a3a83, #C4DEFF ); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">NO ONE KNOWS</h3></b></a>
+            		
 <% 
 	if(session.getAttribute("adminInfo") == null){ 
 %>
 	
-            		<div class="hevent"><a class="navbar-brand" href="login" style="color:#BDBDBD; font-size:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그인</a></div>
-            		<div class="hevent"><a class="navbar-brand" href="signup" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;회원가입</a></div>
-					<div class="hevent"><a class="navbar-brand" href="adminlogin" style="color:#6799FF; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;관리자로 로그인</a></div>
+            		<div class="hevent"><a href="login"><h5 style="color:#1a3a83; font-size:13px;">로그인&nbsp;&nbsp;&nbsp;</h5></a></div>
+            		<div class="hevent"><a href="signup"><h5 style="color:#1a3a83; font-size:13px">회원가입&nbsp;&nbsp;&nbsp;</h5></a></div>
+					<div class="hevent"><a href="adminlogin"><h5 style="color:#1a3a83; font-size:13px">관리자로 로그인</h5></a></div>
 <%
 	} else {%>
-					<p class="navbar-brand" style="color:#6799FF; font-size:14px">관리자 ${sessionScope.adminInfo.admin_id} 님 환영합니다!</p>
-                    <div class="hevent"><a class="navbar-brand" href="logout" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그아웃</a></div>
+					<h5 style="color:#1a3a83; font-size:13px">${sessionScope.adminInfo.admin_id} 님 환영합니다!&nbsp;&nbsp;&nbsp;</h5>
+                    <div class="hevent"><a href="logout"><h5 style="color:#1a3a83; font-size:13px">로그아웃</h5></a></div>
 <% } %>
             	</div>
             </div>

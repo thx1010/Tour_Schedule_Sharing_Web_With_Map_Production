@@ -22,8 +22,19 @@ public class MainController {
 	@Autowired
 	private ThemeService themeService;
 	
+	@Autowired
+	private PointService pointService;
+	
+	@Autowired
+	private AdminService adminService;
+	
+	
 	@GetMapping(value="/main")
-	public ModelAndView main() throws Exception {
+	public ModelAndView main(Model model) throws Exception {
+		List<NoticeDTO> noticelist = adminService.selectNotice();
+		NoticeDTO noticecount = mainService.selectNoticeCount();
+		model.addAttribute("noticelist", noticelist);
+		model.addAttribute("noticecount", noticecount);
 		return new ModelAndView("main");
 	}
 	
@@ -34,6 +45,49 @@ public class MainController {
 		return mainInfoList;
 	}
 	
+	@GetMapping(value = "/main/viewmore", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapRegisterDTO> main_viewmore() throws Exception {
+		List<MapRegisterDTO> mainInfoList = mainService.getMapViewmoreList();
+		return mainInfoList;
+	}
+	
+	@GetMapping(value = "/cartpage/cartlist/search/{searchKeyword}/{userno}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public Map<String, Object> main_new(@PathVariable String searchKeyword,
+			@PathVariable long userno
+			/*@PathVariable long pageno*/) throws Exception {
+		
+		UserDTO userDTO = new UserDTO();
+		userDTO.setUser_no(userno);
+		log.info("[CartSearch] userInfo : {}", userDTO);
+		
+		//PageDTO pageDTO = new PageDTO();
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("user", userDTO);
+		param.put("keyword", searchKeyword);
+		
+		long count = mainService.countCartMapForKeyword(param);
+		
+		
+		//pageDTO.setTotalArticle(count);		
+		//pageDTO.setEachArticlePerPage(5);
+		//pageDTO.setPageBlock(10);		
+		//pageDTO.setCurrentPage(pageno);
+		//pageDTO.calculatePage();
+		//param.put("page", pageDTO);
+		
+		//log.info("[Cartsys] 페이지 정보 : {}", pageDTO);
+		log.info("[Cartsys] 토탈 장바구니 개수: : {}", count);
+		List<MapDTO> cartList = mainService.getCartContentForKeyword(param);
+				
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("cartList", cartList);
+		//data.put("pageDTO", pageDTO);
+		
+		return data;
+	}
+	
 	@GetMapping(value = "/main/newlist", produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public List<MapRegisterDTO> main_new() throws Exception {
@@ -41,6 +95,30 @@ public class MainController {
 		return mainInfoList;
 	}
 	
+	
+	@GetMapping(value = "/main/bestlist", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapRegisterDTO> main_best() throws Exception {
+		List<MapRegisterDTO> mainInfoList = mainService.getMapBestList();
+		return mainInfoList;
+	}
+	
+	@GetMapping(value = "/main/mylist/")
+	@ResponseBody
+	public ModelAndView main_mylist() throws Exception {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("result");
+		mav.addObject("msg", "로그인을 해주세요");
+		mav.addObject("url", "/board/main");
+		return mav;
+	}
+	
+	@GetMapping(value = "/main/mylist/{theme_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapRegisterDTO> main_my(@ModelAttribute ThemeDTO themeDTO) throws Exception {
+		List<MapRegisterDTO> mainInfoList = mainService.getMapMyList(themeDTO);
+		return mainInfoList;
+	}
 	@RequestMapping(value = "/main/detailmodal/{map_no}", produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public List<PlaceDTO> main_detailmodal(
@@ -61,17 +139,19 @@ public class MainController {
 	@ResponseBody
 	public ModelAndView main_addtocart(
 			@ModelAttribute MapRegisterDTO mapregisterDTO) throws Exception {
+
 		mainService.addtoCart(mapregisterDTO);
 		return new ModelAndView("main");
 	}
 	
 	@RequestMapping(value = "/main/like/{map_no}/{user_no}", produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public ModelAndView main_addtolike(
+	public List<MapRegisterDTO> main_addtolike(
 			@ModelAttribute MapRegisterDTO mapregisterDTO) throws Exception {
 		mainService.addtoLike(mapregisterDTO);
 		mainService.updateLikeCount(mapregisterDTO);
-		return new ModelAndView("main");
+		List<MapRegisterDTO> mainInfoList = mainService.getMapList();
+		return mainInfoList;
 	}
 	
 	@GetMapping(value="/likepage")
@@ -79,12 +159,37 @@ public class MainController {
 		return new ModelAndView("likepage");
 	}
 	
-	@RequestMapping(value = "/likepage/likelist/{user_no}", produces="application/json;charset=UTF-8")
+	@RequestMapping(value = "/likepage/likelist/{user_no}/{page_no}", produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public List<MapDTO> likepage_addContent(
-			@ModelAttribute UserDTO userno) throws Exception {
-		List<MapDTO> mainInfoList = mainService.getLikeContent(userno);
-		return mainInfoList;
+	public Map<String, Object> likepage_addContent(
+			@ModelAttribute UserDTO userno, @PathVariable long page_no) throws Exception {
+		//List<MapDTO> mainInfoList = mainService.getLikeContent(userno);
+		
+		PageDTO pageDTO = new PageDTO();
+		
+		log.info("[CartSys] 유저정보 : {}", userno.toString());
+		long count = mainService.countLikeMap(userno);
+		
+		pageDTO.setTotalArticle(count);		//조건에 맞는 총 data 개수
+		pageDTO.setEachArticlePerPage(5);	//한 페이지당 data 개수
+		pageDTO.setPageBlock(10);			//보여줄 페이지 개수
+		pageDTO.setCurrentPage(page_no);	//현재 페이지
+		pageDTO.calculatePage();
+		log.info("[Cartsys] 페이지 정보 : {}", pageDTO);
+		log.info("[Cartsys] 토탈 찜 개수: : {}", count);
+		//List<MapDTO> cartList = mainService.getCartContent(userno);
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("page", pageDTO);
+		param.put("user", userno);
+		
+		List<MapDTO> likeList = mainService.getLikeContentForPage(param);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("likeList", likeList);
+		data.put("pageDTO", pageDTO);
+		
+		return data;
 	}
 	
 	@RequestMapping(value = "/likepage/category", produces="application/json;charset=UTF-8")
@@ -141,8 +246,16 @@ public class MainController {
 			log.info(userlist.toString());
 			List<PointDTO> pointlist = mainService.getPointList(userDTO);
 			log.info(pointlist.toString());
+			List<PointChargeDTO> pointchargelist = mainService.getPointChargeList(userDTO);
+			List<PointSpendDTO> pointspendlist = mainService.getPointSpendList(userDTO);
+			List<MapDTO> mapstatuslist = mainService.getMapStatusList(userDTO);
+			List<MapDTO> mappurchaselist = mainService.getMapPurchaseList(userDTO);
 			model.addAttribute("userlist", userlist);
 			model.addAttribute("pointlist", pointlist);
+			model.addAttribute("pointchargelist", pointchargelist);
+			model.addAttribute("pointspendlist", pointspendlist);
+			model.addAttribute("mapstatuslist", mapstatuslist);
+			model.addAttribute("mappurchaselist", mappurchaselist);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -151,14 +264,81 @@ public class MainController {
 	
 	
 	@GetMapping(value="/cartpage")
-	public ModelAndView cartpage() throws Exception {
+	public ModelAndView cartpage(Model model) throws Exception {
+		List<NoticeDTO> noticelist = adminService.selectNotice();
+		NoticeDTO noticecount = mainService.selectNoticeCount();
+		model.addAttribute("noticelist", noticelist);
+		model.addAttribute("noticecount", noticecount);
 		return new ModelAndView("cartpage");
 	}
 	
-	@RequestMapping(value = "/cartpage/cartlist/{user_no}", produces="application/json;charset=UTF-8")
+	@RequestMapping(value = "/cartpage/cartlist/{user_no}/{page_no}", produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public List<MapDTO> cartpage_addContent(
-			@ModelAttribute UserDTO userno) throws Exception {
+	public /*List<MapDTO>*/Map<String, Object> cartpage_addContent(
+			@ModelAttribute UserDTO userno, @PathVariable long page_no) throws Exception {
+		PageDTO pageDTO = new PageDTO();
+		
+		log.info("[CartSys] 유저정보 : {}", userno.toString());
+		long count = mainService.countCartMap(userno);
+		
+		pageDTO.setTotalArticle(count);		//조건에 맞는 총 data 개수
+		pageDTO.setEachArticlePerPage(5);	//한 페이지당 data 개수
+		pageDTO.setPageBlock(10);			//보여줄 페이지 개수
+		pageDTO.setCurrentPage(page_no);	//현재 페이지
+		pageDTO.calculatePage();
+		log.info("[Cartsys] 페이지 정보 : {}", pageDTO);
+		log.info("[Cartsys] 토탈 장바구니 개수: : {}", count);
+		//List<MapDTO> cartList = mainService.getCartContent(userno);
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("page", pageDTO);
+		param.put("user", userno);
+		
+		List<MapDTO> cartList = mainService.getCartContentForPage(param);
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("cartList", cartList);
+		data.put("pageDTO", pageDTO);
+		return data;
+	}
+	
+	@GetMapping(value = "/cartpage/payformaps/{map_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> paymodal_addContent(
+			@ModelAttribute MapDTO mapdto) throws Exception {
+		List<MapDTO> mainInfoList = mainService.getPayModalContent(mapdto);
+		return mainInfoList;
+	}
+	
+	@RequestMapping(value = "/cartpage/paybutton/{map_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public ModelAndView  paymodal_purchase(
+			@ModelAttribute MapPurchaseDTO purchasedto) throws Exception {
+		mainService.insertintoPurchase(purchasedto);
+		//결제 프로세스
+		long user_no = purchasedto.getUser_no();
+		UserDTO userno = new UserDTO();
+		userno.setUser_no(user_no);
+		PointDTO pointDTO = pointService.selectPointInfo(userno);
+		pointDTO.setUserDTO(userno);
+		PointSpendDTO pointspendInfo = new PointSpendDTO();
+		pointspendInfo.setPoint_decrease(3000);
+		pointspendInfo.setPoint_spend_log("[게시물 구매] 포인트 결제");
+		pointspendInfo.setPointDTO(pointDTO);
+		pointService.insertPointSpend(pointspendInfo);
+		pointService.updatePointDecrease(pointspendInfo);
+		
+		return new ModelAndView("cartpage");
+	}
+	
+	@RequestMapping(value = "/cartpage/delete/{map_no}/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> paymodal_deleteContent(
+			@ModelAttribute MapPurchaseDTO purchasedto) throws Exception {
+		mainService.deleteCart(purchasedto);
+		long number = purchasedto.getUser_no();
+		UserDTO userno = new UserDTO();
+		userno.setUser_no(number);
 		List<MapDTO> mainInfoList = mainService.getCartContent(userno);
 		return mainInfoList;
 	}
@@ -179,8 +359,64 @@ public class MainController {
 		return mav;
 	}
 	
-	@GetMapping(value="/mapdetail")
-	public ModelAndView mapdetail() throws Exception {
-		return new ModelAndView("mapdetail");
+	@GetMapping(value="/chatroom")
+	public ModelAndView chatroom(Model model) throws Exception {
+		List<NoticeDTO> noticelist = adminService.selectNotice();
+		NoticeDTO noticecount = mainService.selectNoticeCount();
+		
+		model.addAttribute("noticelist", noticelist);
+		model.addAttribute("noticecount", noticecount);
+		return new ModelAndView("chatroom");
+	}
+	
+	@GetMapping(value = "/chatroom/getroom", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ChatRoomDTO> chat_getroom() throws Exception {
+		List<ChatRoomDTO> chatroom = mainService.getChatroom();
+		return chatroom;
+	}
+	
+	@RequestMapping(value = "/chatroom/payforcommu/{room_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ChatRoomDTO> chat_getroominfo(@ModelAttribute ChatRoomDTO chatrooom) throws Exception {
+		List<ChatRoomDTO> roominfo = mainService.getroomInfo(chatrooom);
+		return roominfo;
+	}
+	
+	@RequestMapping(value = "/chatroom/paybutton/{user_no}/{room_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public ModelAndView chat_paycommunity(@ModelAttribute UserDTO userdto, @ModelAttribute ChatRoomDTO chatroom) throws Exception {
+		long user_no = userdto.getUser_no();
+		UserDTO userno = new UserDTO();
+		userno.setUser_no(user_no);
+		PointDTO pointDTO = pointService.selectPointInfo(userno);
+		pointDTO.setUserDTO(userno);
+		PointSpendDTO pointspendInfo = new PointSpendDTO();
+		pointspendInfo.setPoint_decrease(5000);
+		pointspendInfo.setPoint_spend_log("[커뮤니티 가입] 포인트 결제");
+		pointspendInfo.setPointDTO(pointDTO);
+		pointService.insertPointSpend(pointspendInfo);
+		pointService.updatePointDecrease(pointspendInfo);
+		long room = chatroom.getRoom_no();
+		RegisterChatRoomDTO registerchatroom = new RegisterChatRoomDTO();
+		registerchatroom.setRoom_no(room);
+		registerchatroom.setUser_no(user_no);
+		mainService.insertRegisterRoom(registerchatroom);
+		
+		return new ModelAndView("chatroom");
+	}
+	
+	@RequestMapping(value = "/main/message/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ChatMessageDTO> chat_message(@ModelAttribute ChatMessageDTO message) throws Exception {
+		List<ChatMessageDTO> messageinfo = mainService.getMessageInfo(message);
+		return messageinfo;
+	}
+	
+	@RequestMapping(value = "/main/messagecount/{user_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<ChatMessageDTO> chat_messagecount(@ModelAttribute ChatMessageDTO message) throws Exception {
+		List<ChatMessageDTO> messageinfo = mainService.getMessageCountInfo(message);
+		return messageinfo;
 	}
 }

@@ -1,30 +1,41 @@
 package net.developia.board.web;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpSession;
 
-import org.json.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
-<<<<<<< HEAD
 import lombok.extern.slf4j.Slf4j;
 import net.developia.board.dto.MapDTO;
+import net.developia.board.dto.PageDTO;
 import net.developia.board.dto.PlaceDTO;
+import net.developia.board.dto.PointChargeDTO;
+import net.developia.board.dto.PointDTO;
+import net.developia.board.dto.ReviewDTO;
 import net.developia.board.dto.RouteDTO;
 import net.developia.board.dto.ThemeDTO;
 import net.developia.board.dto.UserDTO;
 import net.developia.board.service.ChatService;
 import net.developia.board.service.MapService;
+import net.developia.board.service.PointService;
+import net.developia.board.service.ReviewService;
 import net.developia.board.service.ThemeService;
-=======
-import lombok.extern.slf4j.*;
-import net.developia.board.dto.*;
-import net.developia.board.service.*;
->>>>>>> 39518d9d1ba616cd55e0c0493815b864cd2c9c26
 
 @Slf4j
 @Controller
@@ -41,6 +52,9 @@ public class MapController {
 	
 	@Autowired
 	private PointService pointService;
+	
+	@Autowired
+	private ReviewService reviewService;
 	
 	@RequestMapping(value="", method=RequestMethod.GET)
 	public String dynamicMarker() {
@@ -109,7 +123,8 @@ public class MapController {
 			 */
 			log.info("맵등록시작");
 			mapService.addMap(mapDTO);
-			chatService.addChatRoom(mapDTO);
+			//여기 mapDTO에는 맵 번호가 없음...! 낼 물어보기
+			//chatService.addChatRoom(mapDTO);
 			log.info("맵등록끝");
 			for(int i=0; i<jPlaceInfos.length(); i++) {
 				JSONObject obj = jPlaceInfos.getJSONObject(i);
@@ -242,6 +257,7 @@ public class MapController {
 			UserDTO userno = mapService.getUserno(mapDTO);
 			UserDTO userInfo = mapService.getUserList(userno);
 			log.info(userInfo.toString());
+			
 			mav.setViewName("coursedrawer");
 			mav.addObject("userInfo", userInfo);
 			mav.addObject("mapInfo", mapDTO);
@@ -257,6 +273,88 @@ public class MapController {
 		}
 	
 		return mav;
+	}
+	
+	@RequestMapping(value="/coursedraw/{mapno}/{userno}/{pageno}", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> saveReview(@PathVariable("mapno") long mapno, @PathVariable("userno") long userno, @PathVariable("pageno") long pageno, @RequestParam Map<String, Object> reviewData) {
+		//add review
+		Map<String, Object> result = new HashMap<String, Object>();
+		ReviewDTO reviewDTO = new ReviewDTO();
+		Boolean isLoad = false;
+		reviewDTO.setMap_no(mapno);
+		reviewDTO.setUser_no(userno);
+		reviewDTO.setReview_rate(Long.parseLong((String)reviewData.get("rating")));
+		reviewDTO.setReview_content((String)reviewData.get("content"));
+		
+		isLoad = Boolean.parseBoolean((String)reviewData.get("load"));
+		try {
+			if(reviewService.checkMyReview(reviewDTO) == 1) {
+				if(isLoad) {
+					Map<String, Object> myInfo = new HashMap<String, Object>();
+					myInfo.put("user_no", userno);
+					myInfo.put("map_no", mapno);
+					reviewDTO = reviewService.getMyReview(myInfo);
+				} else {
+					reviewService.updateReview(reviewDTO);
+				}
+			} else {
+				reviewService.addReview(reviewDTO);
+			}
+		} catch(Exception e) {
+			log.info(e.getMessage());
+			result.put("result", "fail");
+			result.put("msg", "리뷰 등록 실패");
+			return result;
+		}
+		
+		//review return
+		PageDTO pageDTO = new PageDTO();
+		long count = 0;
+		try {	
+			count = reviewService.countReviewForMap(mapno);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", "fail");
+			result.put("msg", "리뷰 카운팅 실패");
+			return result;
+		}
+		
+		pageDTO.setTotalArticle(count);		//조건에 맞는 총 data 개수
+		pageDTO.setEachArticlePerPage(5);	//한 페이지당 data 개수
+		pageDTO.setPageBlock(10);			//보여줄 페이지 개수
+		pageDTO.setCurrentPage(pageno);		//현재 페이지
+		pageDTO.calculatePage();
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		//param.put("user_no", userno);
+		param.put("map_no", mapno);
+		param.put("page", pageDTO);
+		//log.info("[ReviewSys] user_no {}", userno);
+		//log.info("[ReviewSys] map_no {}", mapno);
+		//log.info("[ReviewSys] page_no {}", pageno);
+		//log.info("[ReviewSys] review data {}", reviewData.toString());
+		
+		List<ReviewDTO> reviewList = null;
+		try {
+			reviewList = reviewService.getReviewList(param);
+			log.info("[ReviewSys] reviewList : {}", reviewList.toString());
+		} catch(Exception e) {
+			log.info(e.getMessage());
+			result.put("result", "fail");
+			result.put("msg", "리뷰 불러오기 실패");
+			return result;
+		}
+		
+		
+		
+		
+		result.put("reviewList", reviewList);
+		result.put("myReview", reviewDTO);
+		result.put("page", pageDTO);
+		result.put("result", "success");
+		result.put("msg", "리뷰 등록 성공");
+		return result;
 	}
 	
 	

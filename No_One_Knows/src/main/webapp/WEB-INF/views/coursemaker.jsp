@@ -8,10 +8,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <title>Insert title here</title>
+
+
+<link
+   rel="stylesheet"
+   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+/>
+
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
+<link href="resources/css/main.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
- <link rel="stylesheet" href="resources/css/main.css" />
  <noscript><link rel="stylesheet" href="resources/css/noscript.css" /></noscript>
+ 
 <%
 	//유저가 접속 중인 상태
 	if(session.getAttribute("userInfo") != null){
@@ -26,195 +34,284 @@
 	}
 %>
 </head>
+<header class="header" style=" background-color: white">
+      <div class="nav notify-row" id="top_menu" style="margin-left: 150px;">
+        <!--  notification start -->
+        <ul class="nav top-menu">
+          <!-- settings start -->
+          <li class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+              <i class="fa fa-tasks"></i>
+ <% 
+	if(session.getAttribute("userInfo") == null){ 
+%>
+<% 
+	} else {
+%>
+              <span class="badge bg-theme" id="messagecount"></span>
+<% 
+	}
+%>
+              </a>
+            <ul class="dropdown-menu extended tasks-bar">
+              <div class="notify-arrow notify-arrow-green"></div>
+              
+              <li>
+                <a href="#notice">
+                  <div class="task-info">
+                    <div class="desc"><h5>공지 사항 확인하기</h5></div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- settings end -->
+          <!-- 두번째 토글-->
+          <li id="header_inbox_bar" class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+              <i class="fa fa-envelope-o"></i>
+              <span class="badge bg-warning">${noticecount.notice_no}</span>
+          </a>
+            <ul class="dropdown-menu extended inbox">
+              <div class="notify-arrow notify-arrow-green"></div>
+              
+              <li>
+              <div id = "displaymessagelist">
+              
+              </div>
+              </li>
+            </ul>
+          </li>
+          <!-- inbox dropdown end -->
+          <!-- notification dropdown start-->
+          <li id="header_notification_bar" class="dropdown">
+            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+              <i class="fa fa-bell-o"></i>
+     
+              </a>
+            <ul class="dropdown-menu extended notification">
+              <div class="notify-arrow notify-arrow-yellow"></div>
+              <c:forEach items="${noticelist}" var="dto">
+              <li>
+                  <span class="label label-danger"><i class="fa fa-bolt"></i></span>
+                  <p style="font-size: 12px">${dto.notice_content}</p>
+              </li>
+              </c:forEach>
+            </ul>
+          </li>
+          <!-- notification dropdown end -->
+        </ul>
+        <!--  notification end -->
+      </div>
+    </header>
+
+
 	<body>
-        <nav class="navbar navbar-expand-lg" style="background: white;">
-            <div class="container">
+        <nav class="navbar">
+            <div class="container"  style="margin-top: 95px;">
             	<div class="row"><br><br>
-            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px; color: black;">&nbsp;&nbsp;&nbsp;&nbsp;NO</h3></b></a>
-            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px;">One</h3></b></a>
-            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px; color: black;">Knows&nbsp;&nbsp;&nbsp;&nbsp;</h3></b></a>
+            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px; background: linear-gradient( to right, white, #C4DEFF ); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">NO ONE KNOWS</h3></b></a>
+            		
 <% 
 	if(session.getAttribute("userInfo") == null){ 
 %>
 	
-            		<div class="hevent"><a class="navbar-brand" href="login" style="color:#BDBDBD; font-size:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그인</a></div>
-            		<div class="hevent"><a class="navbar-brand" href="signup" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;회원가입</a></div>
-					<div class="hevent"><a class="navbar-brand" href="adminlogin" style="color:#6799FF; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;관리자로 로그인</a></div>
+            		<div class="hevent"><a href="login"><h5 style="color:#E8FFFF; font-size:13px;">로그인</h5></a></div>
+            		<div class="hevent"><a href="signup"><h5 style="color:#E8FFFF; font-size:13px">회원가입</h5></a></div>
+					<div class="hevent"><a href="adminlogin"><h5 style="color:#E8FFFF; font-size:13px">관리자로 로그인</h5></a></div>
 <%
 	} else {%>
-					<p class="navbar-brand" style="color:#6799FF; font-size:14px">${sessionScope.userInfo.user_id} 님 환영합니다!</p>
-                    <div class="hevent"><a class="navbar-brand" href="logout" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그아웃</a></div>
+					<h5 style="color:#E8FFFF; font-size:13px">${sessionScope.userInfo.user_id} 님 환영합니다!</h5>
+                    <div class="hevent"><a href="logout"><h5 style="color:#E8FFFF; font-size:13px">로그아웃</h5></a></div>
 <% } %>
             	</div>
             </div>
         </nav>
-        <nav class="navbar navbar-expand-lg" style="background: white;">
+        <nav class="navbar navbar-expand-lg">
             <div class="container">
             	<div class="row">
-            		<div class="tscale"><a class="navbar-brand" href="likepage" style="color:#878787; font-size:14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src = "resources/img/heart.png" style="width: 25px; height:25px;">&nbsp;내가 찜한 코스&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</a></div>
-            		<div class="tscale"><a class="navbar-brand" href="cartpage" style="color:#878787; font-size:14px">&nbsp;&nbsp;<img src = "resources/img/cart.png" style="width: 28px; height:28px;">&nbsp;장바구니&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</a></div>
-                    <div class="tscale"><a class="navbar-brand" href="mypage/${sessionScope.userInfo.user_no}" style="color:#878787; font-size:14px">&nbsp;&nbsp;<img src = "resources/img/user.png" style="width: 25px; height:25px;">&nbsp;마이페이지</a></div>
+            		<div class="tscale"><a href="likepage" style="color:white; font-size:14px;"><img src = "resources/img/heart2.png" style="width: 18px; height:18px;">&nbsp;&nbsp;내가 찜한 코스</a></div>
+            		<div class="tscale"><a href="cartpage" style="color:white; font-size:14px"><img src = "resources/img/cart.png" style="width: 18px; height:18px;">&nbsp;&nbsp;장바구니</a></div>
+                    <div class="tscale"><a href="mypage/${sessionScope.userInfo.user_no}" style="color:white; font-size:14px"><img src = "resources/img/info.png" style="width: 18px; height:18px;">&nbsp;&nbsp;마이페이지</a></div>
+                    <div class="tscale"><a href="coursemaker" style="color:white; font-size:14px"><img src = "resources/img/check.png" style="width: 18px; height:18px;">&nbsp;&nbsp;여행코스 만들기</a></div>
+            		<div class="tscale"><a href="chatroom" style="color:white; font-size:14px"><img src = "resources/img/chat.png" style="width: 20px; height:20px;">&nbsp;&nbsp;커뮤니티</a></div>
             	</div>
             </div>
-        </nav><br><br>
+        </nav>
         <!-- Page Content-->
-   
-        <header style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) );">
-	        <div class="container" style="width: 750px">
-		        <div class="col-sm-12 pt-3">
-		            <div class="card">
-		                <div class="card-header card-header-primary" style="background-color: white">
-		                    <h4 class="card-title" style="color:#6799FF;"> 기본 정보 입력</h4>
-		                    <p class="card-catagory"></p>
-		                </div>
-		                <div class="card-body" style="background-color: white">
-		                    <div class="table-responsive">
-		                        <table class="table">
-		                            <tbody>
-		                            <tr>
-		                                <td>
-		                                	<label><h5>여행 제목</h5></label>
-		                                    <input type="text" id="map_title" name="map_title" class="form-control" value="" style="width: 620px">
-		                                </td>                        
-		                            </tr>
-		                            <tr>
-		                                <td>
-		                                	<label><h5>부제</h5></label>
-		                                    <input type="text" id="map_subtitle" name="map_subtitle" class="form-control" value="" style="width: 620px">                                    
-		                                </td>
-		                            </tr>  
-		                            <tr>
-		                                <td>
-		                                	<div class="form-row">
-											<div class="form-group col-sm-6">
-													<label><h5>국가</h5></label>
-													<input type="text" id="map_country" name="map_country" class="form-control" maxlength=20>
-											</div>
-											<div class="form-group col-sm-6">
-													<label><h5>테마 카테고리</h5></label>
-													<select id="theme_no" name="theme_no" class="form-control">
-										      			<c:forEach var="theme" items='${themeList}'>
-										      				<option value="${theme.theme_no}">${theme.theme_name}</option>
-										      			</c:forEach>
-										      		</select>
-											</div>
-											</div>                                    
-		                                </td>
-		                            </tr>
-		                            <tr>
-		                                <td>
-		                                	<div class="form-row">
-											<div class="form-group col-sm-6">
-													<label><h5>주</h5></label>
-													<input type="text"  id="map_state" name="map_state" class="form-control" maxlength=20>
-											</div>
-											<div class="form-group col-sm-6">
-													<label><h5>도시</h5></label>
-													<input type="text" id="map_city" name="map_city" class="form-control" maxlength=20>
-											</div>
-											</div>                                    
-		                                </td>
-		                            </tr>
-		                            <tr>
-		                                <td>
-		                                    <div class="form-group">
-												<label><h5>내용</h5></label>
-												<textarea  id="map_content" name="map_content" class="form-control" maxlength="500" style="height:180px;"></textarea>
-											</div>                            
-		                                </td>
-		                            </tr>
-		                            </tbody>
-		                        </table>
-		                    </div>
-		                </div>
-		            </div>
-		        </div><br><br>
-		        <div class="col-sm-12 pt-3">
-		            <div class="card">
-		                <div class="card-header card-header-primary" style="background-color: white">
-		                    <h4 class="card-title" style="color:#6799FF;"> 썸네일 등록</h4>
-		                    <p class="card-catagory"></p>
-		                </div>
-		                <div class="card-body" style="background-color: white">
-		                    <div class="table-responsive">
-		                        <table class="table">
-		                            <tbody>
-		                            <tr>
-		                                <td>
-		                                   <div class="filebox preview-image"><br><br>
-											  <input class="upload-name" value="파일선택" disabled="disabled" >
-											
-											  <label for="map_photo" class="bs3-primary">업로드</label> 
-											  <input type="file" name="map_photo" id="map_photo" class="upload-hidden" style="opacity: 0.0"> 
-											</div>
-		                                </td>                        
-		                            </tr>
-		                            </tbody>
-		                        </table>
-		                    </div>
-		                </div>
-		            </div>
-		        </div><br><br>
-		        <div class="col-sm-12 pt-3">
-		            <div class="card">
-		                <div class="card-header card-header-primary" style="background-color: white">
-		                    <h4 class="card-title" style="color:#6799FF;"> 코스 정보 입력</h4>
-		                    <p class="card-catagory"></p>
-		                </div>
-		                <div class="card-body" style="background-color: white">
-		                    <div class="table-responsive">
-		                        <table class="table">
-		                            <tbody>
-		                            <tr>
-		                                <td>
-		                                  <div id="map" style="width: 100%; height: 400px;"></div>
-		                                  <div><br>
-									        	<p>
-									        		<button onclick="selectOverlay('ARROW')" style="background-color:#EBF7FF; border-radius: 15px">화살표</button>
-												    <button onclick="selectOverlay('POLYLINE')" style="background-color:#EBF7FF; border-radius: 15px">선</button>
-												    <button onclick="selectOverlay('CIRCLE')" style="background-color: #EBF7FF; border-radius: 15px">원</button>
-												    <button onclick="selectOverlay('RECTANGLE')" style="background-color:#EBF7FF; border-radius: 15px">사각형</button>
-												    <button onclick="getDataFromDrawingMap()" style="background-color:#EBF7FF; border-radius: 15px">가져오기</button>
-												</p>
-								        	</div>
-		                                </td>                        
-		                            </tr>
-		                            <tr>
-		                                <td>
-		                                  <div class="form-group">
-												<div id="divRoute">
-								        		<div id="divRouteForm_order"></div>
-								        		<div id="divRouteForm_name"></div>
-								        		<div id="divRouteForm_type"></div>
-								        		<div id="divRouteForm_content"></div>
-				        					</div>
-				        					<div id="divPlace">
-									        	<div id="divPlaceForm_order"></div>
-												<div id="divPlaceForm_name"></div>
-												<div id="divPlaceForm_loadaddr"></div>
-												<div id="divPlaceForm_addr"></div>
-												<div id="divPlaceForm_lat"></div>
-												<div id="divPlaceForm_lng"></div>
-												<div id="divPlaceForm_image"></div>
-												<div id="divPlaceForm_content"></div>
-												<div id="divPlaceForm_photo"></div>
-											</div>
-										  </div> 
-		                                </td>                        
-		                            </tr>
-		                            </tbody>
-		                        </table>
-		                    </div>
-		                </div>
-		            </div>
-		        </div>
- 
-			    <div class="text-center mt-3">
-			        <button type="button" onclick="makeCourse()" class="btn btn-info"><h5>지도 만들기</h5></button>
-			        <a href="main" style="text-decoration: none"><button type="button" class="btn btn-info"><h5>돌아가기</h5></button></a><br><br>
-			    </div><br><br>
-	        </div>
-	    </header>
+   		 <div id="wrapper"><br><br><br>
+				<!-- Nav -->
+					<nav id="nav">
+						<ul>
+							<li><a href="#top" class="active">TOP</a></li>
+							<li><a href="#bottom">BOTTOM</a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+							<section class="main">
+								<a id="top"></a>
+									 <section class="container">
+									 	<div class="card">
+								                <div class="card-header card-header-primary" style="background-color: white">
+								                    <h4 class="card-title" style="color:#6799FF; font-size: 20px"> 기본 정보 입력</h4>
+								                    <p class="card-catagory"></p>
+								                </div>
+								                <div class="card-body" style="background-color: white">
+								                    <div class="table-responsive">
+								                        <table class="table">
+								                            <tbody>
+								                            <tr>
+								                                <td>
+								                                	<label><h5 style="font-size: 17px">여행 제목</h5></label>
+								                                    <input type="text" id="map_title" name="map_title" class="form-control">
+								                                </td>                        
+								                            </tr>
+								                            <tr>
+								                                <td>
+								                                	<label><h5 style="font-size: 17px">부제</h5></label>
+								                                    <input type="text" id="map_subtitle" name="map_subtitle" class="form-control">                                    
+								                                </td>
+								                            </tr>  
+								                            <tr>
+								                                <td>
+								                                	<div class="form-row">
+																	<div class="form-group col-sm-6">
+																			<label><h5 style="font-size: 17px">국가</h5></label>
+																			<input type="text" id="map_country" name="map_country" class="form-control" maxlength=20>
+																	</div>
+																	<div class="form-group col-sm-6">
+																			<label><h5 style="font-size: 17px">테마 카테고리</h5></label>
+																			<select id="theme_no" name="theme_no" class="form-control">
+																      			<c:forEach var="theme" items='${themeList}'>
+																      				<option value="${theme.theme_no}">${theme.theme_name}</option>
+																      			</c:forEach>
+																      		</select>
+																	</div>
+																	</div>                                    
+								                                </td>
+								                            </tr>
+								                            <tr>
+								                                <td>
+								                                	<div class="form-row">
+																	<div class="form-group col-sm-6">
+																			<label><h5 style="font-size: 17px">주</h5></label>
+																			<input type="text"  id="map_state" name="map_state" class="form-control" maxlength=20>
+																	</div>
+																	<div class="form-group col-sm-6">
+																			<label><h5 style="font-size: 17px">도시</h5></label>
+																			<input type="text" id="map_city" name="map_city" class="form-control" maxlength=20>
+																	</div>
+																	</div>                                    
+								                                </td>
+								                            </tr>
+								                            <tr>
+								                                <td>
+								                                    <div class="form-group">
+																		<label><h5 style="font-size: 17px">내용</h5></label>
+																		<textarea  id="map_content" name="map_content" class="form-control" maxlength="500" style="height:180px;"></textarea>
+																	</div>                            
+								                                </td>
+								                            </tr>
+								                            </tbody>
+								                        </table>
+								                    </div>
+								                </div>
+								            </div>
+								        </div><br><br>
+								        <div class="col-sm-12 pt-3">
+								            <div class="card">
+								                <div class="card-header card-header-primary" style="background-color: white">
+								                    <h4 class="card-title" style="color:#6799FF; font-size: 20px"> 썸네일 등록</h4>
+								                    <p class="card-catagory"></p>
+								                </div>
+								                <div class="card-body" style="background-color: white">
+								                    <div class="table-responsive">
+								                        <table class="table">
+								                            <tbody>
+								                            <tr>
+								                                <td>
+								                                   <div class="filebox preview-image"><br><br>
+																	  <input class="upload-name" value="파일선택" disabled="disabled" >
+																	
+																	  <label for="map_photo" class="bs3-primary">업로드</label> 
+																	  <input type="file" name="map_photo" id="map_photo" class="upload-hidden" style="opacity: 0.0"> 
+																	</div>
+								                                </td>                        
+								                            </tr>
+								                            </tbody>
+								                        </table>
+								                    </div>
+								                </div>
+								            </div>
+								        </div><br><br>
+								        <div class="col-sm-12 pt-3">
+								            <div class="card">
+								                <div class="card-header card-header-primary" style="background-color: white">
+								                    <h4 class="card-title" style="color:#6799FF; font-size: 20px"> 코스 정보 입력</h4>
+								                    <p class="card-catagory"></p>
+								                </div>
+								                <div class="card-body" style="background-color: white">
+								                    <div class="table-responsive">
+								                        <table class="table">
+								                            <tbody>
+								                            <tr>
+								                                <td>
+								                                  <div id="map" style="width: 100%; height: 400px;"></div>
+								                                  <div><br>
+															        	<p>
+															        		<button onclick="selectOverlay('ARROW')" style="background-color:#EBF7FF; border-radius: 15px"><p style="color: #626262; font-size: 15px;">화살표</p></button>
+																		    <button onclick="selectOverlay('POLYLINE')" style="background-color:#EBF7FF; border-radius: 15px"><p style="color: #626262; font-size: 15px;">선</p></button>
+																		    <button onclick="selectOverlay('CIRCLE')" style="background-color: #EBF7FF; border-radius: 15px"><p style="color: #626262; font-size: 15px;">원</p></button>
+																		    <button onclick="selectOverlay('RECTANGLE')" style="background-color:#EBF7FF; border-radius: 15px"><p style="color: #626262; font-size: 15px;">사각형</p></button>
+																		    <button onclick="getDataFromDrawingMap()" style="background-color:#EBF7FF; border-radius: 15px"><p style="color: #626262; font-size: 15px;">가져오기</p></button>
+																		</p>
+														        	</div>
+								                                </td>                        
+								                            </tr>
+								                            <tr>
+								                                <td>
+								                                  <div class="form-group">
+																		<div id="divRoute">
+														        		<div id="divRouteForm_order"></div>
+														        		<div id="divRouteForm_name"></div>
+														        		<div id="divRouteForm_type"></div>
+														        		<div id="divRouteForm_content"></div>
+								        								<div id="divRouteForm_delete"></div>
+				        							  </div>
+										        					<div id="divPlace">
+															        	<div id="divPlaceForm_order"></div>
+																		<div id="divPlaceForm_name"></div>
+																		<div id="divPlaceForm_loadaddr"></div>
+																		<div id="divPlaceForm_addr"></div>
+																		<div id="divPlaceForm_lat"></div>
+																		<div id="divPlaceForm_lng"></div>
+																		<div id="divPlaceForm_image"></div>
+																		<div id="divPlaceForm_content"></div>
+																		<div id="divPlaceForm_photo"></div>
+																		<div id="divPlaceForm_delete"></div>
+																	</div>
+																  </div> 
+								                                </td>                        
+								                            </tr>
+								                            </tbody>
+								                        </table>
+								                    </div>
+								                </div>
+								            </div>
+								        </div>
+						 
+									    <div class="text-center mt-3">
+									        <button type="button" onclick="makeCourse()"  style="background-color: white;"><p style= "color:#626262;">지도 만들기</p></button>
+									        <a href="main" style="text-decoration: none"><button type="button" style="background-color: white;"><p style= "color: #626262;">돌아가기</p></button></a><br><br>
+									    </div><br><br>
+							        </div>
+									</section>
+								<a id="bottom"></a>
+							</section>
+					</div>
+		</div>
         <!-- Bootstrap core JS-->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -227,7 +324,21 @@
 	<script>
 		//preview image 
 	    var imgTarget = $('.preview-image .upload-hidden');
-	
+	    var startSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/red_b.png', // 출발 마커이미지의 주소입니다    
+	    startSize = new kakao.maps.Size(50, 45), // 출발 마커이미지의 크기입니다 
+	    startOption = { 
+	        offset: new kakao.maps.Point(15, 43) // 출발 마커이미지에서 마커의 좌표에 일치시킬 좌표를 설정합니다 (기본값은 이미지의 가운데 아래입니다)
+	    };
+	    
+	    var arriveSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/blue_b.png', // 도착 마커이미지 주소입니다    
+	    arriveSize = new kakao.maps.Size(50, 45), // 도착 마커이미지의 크기입니다 
+	    arriveOption = { 
+	        offset: new kakao.maps.Point(15, 43) // 도착 마커이미지에서 마커의 좌표에 일치시킬 좌표를 설정합니다 (기본값은 이미지의 가운데 아래입니다)
+	    };
+	    
+	    var startImage = new kakao.maps.MarkerImage(startSrc, startSize, startOption);
+	    var arriveImage = new kakao.maps.MarkerImage(arriveSrc, arriveSize, arriveOption);
+	    
 	    imgTarget.on('change', function(){
 	        var parent = $(this).parent();
 	        parent.children('.upload-display').remove();
@@ -293,13 +404,14 @@
 			    guideTooltip: ['draw', 'drag', 'edit'],
 			    arrowOptions: {
 			    	draggable: true,
-			    	removable: true,
+			    	removable: false,
+			    	editable: true,
 			    	strokeColor: '#39f',
 			    	hintStrokeStyle: 'dash'
 			    },
 			    polylineOptions: { // 선 옵션입니다
 			        draggable: true, // 그린 후 드래그가 가능하도록 설정합니다
-			        removable: true, // 그린 후 삭제 할 수 있도록 x 버튼이 표시됩니다
+			        removable: false, // 그린 후 삭제 할 수 있도록 x 버튼이 표시됩니다
 			        editable: true, // 그린 후 수정할 수 있도록 설정합니다 
 			        strokeColor: '#39f', // 선 색
 			        hintStrokeStyle: 'dash', // 그리중 마우스를 따라다니는 보조선의 선 스타일
@@ -307,7 +419,7 @@
 			    },
 			    rectangleOptions: {
 			        draggable: true,
-			        removable: true,
+			        removable: false,
 			        editable: true,
 			        strokeColor: '#39f', // 외곽선 색
 			        fillColor: '#39f', // 채우기 색
@@ -315,7 +427,7 @@
 			    },
 			    circleOptions: {
 			        draggable: true,
-			        removable: true,
+			        removable: false,
 			        editable: true,
 			        strokeColor: '#39f',
 			        fillColor: '#39f',
@@ -353,10 +465,12 @@
 	   			
 	   		};
 		    lineInfos.push(lineInfo);
+		    displayRouteEditor(lineInfo);
 		    addRouteClickEvent(lineInfo);
 		    
 
 		});
+		
 		
 		map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 		map.addControl(zoomControl, kakao.maps.ControlPosition.Right);
@@ -394,13 +508,15 @@
 						markerInfo.place_addr = detailAddr;
 						
 						markerInfos.push(markerInfo);
+						displayMarkerEditor(markerInfo);
 						//console.log(markerInfo);
 						console.log("도로명 : " + detailLoadAddr);
 						console.log("지번 : " + detailAddr);
 					}
 				});
 			})();
-		
+			
+			
 		};
 		
 		kakao.maps.event.addListener(map, 'click', mapClickHandler);
@@ -411,6 +527,7 @@
 		
 		//마커생성 메서드
 		function addMarker(position) {
+			
 		 	var marker = new kakao.maps.Marker({
 		 		position: position,
 		 		draggable: true,
@@ -419,6 +536,14 @@
 		 	
 		 	marker.setMap(map);
 		 	markers.push(marker);
+		 	
+		 	if(markers.length > 1) {
+		 		markers[0].setImage(startImage);
+		 		for(var idx=1; idx<markers.length-1; idx++) {
+		 			markers[idx].setImage(null);
+		 		}
+		 		markers[markers.length-1].setImage(arriveImage);
+		 	}
 		 	
 		 	
 		 	var markerInfo = {
@@ -440,6 +565,7 @@
 		 	//console.log(markerInfo.lng);
 		 	
 		 	addMarkerClickEvent(markerInfo);
+		 	addMarkerDragEvent(markerInfo);
 		 	
 		 	return markerInfo;
 		}
@@ -521,6 +647,116 @@
 		    return 1;
 		}
 		
+		function displayMarkerEditor(markerInfo) {
+			for(const key in markerInfos) {
+				if(markerInfo.place_lat == markerInfos[key].place_lat && markerInfo.place_lng == markerInfos[key].place_lng) {
+					console.log(markerInfos[key]);
+					
+					$("#divRoute").hide();
+					$("#divPlace").show();
+					
+					//if(!markerInfos[key].created) {					
+						$('#divPlaceForm_order').html('<label><h5>장소번호</h5></label><input type="text" id="place_course_no" class="form-control"  style="width: 620px" readonly/><br/><br/>');
+						$('#place_course_no').val(markerInfos[key].place_course_no);
+						
+						$('#divPlaceForm_name').html('<label><h5>장소명</h5></label><input type="text" id="place_name" class="form-control"  style="width: 620px"/><br/><br/>');
+						$('#place_name').val(markerInfos[key].place_name);
+						
+						$('#divPlaceForm_loadaddr').html('<label><h5>도로명주소</h5></label><input type="text" id="place_loadaddr" class="form-control"  style="width: 620px" readonly/><br/><br/>');
+						$('#place_loadaddr').val(markerInfos[key].place_loadaddr);
+						
+						$('#divPlaceForm_addr').html('<label><h5>지번주소</h5></label><input type="text" id="place_addr" class="form-control"  style="width: 620px" readonly/><br/><br/>');
+						$('#place_addr').val(markerInfos[key].place_addr);
+						
+						$('#divPlaceForm_lat').html('<label><h5>위도</h5></label><input type="text" id="place_lat" class="form-control"  style="width: 620px" readonly/><br>');
+						$('#place_lat').val(markerInfos[key].place_lat);
+						
+						$('#divPlaceForm_lng').html('<label><h5>경도</h5></label><input type="text" id="place_lng" class="form-control"  style="width: 620px" readonly/><br>');
+						$('#place_lng').val(markerInfos[key].place_lng); 
+						
+						$('#divPlaceForm_content').html('<label><h5>내용</h5></label><textarea id="place_content" class="form-control"  style="width: 620px" ></textarea><br/>');
+						$('#place_content').val(markerInfos[key].place_content);
+						
+						$('#divPlaceForm_photo').html('<label><h5>장소 사진 업로드</h5></label><br/><input type="file" name="place_photo" id="place_photo" onchange="uploadFile()"></div><br/><br/>');
+						$('#place_photo').val(markerInfos[key].place_photo);
+					
+						$('#divPlaceForm_delete').html('<button type=' + '"button"' + 'onclick=' + '"deleteMarker(' + key + ')" ' + 'class=' + '"btn btn-info"' + '><h5>삭제하기</h5></button>');	
+					//	markerInfos[key].created = true;
+					//} else {
+					//	break;
+					//}
+					
+					break;
+				}
+			}
+		}
+		
+		
+		function deleteMarker(index) {
+			markers[index].setMap(null);
+			markers.splice(index, 1);
+			console.log(markers);
+			
+			markerInfos.splice(index, 1);
+			for(var idx=index; idx<markerInfos.length; idx++) {
+				markerInfos[idx].place_course_no = idx;
+				console.log(markerInfos[idx]);
+			}
+			
+			if(markers.length > 1) {
+		 		markers[0].setImage(startImage);
+		 		for(var idx=1; idx<markers.length-1; idx++) {
+		 			markers[idx].setImage(null);
+		 		}
+		 		markers[markers.length-1].setImage(arriveImage);
+		 	}
+			placeCount--;
+			deleteMarkerForm();
+		}
+		
+		function deleteRoute(index) {
+			manager.remove(lineInfos[index].obj);
+			lineInfos.splice(index, 1);
+			for(var idx=index; idx<lineInfos.length; idx++) {
+				lineInfos[idx].route_course_no = idx;
+			}
+			routeCount--;
+			deleteRouteForm();
+		}
+		function deleteMarkerForm() {
+			$('#divPlace').hide();
+		}
+		
+		function deleteRouteForm() {
+			$('#divRoute').hide();
+		}
+		function displayRouteEditor(lineInfo) {
+			for(const key in lineInfos) {
+				//console.log("[listener Loop]" + lineInfos);
+				if(lineInfo.route_idf_La == lineInfos[key].route_idf_La && lineInfo.route_idf_Ma == lineInfos[key].route_idf_Ma) {
+                    //console.log("[lineInfo]" + lineInfos[key].route_course_no);
+					$('#divPlace').hide();
+                    $('#divRoute').show();
+                    
+                    $('#divRouteForm_order').html('<label><h5>경로번호</h5></label><input type="text" id="route_course_no" class="form-control" value="" style="width: 620px" readonly/><br/><br/>');
+                    $('#route_course_no').val(lineInfos[key].route_course_no);
+                    
+		        	$('#divRouteForm_name').html('<label><h5>경로이름</h5></label><input type="text" id="route_name" class="form-control" value="" style="width: 620px"/><br/><br/>');
+		        	$('#route_name').val(lineInfos[key].route_name); 
+		        	
+		        	$('#divRouteForm_type').html('<label><h5>경로타입</h5></label><input type="text" id="route_type" class="form-control" value="" style="width: 620px" readonly/><br/><br/>');
+		        	$('#route_type').val(lineInfos[key].route_type);
+		        	
+		        	$('#divRouteForm_content').html('<label><h5>경로내용</h5></label><textarea id="route_content" class="form-control" value="" style="width: 620px"></textarea><br/><br/>');
+		        	$('#route_content').val(lineInfos[key].route_content);
+		        	
+		        	$('#divRouteForm_delete').html('<button type=' + '"button"' + 'onclick=' + '"deleteRoute(' + key + ')" ' + 'class=' + '"btn btn-info"' + '><h5>삭제하기</h5></button>');	
+		        	
+		        	break;
+
+                }
+			}
+		}
 		//루트 클릭 이벤트 추가
 		function addRouteClickEvent(lineInfo) {
 			//console.log("[addRouteClickEvent]" + lineInfo.route_type);
@@ -528,79 +764,42 @@
 				//console.log("[addRouteClickEvent lineInfos length]" + lineInfos.length)
 				//console.log("[lineInfo idf_La]" + lineInfo.route_idf_Ma);
 				//console.log("[lineInfos idf_La]" + lineInfos[0].route_idf_Ma);
-				for(const key in lineInfos) {
-					//console.log("[listener Loop]" + lineInfos);
-					if(lineInfo.route_idf_La == lineInfos[key].route_idf_La && lineInfo.route_idf_Ma == lineInfos[key].route_idf_Ma) {
-                        //console.log("[lineInfo]" + lineInfos[key].route_course_no);
-						$('#divPlace').hide();
-                        $('#divRoute').show();
-                        
-	                    $('#divRouteForm_order').html('<label><h5>경로번호</h5></label><input type="text" id="route_course_no" class="form-control" value="" style="width: 620px" readonly/><br/><br/>');
-	                    $('#route_course_no').val(lineInfos[key].route_course_no);
-	                    
-			        	$('#divRouteForm_name').html('<label><h5>경로이름</h5></label><input type="text" id="route_name" class="form-control" value="" style="width: 620px"/><br/><br/>');
-			        	$('#route_name').val(lineInfos[key].route_name); 
-			        	
-			        	$('#divRouteForm_type').html('<label><h5>경로타입</h5></label><input type="text" id="route_type" class="form-control" value="" style="width: 620px" readonly/><br/><br/>');
-			        	$('#route_type').val(lineInfos[key].route_type);
-			        	
-			        	$('#divRouteForm_content').html('<label><h5>경로내용</h5></label><textarea id="route_content" class="form-control" value="" style="width: 620px"></textarea><br/><br/>');
-			        	$('#route_content').val(lineInfos[key].route_content);
-			        	
-			        	break;
-
-                    }
-				}
+				displayRouteEditor(lineInfo);
 			});
 		
 		   	  
 	    }
 		
+		function addMarkerDragEvent(markerInfo) {
+			kakao.maps.event.addListener(markerInfo.obj, 'dragend', function(mouseEvent) {
+				markerInfos[markerInfo.place_course_no].place_lat = markerInfo.obj.getPosition().getLat();
+				markerInfos[markerInfo.place_course_no].place_lng = markerInfo.obj.getPosition().getLng();
+				
+				searchDetailAddrFromCoords(markerInfo.obj.getPosition(), function(result, status) {
+					if(status == kakao.maps.services.Status.OK) {
+						detailLoadAddr = !!result[0].road_address ? result[0].road_address.address_name : '';
+			            detailAddr = result[0].address.address_name;
+			            
+						//placeAddr1.push(detailLoadAddr);
+						//placeAddr2.push(detailAddr);
+						
+						markerInfo.place_loadaddr = detailLoadAddr;
+						markerInfo.place_addr = detailAddr;
+						
+						displayMarkerEditor(markerInfo);
+						//console.log(markerInfo);
+						console.log("도로명 : " + detailLoadAddr);
+						console.log("지번 : " + detailAddr);
+					}
+				});
+				
+			});
+		}
 		//마커 클릭 이벤트 추가
 		function addMarkerClickEvent(markerInfo) {
 			kakao.maps.event.addListener(markerInfo.obj, 'click', function() {
 				//console.log(markerInfo);
-				for(const key in markerInfos) {
-					if(markerInfo.place_lat == markerInfos[key].place_lat && markerInfo.place_lng == markerInfos[key].place_lng) {
-						console.log(markerInfos[key]);
-						
-						$("#divRoute").hide();
-						$("#divPlace").show();
-						
-						//if(!markerInfos[key].created) {					
-							$('#divPlaceForm_order').html('<label><h5>장소번호</h5></label><input type="text" id="place_course_no" class="form-control"  style="width: 620px" readonly/><br/><br/>');
-							$('#place_course_no').val(markerInfos[key].place_course_no);
-							
-							$('#divPlaceForm_name').html('<label><h5>장소명</h5></label><input type="text" id="place_name" class="form-control"  style="width: 620px"/><br/><br/>');
-							$('#place_name').val(markerInfos[key].place_name);
-							
-							$('#divPlaceForm_loadaddr').html('<label><h5>도로명주소</h5></label><input type="text" id="place_loadaddr" class="form-control"  style="width: 620px" readonly/><br/><br/>');
-							$('#place_loadaddr').val(markerInfos[key].place_loadaddr);
-							
-							$('#divPlaceForm_addr').html('<label><h5>지번주소</h5></label><input type="text" id="place_addr" class="form-control"  style="width: 620px" readonly/><br/><br/>');
-							$('#place_addr').val(markerInfos[key].place_addr);
-							
-							$('#divPlaceForm_lat').html('<label><h5>위도</h5></label><input type="text" id="place_lat" class="form-control"  style="width: 620px" readonly/><br>');
-							$('#place_lat').val(markerInfos[key].place_lat);
-							
-							$('#divPlaceForm_lng').html('<label><h5>경도</h5></label><input type="text" id="place_lng" class="form-control"  style="width: 620px" readonly/><br>');
-							$('#place_lng').val(markerInfos[key].place_lng); 
-							
-							$('#divPlaceForm_content').html('<label><h5>내용</h5></label><textarea id="place_content" class="form-control"  style="width: 620px" ></textarea><br/>');
-							$('#place_content').val(markerInfos[key].place_content);
-							
-							$('#divPlaceForm_photo').html('<label><h5>장소 사진 업로드</h5></label><br/><input type="file" name="place_photo" id="place_photo" onchange="uploadFile()"></div><br/>');
-							$('#place_photo').val(markerInfos[key].place_photo);
-						//	markerInfos[key].created = true;
-						//} else {
-						//	break;
-						//}
-						
-						break;
-					}
-				}
-		
-				
+				displayMarkerEditor(markerInfo);				
 			});
 			
 		}
@@ -665,24 +864,47 @@
 		    var drawingData = manager.getData();
 		    var routeInfo;
 		    
+		    var polylineIndex = 0;
+		    var arrowIndex = 0;
+		    
+		    
 		    console.log(drawingData.polyline.length);
-		    for(var i = 0; i<drawingData.polyline.length; i++) {
+		    console.log(drawingData);
+		    
+	
+		    for(var i = 0; i<lineInfos.length; i++) {
 		    	lineInfos[i].route_path = '{"latlng" : [';
-		    	console.log(drawingData);
+		    	//console.log(drawingData);
 		    	//console.log(drawingData.polyline[i].points.length);
 		    	//console.log(drawingData.polyline[i].points);
-		    	for(var j = 0; j<drawingData.polyline[i].points.length; j++) {
-		    		if(j == drawingData.polyline[i].points.length -1) {
-		    			lineInfos[i].route_path += '{"lat" : ' + '"' + drawingData.polyline[i].points[j].y + '"' + " , " + '"lng" : ' + '"' + drawingData.polyline[i].points[j].x + '"}';
-		    		} else {
-		    			lineInfos[i].route_path += '{"lat" : ' + '"' + drawingData.polyline[i].points[j].y + '"' + " , " + '"lng" : ' + '"' + drawingData.polyline[i].points[j].x + '"}, ';
-		    		}
-		    		//console.log(drawingData.polyline[i].points[j].x); //x : 경도
-		    		//console.log(drawingData.polyline[i].points[j].y); //y : 위도
-		    		
+		    	if(lineInfos[i].route_type == 'polyline') {
+			    	for(var j = 0; j<drawingData.polyline[polylineIndex].points.length; j++) {
+			    		if(j == drawingData.polyline[polylineIndex].points.length -1) {
+			    			lineInfos[i].route_path += '{"lat" : ' + '"' + drawingData.polyline[polylineIndex].points[j].y + '"' + " , " + '"lng" : ' + '"' + drawingData.polyline[polylineIndex].points[j].x + '"}';
+			    		} else {
+			    			lineInfos[i].route_path += '{"lat" : ' + '"' + drawingData.polyline[polylineIndex].points[j].y + '"' + " , " + '"lng" : ' + '"' + drawingData.polyline[polylineIndex].points[j].x + '"}, ';
+			    		}
+			    		//console.log(drawingData.polyline[i].points[j].x); //x : 경도
+			    		//console.log(drawingData.polyline[i].points[j].y); //y : 위도
+			    		
+			    	}
+			    	lineInfos[i].route_option = JSON.stringify(drawingData.polyline[polylineIndex].options);
+			    	polylineIndex++;
+		    	} else if(lineInfos[i].route_type == 'arrow') {
+		    		for(var j = 0; j<drawingData.arrow[arrowIndex].points.length; j++) {
+			    		if(j == drawingData.arrow[arrowIndex].points.length -1) {
+			    			lineInfos[i].route_path += '{"lat" : ' + '"' + drawingData.arrow[arrowIndex].points[j].y + '"' + " , " + '"lng" : ' + '"' + drawingData.arrow[arrowIndex].points[j].x + '"}';
+			    		} else {
+			    			lineInfos[i].route_path += '{"lat" : ' + '"' + drawingData.arrow[arrowIndex].points[j].y + '"' + " , " + '"lng" : ' + '"' + drawingData.arrow[arrowIndex].points[j].x + '"}, ';
+			    		}
+			    		//console.log(drawingData.polyline[i].points[j].x); //x : 경도
+			    		//console.log(drawingData.polyline[i].points[j].y); //y : 위도
+			    		lineInfos[i].route_option = JSON.stringify(drawingData.arrow[arrowIndex].options);
+			    	}
+		    		arrowIndex++;
 		    	}
 		    	lineInfos[i].route_path += "]}";
-		    	lineInfos[i].route_option = JSON.stringify(drawingData.polyline[i].options);
+		    	
 		    	routeInfo = {
 	   				"route_course_no" : lineInfos[i].route_course_no,
 	   				"route_name" : lineInfos[i].route_name,
@@ -692,9 +914,18 @@
 		    		"route_option" : lineInfos[i].route_option
 		    	};
 		    	routeInfos.push(routeInfo);
-		    	console.log("options::" + lineInfos[i].route_option);
+		    	//console.log("options::" + lineInfos[i].route_option);
 		    }
+		    console.log(lineInfos);
 		    	
 		}
 	</script>
+     <script src="${pageContext.request.contextPath}/resources/js/scripts.js"></script>
+        <script src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/jquery.scrollex.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/s/jquery.scrolly.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/browser.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/breakpoints.min.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/util.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </html>

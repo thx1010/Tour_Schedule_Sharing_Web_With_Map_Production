@@ -30,7 +30,7 @@
 		p:mapperInterface="net.developia.board.dao.UserDAO" />
 	<!-- userDAO end -->
 	
-	<!-- MainDAO start -->
+	<!-- DAODAO start -->
 	<bean id="mainSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean"
 		p:dataSource-ref="dataSource"
 		p:typeAliasesPackage="net.developia.board.dto" />
@@ -89,5 +89,15 @@
 		p:sqlSessionFactory-ref="chatSqlSession"
 		p:mapperInterface="net.developia.board.dao.ChatDAO" />
 	<!-- ChatDAO end -->
+	
+	<!--  ReviewDAO start -->
+	<bean id="reviewSqlSession" class="org.mybatis.spring.SqlSessionFactoryBean"
+		p:dataSource-ref="dataSource"
+		p:typeAliasesPackage="net.developia.board.dto" />
+	
+	<bean id="reviewDAO" class="org.mybatis.spring.mapper.MapperFactoryBean" 
+		p:sqlSessionFactory-ref="reviewSqlSession"
+		p:mapperInterface="net.developia.board.dao.ReviewDAO" />
+	<!-- ReviewDAO end -->
 	
 </beans>

@@ -19,12 +19,53 @@
 	where   user_no = #{user_no}
 	</select>
 	
+	<select id="getPointChargeList"  parameterType="UserDTO" resultType="PointChargeDTO">
+	select a.* 
+	from t_point_charge a inner join t_point b
+	on a.point_no = b.point_no
+	where b.user_no = #{user_no}
+	</select>
+	
+	<select id="getPointSpendList"  parameterType="UserDTO" resultType="PointSpendDTO">
+	select a.*
+	from t_point_spend a inner join t_point b
+	on a.point_no = b.point_no
+	where user_no = #{user_no}
+	</select>
+	
+	<select id="getMapStatusList"  parameterType="UserDTO" resultType="MapDTO">
+	select a.map_no, a.map_title, a.map_regdate, c.map_name
+	from t_map a inner join t_map_register b
+	on a.map_no = b.map_no inner join t_map_status c
+	on a.map_status = c.map_status
+	where b.user_no = #{user_no}
+	</select>
+	
+	<select id="getMapPurchaseList"  parameterType="UserDTO" resultType="MapDTO">
+	select a.map_no, a.map_title, b.purchase_regdate
+	from t_map a inner join t_map_purchase b
+	on a.map_no = b.map_no
+	where b.user_no = #{user_no}
+	</select>
+	
 	<select id="getMapList" resultType="MapRegisterDTO">
 	select a.map_no, a.map_title, a.map_subtitle, a.map_photo, a.map_content, a.map_country, a.map_state, a.map_city, a.map_like,
        b.register_regdate, b.user_no, c.user_id, c.user_photo
 	from t_map a left join t_map_register b
 	on a.map_no = b.map_no left join t_user c
 	on b.user_no = c.user_no
+    <![CDATA[where rownum <= 8]]>
+    and a.map_status = 1
+	</select>
+	
+	<select id="getMapViewmoreList" resultType="MapRegisterDTO">
+	select a.map_no, a.map_title, a.map_subtitle, a.map_photo, a.map_content, a.map_country, a.map_state, a.map_city, a.map_like,
+       b.register_regdate, b.user_no, c.user_id, c.user_photo
+	from t_map a left join t_map_register b
+	on a.map_no = b.map_no left join t_user c
+	on b.user_no = c.user_no
+    <![CDATA[where rownum <= 16]]>
+    and a.map_status = 1
 	</select>
 	
 	<select id="getMapNewList" resultType="MapRegisterDTO">
@@ -33,7 +74,30 @@
 	from t_map a left join t_map_register b
 	on a.map_no = b.map_no left join t_user c
 	on b.user_no = c.user_no 
+	<![CDATA[where rownum <= 8]]>
+	and a.map_status = 1
 	order by b.register_regdate desc
+	</select>
+	
+	<select id="getMapBestList" resultType="MapRegisterDTO">
+	select a.map_title, a.map_subtitle, a.map_photo, a.map_content, a.map_country, a.map_state, a.map_city, a.map_like,
+       b.register_regdate, b.user_no, c.user_id, c.user_photo
+	from t_map a left join t_map_register b
+	on a.map_no = b.map_no left join t_user c
+	on b.user_no = c.user_no 
+	<![CDATA[where rownum <= 8]]>
+	and a.map_status = 1
+	order by a.map_like desc
+	</select>
+	
+	<select id="getMapMyList" parameterType="ThemeDTO" resultType="MapRegisterDTO">
+	select a.map_title, a.map_subtitle, a.map_photo, a.map_content, a.map_country, a.map_state, a.map_city, a.map_like,
+       b.register_regdate, b.user_no, c.user_id, c.user_photo, a.theme_no
+	from t_map a left join t_map_register b
+	on a.map_no = b.map_no left join t_user c
+	on b.user_no = c.user_no 
+	where a.theme_no = #{theme_no}
+	and a.map_status = 1
 	</select>
 	
 	<select id="getImageSlide" parameterType="MapDTO" resultType="PlaceDTO">
@@ -96,10 +160,10 @@
 		   where map_no = #{map_no}
 	</update>
 	
-	<update id="deleteLike" parameterType="MapRegisterDTO">
+	<delete id="deleteLike" parameterType="MapRegisterDTO">
 	delete from t_like
 	where user_no = #{user_no} and map_no = #{map_no}
-	</update>
+	</delete>
 	
 	<select id="getLikedeleteContent" parameterType="MapRegisterDTO" resultType="MapDTO">
 	select a.*
@@ -107,5 +171,110 @@
 	on a.map_no = b.map_no
 	where b.user_no = #{user_no}
 	order by b.like_regdate desc
+	</select>
+	
+	<select id="countCartMap" parameterType="UserDTO" resultType="long">
+		SELECT count(*)
+		FROM t_cart
+		WHERE user_no=#{user_no}
+	</select>
+	
+	<select id="getCartContentForPage" parameterType="HashMap" resultType="MapDTO">
+		select d.map_no, d.map_title, d.map_subtitle, d.map_content, d.map_photo, d.map_like, d.map_regdate, d.map_status, d.map_country, d.map_state, d.map_city, d.map_placett, d.theme_no, d.map_routett	
+			from (select rownum as rnum, c.*
+		  		  from (select a.*
+			      from t_map a 
+			      inner join t_cart b on a.map_no = b.map_no
+			      where b.user_no=#{user.user_no}
+			      order by b.cart_regdate desc) c) d
+		where rnum between #{page.start} and #{page.end}
+	</select>
+	
+	<select id="countLikeMap" parameterType="UserDTO" resultType="long">
+		SELECT count(*)
+		FROM t_like
+		WHERE user_no=#{user_no}
+	</select>
+	
+	   <select id="getLikeContentForPage" parameterType="HashMap" resultType="MapDTO">
+      select d.map_no, d.map_title, d.map_subtitle, d.map_content, d.map_photo, d.map_like, d.map_regdate, d.map_status, d.map_country, d.map_state, d.map_city, d.map_placett, d.theme_no, d.map_routett   
+		from (select rownum as rnum, c.*
+		      from (select a.*
+		            from t_map a 
+		            inner join t_like b on a.map_no = b.map_no
+		            where b.user_no=#{user.user_no}
+		            order by b.like_regdate desc) c
+		      ) d
+		where rnum between #{page.start} and #{page.end}
+   </select>
+	
+	
+	<select id="countCartMapForKeyword" parameterType="HashMap" resultType="long">
+		select count(*)
+		from (select cart.map_no
+		      from t_cart cart
+		      where cart.user_no=#{user.user_no}) m
+		inner join t_map map ON map.map_no=m.map_no
+		where map.map_title like '%' || #{keyword} || '%'
+		
+	</select>
+	
+	<select id="getCartContentForKeyword" parameterType="HashMap" resultType="MapDTO">
+		select map.*
+		from (select cart.map_no, cart.cart_regdate
+              from t_cart cart
+              where cart.user_no=#{user.user_no}
+              ) m
+		inner join t_map map ON map.map_no=m.map_no
+		where map.map_title like '%' || #{keyword} || '%'
+		order by m.cart_regdate desc
+	</select>
+	
+	<select id="getPayModalContent" parameterType="MapDTO" resultType="MapDTO">
+	select map_no, map_title, map_regdate, map_like
+	from t_map where map_no = #{map_no}
+	</select>
+	
+	<insert id="insertintoPurchase" parameterType="MapPurchaseDTO">
+	insert into t_map_purchase(purchase_no, map_no, user_no)
+	values(seq_map_purchase.nextval, #{map_no}, #{user_no})
+	</insert>
+	
+	<delete id="deleteCart" parameterType="MapPurchaseDTO">
+	delete from t_cart
+	where user_no = #{user_no} and map_no = #{map_no}
+	</delete>
+	
+	<select id="getChatroom" resultType="ChatRoomDTO">
+	select * from t_chatroom
+	</select>
+	
+	<select id="getroomInfo" parameterType="ChatRoomDTO" resultType="ChatRoomDTO">
+	select * from t_chatroom
+	where room_no = #{room_no}
+	</select>
+	
+	<insert id="insertRegisterRoom" parameterType="RegisterChatRoomDTO">
+	insert into t_register_chatroom(register_room_no, room_no, user_no)
+	values(seq_reg_chatroom.nextval, #{room_no}, #{user_no})
+	</insert>
+	
+	<select id="getMessageInfo" parameterType="ChatMessageDTO" resultType="ChatMessageDTO">
+	select *
+	from t_chatmessage 
+	where room_no in (select distinct room_no from t_register_chatroom where user_no = #{user_no})
+	and user_no <![CDATA[<>]]>#{user_no}
+	</select>
+	
+	<select id="getMessageCountInfo" parameterType="ChatMessageDTO" resultType="ChatMessageDTO">
+	select count(*) as "message_count"
+	from t_chatmessage 
+	where room_no in (select distinct room_no from t_register_chatroom where user_no = #{user_no})
+	and user_no <![CDATA[<>]]>#{user_no}
+	</select>
+	
+	<select id="selectNoticeCount" resultType="NoticeDTO">
+	select count(*) as "notice_no"
+	from t_notice
 	</select>
 </mapper>

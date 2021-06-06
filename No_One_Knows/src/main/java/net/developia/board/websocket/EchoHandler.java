@@ -77,7 +77,7 @@ public class EchoHandler extends TextWebSocketHandler {
 			 * sess.sendMessage(textMessage); }
 			 */
 		} else if(RoomList.get(Long.toString(chatRoom.getRoom_no())) != null && !chatMessage.getChat_message().equals("ENTER-CHAT") && chatRoom != null) {
-			TextMessage textMessage = new TextMessage(chatMessage.getUser_name() + "," + chatMessage.getUser_id() + "," + chatMessage.getChat_message());
+			TextMessage textMessage = new TextMessage(chatMessage.getUser_name() + "," + chatMessage.getUser_id() + "," + chatMessage.getChat_message() + "," + chatMessage.getUser_photo());
 			
 			int sessionCount = 0;
 			

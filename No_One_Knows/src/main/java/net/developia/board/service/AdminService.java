@@ -41,5 +41,23 @@ public interface AdminService {
 	List<MapDTO> getMapDetail(MapDTO mapDTO) throws Exception;
 
 	List<PlaceDTO> getPlaceDetail(MapDTO mapDTO) throws Exception;
+	List<UserDTO> getUserInfoForPage(PageDTO pageDTO) throws Exception;
+
+	List<GradeDTO> getGradeList() throws Exception;
+
+	long getSearchedMemberCount(String keyword) throws Exception;
+
+	List<UserDTO> getSearchedUserInfoForPage(Map<String, Object> param) throws Exception;
+	void updatePermit(MapDTO mapDTO) throws Exception;
+
+	void updateReject(MapDTO mapDTO) throws Exception;
+
+	List<MapDTO> getPermitMapList() throws Exception;
+
+	List<MapDTO> getRejectMapList() throws Exception;
+
+	void insertNotice(NoticeDTO noticedto) throws Exception;
+
+	List<NoticeDTO> selectNotice() throws Exception;
 	
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.developia.board.dao.ReviewDAO">
+<select id="countReviewForMap" parameterType="long" resultType="long">
+	select count(*)
+	from t_review
+	where map_no=#{map_no}
+</select>
+
+<insert id="addReview" parameterType="ReviewDTO">
+	insert into t_review(review_no, review_rate, review_content, map_no, user_no)
+	values(seq_review.nextval, #{review_rate}, #{review_content}, #{map_no}, #{user_no})
+</insert>
+
+<select id="getReviewList" parameterType="HashMap" resultType="ReviewDTO">
+	select b.review_no, b.review_rate, b.review_content, b.map_no, b.user_no, b.user_name
+	from (select rownum as rnum, a.*
+	      from (select r.*, user_name
+	            from t_review r
+	            inner join t_user u on u.user_no=r.user_no
+	            where map_no=#{map_no}
+	            ) a
+	     ) b
+	where rnum between #{page.start} and #{page.end}
+</select>
+
+<select id="getMyReview" parameterType="HashMap" resultType="ReviewDTO">
+	select r.*, user_name
+	from t_review r
+	inner join t_user u on r.user_no=u.user_no
+	where r.user_no=#{user_no} and r.map_no=#{map_no}
+</select>
+
+<update id="updateReview" parameterType="ReviewDTO">
+	update t_review set 
+	review_rate=#{review_rate},
+	review_content=#{review_content}
+	where user_no=#{user_no} and map_no=#{map_no}
+</update>
+
+<select id="checkMyReview" parameterType="ReviewDTO" resultType="int">
+	select count(*)
+	from t_review
+	where user_no=#{user_no} and map_no=#{map_no}
+</select>
+</mapper>

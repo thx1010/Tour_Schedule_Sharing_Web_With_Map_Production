@@ -78,7 +78,7 @@ where map_no=#{map_no}
 <select id="getUserList" parameterType="UserDTO" resultType="UserDTO">
 select user_photo, user_id
 from t_user
-where user_no = #{user_no}
+where user_no=#{user_no}
 </select>
 
 </mapper>

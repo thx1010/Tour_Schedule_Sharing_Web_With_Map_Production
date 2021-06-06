@@ -6,36 +6,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <title>Insert title here</title>
- <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
- <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
+
+<link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
+<link href="resources/css/main.css" rel="stylesheet" type="text/css" />
+<link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
+<link href="resources/css/style.css" rel="stylesheet"><link href="css/style-responsive.css" rel="stylesheet">
+ <link href="resources/css/jquery-sakura.css" rel="stylesheet" type="text/css" />
+ <noscript><link rel="stylesheet" href="resources/css/noscript.css" /></noscript>
 </head>
-        <nav class="navbar navbar-expand-lg" style="background: white;">
-            <div class="container">
+        <nav class="navbar">
+            <div class="container"  style="margin-top: 95px;">
             	<div class="row"><br><br>
-            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px; color: black;">&nbsp;&nbsp;&nbsp;&nbsp;NO</h3></b></a>
-            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px;">One</h3></b></a>
-            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px; color: black;">Knows&nbsp;&nbsp;&nbsp;&nbsp;</h3></b></a>
+            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px; background: linear-gradient( to right, white, #C4DEFF ); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">NO ONE KNOWS</h3></b></a>
+            		
 <% 
 	if(session.getAttribute("userInfo") == null){ 
 %>
 	
-            		<div class="hevent"><a class="navbar-brand" href="login" style="color:#BDBDBD; font-size:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그인</a></div>
-            		<div class="hevent"><a class="navbar-brand" href="signup" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;회원가입</a></div>
-					<div class="hevent"><a class="navbar-brand" href="adminlogin" style="color:#6799FF; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;관리자로 로그인</a></div>
+            		<div class="hevent"><a href="login"><h5 style="color:#E8FFFF; font-size:13px;">로그인</h5></a></div>
+            		<div class="hevent"><a href="signup"><h5 style="color:#E8FFFF; font-size:13px">회원가입</h5></a></div>
+					<div class="hevent"><a href="adminlogin"><h5 style="color:#E8FFFF; font-size:13px">관리자로 로그인</h5></a></div>
 <%
 	} else {%>
-					<p class="navbar-brand" style="color:#6799FF; font-size:14px">${sessionScope.userInfo.user_id} 님 환영합니다!</p>
-                    <div class="hevent"><a class="navbar-brand" href="logout" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그아웃</a></div>
+					<h5 style="color:#E8FFFF; font-size:13px">${sessionScope.userInfo.user_id} 님 환영합니다!</h5>
+                    <div class="hevent"><a href="logout"><h5 style="color:#E8FFFF; font-size:13px">로그아웃</h5></a></div>
 <% } %>
             	</div>
             </div>
-        </nav><br><br>
+        </nav>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+            	<div class="row">
+            		<div class="tscale"><a href="likepage" style="color:white; font-size:14px;"><img src = "resources/img/heart2.png" style="width: 18px; height:18px;">&nbsp;&nbsp;내가 찜한 코스</a></div>
+            		<div class="tscale"><a href="cartpage" style="color:white; font-size:14px"><img src = "resources/img/cart.png" style="width: 18px; height:18px;">&nbsp;&nbsp;장바구니</a></div>
+                    <div class="tscale"><a href="mypage/${sessionScope.userInfo.user_no}" style="color:white; font-size:14px"><img src = "resources/img/info.png" style="width: 18px; height:18px;">&nbsp;&nbsp;마이페이지</a></div>
+                    <div class="tscale"><a href="coursemaker" style="color:white; font-size:14px"><img src = "resources/img/check.png" style="width: 18px; height:18px;">&nbsp;&nbsp;여행코스 만들기</a></div>
+                    <div class="tscale"><a href="chatroom" style="color:white; font-size:14px"><img src = "resources/img/chat.png" style="width: 20px; height:20px;">&nbsp;&nbsp;커뮤니티</a></div> 
+            	</div>
+            </div>
+        </nav>
       	
         <!-- Page Content-->
-        <header style="background: linear-gradient( to bottom, white, rgba( 213, 213, 213, 0.1 ) );">
-	        <section class="container mt-3" style="max-width: 560px;">
+        <header>
+	        <section class="container mt-3" style="max-width: 560px; height: 1000px">
+	        	<!--login content -->
+	        	<br><br><br><br>
 				<form method="post" style="display: block; margin-top: 30px;">
-					<div class="scale"><img src = "resources/img/admin.png" style="width: 90px; height:90px; display: block; margin: 0px auto;"></div>
 					<div class="form-group">
 						<label>아이디</label>
 						<input type="text" name="admin_id" class="form-control">		
@@ -44,13 +60,18 @@
 						<label>비밀번호</label>
 						<input type="password" name="admin_pw" class="form-control">
 					</div><br><br>
-					<div class="tscale"><button type="submit" class="btn"  style="background: linear-gradient( to left, #FAED7D, #FFCD12 ); color:white; display: block; margin: 0px auto;">로그인</button></div>
+					<div style="text-align: center"><button type="submit" style="background-color:white; border-radius: 10px"><p style="color: #868686">로그인</p></button></div>
 				</form>
-			</section><br><br><br><br><br><br><br><br><br>
+			</section>
 	    </header>
+	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	    <script>
+		$(window).load(function () {
+		    $('body').sakura();
+		});
+		</script>
         <!-- Bootstrap core JS-->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="resources/js/jquery-sakura.js"></script>
         <!-- Core theme JS-->
         <script src="resources/js/scripts.js"></script>
 </html>

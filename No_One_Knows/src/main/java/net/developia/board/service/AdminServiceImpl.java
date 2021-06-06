@@ -1,13 +1,24 @@
 package net.developia.board.service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.*;
-import net.developia.board.dao.*;
-import net.developia.board.dto.*;
+import lombok.extern.slf4j.Slf4j;
+import net.developia.board.dao.AdminDAO;
+import net.developia.board.dto.AdminDTO;
+import net.developia.board.dto.GradeDTO;
+import net.developia.board.dto.GradenumDTO;
+import net.developia.board.dto.MapDTO;
+import net.developia.board.dto.NoticeDTO;
+import net.developia.board.dto.PageDTO;
+import net.developia.board.dto.PlaceDTO;
+import net.developia.board.dto.PointDTO;
+import net.developia.board.dto.PointTransactionLogDTO;
+import net.developia.board.dto.ThemeDTO;
+import net.developia.board.dto.UserDTO;
 
 @Slf4j
 @Service
@@ -207,6 +218,117 @@ public class AdminServiceImpl implements AdminService{
 		try {
 			List<PlaceDTO> placelist = adminDAO.getPlaceDetail(mapDTO);
 			return placelist;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+	@Override
+	public List<UserDTO> getUserInfoForPage(PageDTO pageDTO) throws Exception {
+		List<UserDTO> userList = null;
+		try {
+			userList = adminDAO.getUserInfoForPage(pageDTO);
+		} catch(Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+		return userList;
+	}
+
+	@Override
+	public List<GradeDTO> getGradeList() throws Exception {
+		List<GradeDTO> gradeList = null;
+		try {
+			gradeList = adminDAO.getGradeList();
+		} catch(Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+		return gradeList;
+	}
+
+	@Override
+	public long getSearchedMemberCount(String keyword) throws Exception {
+		long count = 0;
+		try {
+			count = adminDAO.getSearchedMemberCount(keyword);
+		} catch(Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+		return count;
+	}
+
+	@Override
+	public List<UserDTO> getSearchedUserInfoForPage(Map<String, Object> param) throws Exception {
+		List<UserDTO> searchedUserList = null;
+		try {
+			searchedUserList = adminDAO.getSearchedUserInfoForPage(param);
+		} catch(Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+		return searchedUserList;
+	}
+
+
+	@Override
+	public void updatePermit(MapDTO mapDTO) throws Exception {
+		try {
+			adminDAO.updatePermit(mapDTO);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public void updateReject(MapDTO mapDTO) throws Exception {
+		try {
+			adminDAO.updateReject(mapDTO);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<MapDTO> getPermitMapList() throws Exception {
+		try {
+			List<MapDTO> maplist = adminDAO.getPermitMapList();
+			return maplist;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<MapDTO> getRejectMapList() throws Exception {
+		try {
+			List<MapDTO> maplist = adminDAO.getRejectMapList();
+			return maplist;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public void insertNotice(NoticeDTO noticedto) throws Exception {
+		try {
+			adminDAO.insertNotice(noticedto);
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public List<NoticeDTO> selectNotice() throws Exception {
+		try {
+			List<NoticeDTO> noticelist = adminDAO.selectNotice();
+			return noticelist;
 		} catch (Exception e) {
 			log.info(e.getMessage());
 			throw e;

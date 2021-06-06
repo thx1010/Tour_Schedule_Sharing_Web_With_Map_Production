@@ -75,6 +75,15 @@ public class AdminController {
 		return new ModelAndView("adminmain");
 	}
 	
+	@GetMapping(value="/adminmain/notice/{notice_content}" , produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<NoticeDTO> notice_list(
+			@ModelAttribute NoticeDTO noticedto) throws Exception {
+		adminService.insertNotice(noticedto);
+		List<NoticeDTO> notice = adminService.selectNotice();
+		return notice;
+	}
+	
 	@GetMapping(value="/adminpoint")
 	public ModelAndView adminpoint() throws Exception {
 		return new ModelAndView("adminpoint");
@@ -297,6 +306,26 @@ public class AdminController {
 		return maplist;
 	}
 	
+	//승인 맵 정보 받아오기 (리스트)
+		@GetMapping(value = "/adminarticle/permitcontent", produces="application/json;charset=UTF-8")
+		@ResponseBody
+		public List<MapDTO> permitcontent_list() throws Exception {
+			List<MapDTO> maplist = adminService.getPermitMapList();
+			log.info("유저 정보 값 받아옴");
+			log.info(maplist.toString());
+			return maplist;
+		}
+		
+	//반려 맵 정보 받아오기 (리스트)
+	@GetMapping(value = "/adminarticle/rejectcontent", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> rejectcontent_list() throws Exception {
+		List<MapDTO> maplist = adminService.getRejectMapList();
+		log.info("유저 정보 값 받아옴");
+		log.info(maplist.toString());
+		return maplist;
+	}
+	
 	// 관리 : 상세 정보 불러오기
 	@RequestMapping(value="/adminarticle/mapinfo/{map_no}", produces="application/json;charset=UTF-8")
 	@ResponseBody
@@ -330,4 +359,25 @@ public class AdminController {
 			return null;
 		}
 	}
+	
+	@RequestMapping(value = "/adminarticle/mapinfo/permit/{map_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> map_permit(
+			@ModelAttribute MapDTO mapDTO) throws Exception {
+		adminService.updatePermit(mapDTO);
+		List<MapDTO> maplist = adminService.getMapList();
+		log.info(maplist.toString());
+		return maplist;
+	}
+	
+	@RequestMapping(value = "/adminarticle/mapinfo/reject/{map_no}", produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public List<MapDTO> map_reject(
+			@ModelAttribute MapDTO mapDTO) throws Exception {
+		adminService.updateReject(mapDTO);
+		List<MapDTO> maplist = adminService.getMapList();
+		log.info(maplist.toString());
+		return maplist;
+	}
+	
 }

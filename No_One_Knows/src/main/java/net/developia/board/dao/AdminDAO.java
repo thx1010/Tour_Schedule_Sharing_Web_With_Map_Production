@@ -1,8 +1,20 @@
 package net.developia.board.dao;
 
-import java.util.*;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
-import net.developia.board.dto.*;
+import net.developia.board.dto.AdminDTO;
+import net.developia.board.dto.GradeDTO;
+import net.developia.board.dto.GradenumDTO;
+import net.developia.board.dto.MapDTO;
+import net.developia.board.dto.NoticeDTO;
+import net.developia.board.dto.PageDTO;
+import net.developia.board.dto.PlaceDTO;
+import net.developia.board.dto.PointDTO;
+import net.developia.board.dto.PointTransactionLogDTO;
+import net.developia.board.dto.ThemeDTO;
+import net.developia.board.dto.UserDTO;
 
 public interface AdminDAO {
 
@@ -41,5 +53,25 @@ public interface AdminDAO {
 	List<MapDTO> getMapDetail(MapDTO mapDTO) throws Exception;
 
 	List<PlaceDTO> getPlaceDetail(MapDTO mapDTO) throws Exception;
+
+	List<UserDTO> getUserInfoForPage(PageDTO pageDTO) throws SQLException;
+
+	List<GradeDTO> getGradeList() throws SQLException;
+
+	long getSearchedMemberCount(String keyword) throws SQLException;
+
+	List<UserDTO> getSearchedUserInfoForPage(Map<String, Object> param) throws SQLException;
+	
+	void updatePermit(MapDTO mapDTO) throws Exception;
+
+	void updateReject(MapDTO mapDTO) throws Exception;
+
+	List<MapDTO> getPermitMapList() throws Exception;
+
+	List<MapDTO> getRejectMapList() throws Exception;
+
+	void insertNotice(NoticeDTO noticedto) throws Exception;
+
+	List<NoticeDTO> selectNotice() throws Exception;
 	
 }

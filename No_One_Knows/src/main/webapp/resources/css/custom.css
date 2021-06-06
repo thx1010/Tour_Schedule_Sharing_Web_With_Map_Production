@@ -2,46 +2,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
 
-.navbar-brand, h1, h2, h3, h4{
-	font-family: 'Do Hyeon'; 
+--폰트수정하기
+.navbar-brand, h1, h2, h3, h4, h5{
+	font-family: 'Do Hyeon';
 }
+
 .card{
 	background-color: #FFFFF6;
 }
-h5{
-	font-family: 'Do Hyeon';
-	font-size: 18px;
-}
 
 .parent{
-    width: 90%;
+    width: 100%;
     margin: 10px auto;
 }
 
 .first {
     float: left;
-    width: 27%;
+    width: 20%;
     box-sizing: border-box;
     border-radius: 10px;
 }
 
 .second{
     float: left;
-    width:27%;
+    width:20%;
     box-sizing: border-box;
     border-radius: 10px;
 }
 
 .third{
     float: left;
-    width:27%;
-    box-sizing: border-box;
-    border-radius: 10px;
-}
-
-.forth{
-    float: right;
-    width:17%;
+    width:20%;
     box-sizing: border-box;
     border-radius: 10px;
 }
@@ -211,9 +202,8 @@ h5{
 
 .filebox .upload-display img {  /* 추가될 이미지 */
   display: block;
-  max-width: 100%;
-  width: 100% \9;
-  height: auto;
+  width: 600px;
+  height: 300px;
 }
 
 .filebox label {

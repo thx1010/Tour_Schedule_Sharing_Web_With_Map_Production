@@ -36,4 +36,48 @@ public interface MainService {
 
 	List<MapDTO> getLikedeleteContent(MapRegisterDTO likeinfo) throws Exception;
 
+	long countCartMap(UserDTO userno) throws Exception;
+
+	List<MapDTO> getCartContentForPage(Map<String, Object> map) throws Exception;
+
+	long countLikeMap(UserDTO userno) throws Exception;
+
+	List<MapDTO> getLikeContentForPage(Map<String, Object> map) throws Exception;
+
+	List<MapDTO> getCartContentForKeyword(Map<String, Object> param) throws Exception;
+
+	long countCartMapForKeyword(Map<String, Object> param) throws Exception;
+
+	List<MapRegisterDTO> getMapBestList() throws Exception;
+
+	List<MapRegisterDTO> getMapMyList(ThemeDTO themeDTO) throws Exception;
+
+	List<MapRegisterDTO> getMapViewmoreList() throws Exception;
+
+	List<PointChargeDTO> getPointChargeList(UserDTO userDTO) throws Exception;
+
+	List<PointSpendDTO> getPointSpendList(UserDTO userDTO) throws Exception;
+
+	List<MapDTO> getMapStatusList(UserDTO userDTO) throws Exception;
+
+	List<MapDTO> getMapPurchaseList(UserDTO userDTO) throws Exception;
+
+	List<MapDTO> getPayModalContent(MapDTO mapdto) throws Exception;
+
+	void insertintoPurchase(MapPurchaseDTO purchasedto) throws Exception;
+
+	void deleteCart(MapPurchaseDTO purchasedto) throws Exception;
+
+	List<ChatRoomDTO> getChatroom() throws Exception;
+
+	List<ChatRoomDTO> getroomInfo(ChatRoomDTO chatrooom) throws Exception;
+
+	void insertRegisterRoom(RegisterChatRoomDTO registerchatroom) throws Exception;
+
+	List<ChatMessageDTO> getMessageInfo(ChatMessageDTO message) throws Exception;
+
+	List<ChatMessageDTO> getMessageCountInfo(ChatMessageDTO message) throws Exception;
+
+	NoticeDTO selectNoticeCount() throws Exception;
+
 }

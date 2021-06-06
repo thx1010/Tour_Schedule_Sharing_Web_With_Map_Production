@@ -8,30 +8,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <title>Insert title here</title>
 <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
+<link href="resources/css/main.css" rel="stylesheet" type="text/css" />
 <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="resources/css/slider2.css" type="text/css" />
- <!-- Bootstrap core CSS -->
-<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<!-- Custom styles for this template -->
-<link href="resources/css/style.css" rel="stylesheet">
-<link href="css/style-responsive.css" rel="stylesheet">
+<link href="resources/css/style.css" rel="stylesheet"><link href="css/style-responsive.css" rel="stylesheet">
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
-  />
+<link
+   rel="stylesheet"
+   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+/>
  <script type="text/javascript">
 	$(document).ready(function(){
 		selectContent();
+		selectMessageContent();
+		selectMessageCount();
 	});
+	
+	function selectMessageContent() {
+		var user_no = "${sessionScope.userInfo.user_no}";
+		$.ajax({
+			method : 'GET',
+			url : '${pageContext.request.contextPath}/main/message/' + user_no , 
+		}).done(function( data ) {
+		 	displayMessageContentList(data);
+		});
+	}
+	
+	function selectMessageCount() {
+		var user_no = "${sessionScope.userInfo.user_no}";
+		$.ajax({
+			method : 'GET',
+			url : '${pageContext.request.contextPath}/main/messagecount/' + user_no , 
+		}).done(function( data ) {
+		 	displayMessageCountList(data);
+		});
+	}
+	
+	function displayMessageCountList(data) {
+		var mytable = "";
+	  	$.each( data, function( key, val ) {
+	  		mytable += val['message_count'];
+	  		});
+		$('#messagecount').html(mytable);
+	}
+	
+	function displayMessageContentList(data) {
+		var mytable = "";
+	  	$.each( data, function( key, val ) {
+	  		mytable += '<a href="/board/echo/chat/'+val['room_no']+'">';
+	  		mytable += '<span class="photo"><img src="resources/img/'+val['user_photo']+'"></span>';
+	  		mytable += '<span class="subject">';
+	  		mytable += '<span class="from">'+val['user_name']+'</span></span>';
+	  		mytable += '<span class="message">'+val['chat_message']+'<p style="font-size: 11px; color: #A6A6A6">'+val['chat_date']+'</p></span></a>';
+	  		});
+		$('#displaymessagelist').html(mytable);
+	}
 	
 	function selectContent() {
 		$.ajax({
 			method : 'GET',
 			url : '${pageContext.request.contextPath}/main/origin', 
 		}).done(function( data ) {
+			$(".viewMoreButton").fadeIn();
 		 	displayContentList(data);
 		});
 	}
@@ -40,21 +81,21 @@
 		var mytable = "";
 	  	$.each( data, function( key, val ) {
 	  		mytable += '<div class="col-lg-3 col-md-6 mb-4" style="margin-top: 50px;">';
-	  		mytable += '<a href = "mapcontrol/coursedraw/'+val['map_no']+'">';
 	  		mytable += '<div id="blur" class="card h-100">';
-	  		mytable += '<div class="tscale">';
-	  		mytable += '<img class="card-img-top" src="resources/img/'+val['map_photo']+'"/></a>';
+	  		mytable += '<img class="card-img-top" src="resources/img/'+val['map_photo']+'"/>';
 	    	mytable += '<div class="card-body" style="background-color: white">';
-	    	mytable += '<h4 class="card-title">'+val['map_title']+'</h4>';
+	    	mytable += '<h2 class="card-title">'+val['map_title']+'</h2>';
 	    	mytable += '<p class="card-text">'+val['map_country']+'&nbsp;'+val['map_state']+'&nbsp;'+val['map_city']+'</p>';
-	    	mytable += '<p class="card-text"><img src="resources/img/'+val['user_photo']+'" style="width: 22px; height: 22px"/>&nbsp;&nbsp;'+val['user_id']+'</p>';
+	    	mytable += '<p class="card-text" style="display:inline"><img src="resources/img/'+val['user_photo']+'" style="width: 22px; height: 22px"/>&nbsp;&nbsp;'+val['user_id']+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="resources/img/heart.png" style="width: 20px; height: 20px"/>&nbsp;&nbsp;<h4 style="display:inline; color: #FF8383">'+val['map_like']+'</h4></p>';
 	    	mytable += '<p class="card-text">'+val['register_regdate']+'</p>';
-	    	mytable += '<p class="card-text">'+val['map_like']+'</p>';
-	    	mytable += '<button class="detailmodalButton" myval="' + val['map_no'] + '"style="background-color: white; border-radius: 10px;" data-toggle="modal" data-target="#detailModal">자세히 보기</button>';
-	    	mytable += '</div></div></div></div>';
+	    	mytable += '<button class="detailmodalButton" myval="' + val['map_no'] + '"style="border: 1px solid #9F9F9F; border-radius: 10px;" data-toggle="modal" data-target="#detailModal"><p style="color: #9F9F9F">자세히 보기</p></button>';
+	    	mytable += '</div></div></div>';
 	  		});
 		$('#photoList').html(mytable);
 		newlistButtonEvent();
+		bestlistButtonEvent();
+		mylistButtonEvent();
+		viewMoreButtonEvent();
 		detailmodalButtonEvent();
 		mapDataEvent();
 	}
@@ -66,6 +107,47 @@
 				method : 'GET',
 				url :'${pageContext.request.contextPath}/main/newlist'
 			}).done(function( data ) {
+				$(".viewMoreButton").fadeIn();
+				displayContentList(data);
+			});
+		});
+	}
+	
+	//좋아요순 정렬
+	function bestlistButtonEvent() {
+		$('.bestlist').click(function(){
+			$.ajax({
+				method : 'GET',
+				url :'${pageContext.request.contextPath}/main/bestlist'
+			}).done(function( data ) {
+				$(".viewMoreButton").fadeIn();
+				displayContentList(data);
+			});
+		});
+	}
+	
+	//테마 정렬
+	function mylistButtonEvent() {
+		$('.mylist').click(function(){
+			var theme_no = "${sessionScope.userInfo.theme_no}";
+			$.ajax({
+				method : 'GET',
+				url :'${pageContext.request.contextPath}/main/mylist/'+ theme_no
+			}).done(function( data ) {
+					$(".viewMoreButton").fadeOut();
+					displayContentList(data);
+			});
+		});
+	}
+	
+	// 더보기 버튼
+	function viewMoreButtonEvent() {
+		$('.viewMoreButton').click(function(){
+			$.ajax({
+				method : 'GET',
+				url :'${pageContext.request.contextPath}/main/viewmore'
+			}).done(function( data ) {
+				$(".viewMoreButton").fadeOut();
 				displayContentList(data);
 			});
 		});
@@ -106,15 +188,14 @@
 	function displayMapData(data) {
 		var mytable = "";
 	  	$.each( data, function( key, val ) {
-	  		mytable += '<br><p style="text-align: center; color: #F15F5F"><small>* 자세한 내용은 포인트 결제를 진행하셔야 확인하실 수 있습니다 *</small></p>';
-	  		mytable += '<br><h2 style="text-align: center">' + val['map_title'] + '</h2>';
-	  		mytable += '<h5 style="text-align: center">'+val['map_subtitle']+'</h5><br>';
+	  		mytable += '<br><p style="text-align: center; color: #F15F5F; font-size: 10px">* 자세한 내용은 포인트 결제를 진행하셔야 확인하실 수 있습니다 *</p>';
+	  		mytable += '<br><h2 style="text-align: center; font-size: 42px">' + val['map_title'] + '</h2>';
+	  		mytable += '<h5 style="text-align: center; font-size: 23px">'+val['map_subtitle']+'</h5><br>';
 	  		mytable += '<p style="text-align: center">'+val['map_country']+'&nbsp;'+val['map_state']+'&nbsp;'+val['map_city']+'</p>';
 	  		mytable += '<div style="text-align: center"><img src="resources/img/'+val['user_photo']+'" style=" width: 25px; height: 25px;"></div>';
-	  		mytable += '<p style="text-align: center">'+val['user_id']+'</p><br>';
+	  		mytable += '<p style="text-align: center">'+val['user_id']+'</p>';
 	  		mytable += '<p style="text-align: center">'+val['register_regdate']+'</p><br>';
-	  		mytable += '<p style="text-align: center">'+val['map_like']+'</p><br>';
-	  		mytable += '<br><div class="row" style="margin-left: 290px"><button class="tocart" style="background-color: white; border-radius: 10px;" mapval="'+val['map_no']+'" userval="'+val['user_no']+'"><img src="resources/img/cart.png" style="width: 30px; height: 30px">&nbsp;장바구니</button>&nbsp;&nbsp;<button class="tolike" style="background-color: white; border-radius: 10px;" mapval="'+val['map_no']+'" userval="'+val['user_no']+'"><img src="resources/img/heart.png" style="width: 30px; height: 30px">&nbsp;찜하기</button></div><br>';
+	  		mytable += '<div class="row" style="margin-left: 260px;"><button class="tocart" style="border: 1px solid #9F9F9F; border-radius: 10px;" mapval="'+val['map_no']+'" userval="'+val['user_no']+'" data-dismiss="modal"><p style="color: #9F9F9F">장바구니&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></button>&nbsp;&nbsp;<button class="tolike" style="border: 1px solid #9F9F9F; border-radius: 10px;" mapval="'+val['map_no']+'" userval="'+val['user_no']+'" data-dismiss="modal"><p style="color: #9F9F9F">찜하기&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></button></div><br>';
 	  		});
 		$('#mapdata').html(mytable);
 		tocartButtonEvent();
@@ -123,29 +204,38 @@
 	
 	function tocartButtonEvent() {
 		$('.tocart').click(function(){
+			var user_no = "${sessionScope.userInfo.user_no}";
 			$.ajax({
 				method : 'POST',
-				url :'${pageContext.request.contextPath}/main/cart/' + $(this).attr('mapval') + '/' + $(this).attr('userval'),
+				url :'${pageContext.request.contextPath}/main/cart/' + $(this).attr('mapval') + '/' + user_no,
+				error: function (request, status, error) {
+			        alert("이미 장바구니 목록에 추가된 게시글입니다.");
+			    }
 			}).done(function() {
-				alert('장바구니에 추가되었습니다 !');
+					alert('장바구니 목록에 추가되었습니다 !');
 			});
 		});
 	}
 	
 	function tolikeButtonEvent() {
 		$('.tolike').click(function(){
+			var user_no = "${sessionScope.userInfo.user_no}";
 			$.ajax({
 				method : 'POST',
-				url :'${pageContext.request.contextPath}/main/like/' + $(this).attr('mapval') + '/' + $(this).attr('userval'),
-			}).done(function() {
-				alert('나의 찜 목록에 추가되었습니다 !');
+				url :'${pageContext.request.contextPath}/main/like/' + $(this).attr('mapval') + '/' + user_no,
+				error: function (request, status, error) {
+			        alert("이미 찜 목록에 추가된 게시글입니다.");
+			    }
+			}).done(function(data) {
+					alert('나의 찜 목록에 추가되었습니다 !');
+					displayContentList(data);	
 			});
 		});
 	}
-
 </script>
+
 </head>
-<header class="header black-bg">
+<header class="header" style=" background-color: white">
       <div class="nav notify-row" id="top_menu" style="margin-left: 150px; margin-top: 20px;">
         <!--  notification start -->
         <ul class="nav top-menu">
@@ -159,20 +249,18 @@
 <% 
 	} else {
 %>
-              <span class="badge bg-theme">4</span>
+              <span class="badge bg-theme" id="messagecount"></span>
 <% 
 	}
 %>
               </a>
             <ul class="dropdown-menu extended tasks-bar">
               <div class="notify-arrow notify-arrow-green"></div>
-              <li>
-                <p class="green"></p>
-              </li>
+              
               <li>
                 <a href="#notice">
                   <div class="task-info">
-                    <div class="desc">공지 사항 확인하기</div>
+                    <div class="desc"><h5>공지 사항 확인하기</h5></div>
                   </div>
                 </a>
               </li>
@@ -183,32 +271,15 @@
           <li id="header_inbox_bar" class="dropdown">
             <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
               <i class="fa fa-envelope-o"></i>
- <% 
-	if(session.getAttribute("userInfo") == null){ 
-%>
-<% 
-	} else {
-%>
-              <span class="badge bg-warning">5</span>
-<% 
-	}
-%>
-              </a>
+              <span class="badge bg-warning">${noticecount.notice_no}</span>
+          </a>
             <ul class="dropdown-menu extended inbox">
               <div class="notify-arrow notify-arrow-green"></div>
+              
               <li>
-                <p class="green">You have 5 new messages</p>
-              </li>
-              <li>
-                <a href="index.html#">
-                  <span class="photo"><img alt="avatar" src="img/ui-zac.jpg"></span>
-                  <span class="subject">
-                  <span class="from">Zac Snider</span>
-                  </span>
-                  <span class="message">
-                  Hi mate, how is everything?
-                  </span>
-                  </a>
+              <div id = "displaymessagelist">
+              
+              </div>
               </li>
             </ul>
           </li>
@@ -221,15 +292,12 @@
               </a>
             <ul class="dropdown-menu extended notification">
               <div class="notify-arrow notify-arrow-yellow"></div>
+              <c:forEach items="${noticelist}" var="dto">
               <li>
-                <p class="yellow">You have 7 new notifications</p>
-              </li>
-              <li>
-                <a href="index.html#">
                   <span class="label label-danger"><i class="fa fa-bolt"></i></span>
-                  Server Overloaded.
-                  </a>
+                  <p style="font-size: 12px">${dto.notice_content}</p>
               </li>
+              </c:forEach>
             </ul>
           </li>
           <!-- notification dropdown end -->
@@ -238,82 +306,63 @@
       </div>
     </header>
 	<body>
-       <nav class="navbar navbar-expand-lg" style="background-color: white;">
-            <div class="container"  style="background-color: white; margin-top: 70px;">
+       <nav class="navbar">
+            <div class="container"  style="margin-top: 95px;">
             	<div class="row"><br><br>
-            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px; color: black;">&nbsp;&nbsp;&nbsp;&nbsp;NO</h3></b></a>
-            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px;">One</h3></b></a>
-            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px; color: black;">Knows&nbsp;&nbsp;&nbsp;&nbsp;</h3></b></a>
+            		<a class="navbar-brand" href="main"><b><h3 style="font-size:25px; background: linear-gradient( to right, white, #C4DEFF ); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">NO ONE KNOWS</h3></b></a>
+            		
 <% 
 	if(session.getAttribute("userInfo") == null){ 
 %>
 	
-            		<div class="hevent"><a class="navbar-brand" href="login" style="color:#BDBDBD; font-size:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그인</a></div>
-            		<div class="hevent"><a class="navbar-brand" href="signup" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;회원가입</a></div>
-					<div class="hevent"><a class="navbar-brand" href="adminlogin" style="color:#6799FF; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;관리자로 로그인</a></div>
+            		<div class="hevent"><a href="login"><h5 style="color:#E8FFFF; font-size:13px;">로그인</h5></a></div>
+            		<div class="hevent"><a href="signup"><h5 style="color:#E8FFFF; font-size:13px">회원가입</h5></a></div>
+					<div class="hevent"><a href="adminlogin"><h5 style="color:#E8FFFF; font-size:13px">관리자로 로그인</h5></a></div>
 <%
 	} else {%>
-					<p class="navbar-brand" style="color:#6799FF; font-size:14px">${sessionScope.userInfo.user_id} 님 환영합니다!</p>
-                    <div class="hevent"><a class="navbar-brand" href="logout" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그아웃</a></div>
+					<h5 style="color:#E8FFFF; font-size:13px">${sessionScope.userInfo.user_id} 님 환영합니다!</h5>
+                    <div class="hevent"><a href="logout"><h5 style="color:#E8FFFF; font-size:13px">로그아웃</h5></a></div>
 <% } %>
             	</div>
             </div>
         </nav>
-        <nav class="navbar navbar-expand-lg" style="background-color: white;">
+        <nav class="navbar navbar-expand-lg">
             <div class="container">
             	<div class="row">
-            		<div class="tscale"><a class="navbar-brand" href="likepage" style="color:#878787; font-size:14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src = "resources/img/heart.png" style="width: 25px; height:25px;">&nbsp;내가 찜한 코스&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</a></div>
-            		<div class="tscale"><a class="navbar-brand" href="cartpage" style="color:#878787; font-size:14px">&nbsp;&nbsp;<img src = "resources/img/cart.png" style="width: 28px; height:28px;">&nbsp;장바구니&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</a></div>
-                    <div class="tscale"><a class="navbar-brand" href="mypage/${sessionScope.userInfo.user_no}" style="color:#878787; font-size:14px">&nbsp;&nbsp;<img src = "resources/img/user.png" style="width: 25px; height:25px;">&nbsp;마이페이지</a></div>
+            		<div class="tscale"><a href="likepage" style="color:white; font-size:14px;"><img src = "resources/img/heart2.png" style="width: 18px; height:18px;">&nbsp;&nbsp;내가 찜한 코스</a></div>
+            		<div class="tscale"><a href="cartpage" style="color:white; font-size:14px"><img src = "resources/img/cart.png" style="width: 18px; height:18px;">&nbsp;&nbsp;장바구니</a></div>
+                    <div class="tscale"><a href="mypage/${sessionScope.userInfo.user_no}" style="color:white; font-size:14px"><img src = "resources/img/info.png" style="width: 18px; height:18px;">&nbsp;&nbsp;마이페이지</a></div>
+                    <div class="tscale"><a href="coursemaker" style="color:white; font-size:14px"><img src = "resources/img/check.png" style="width: 18px; height:18px;">&nbsp;&nbsp;여행코스 만들기</a></div>
+                    <div class="tscale"><a href="chatroom" style="color:white; font-size:14px"><img src = "resources/img/chat.png" style="width: 20px; height:20px;">&nbsp;&nbsp;커뮤니티</a></div>
             	</div>
             </div>
         </nav>
         <!-- Page Content-->
-        <div style="background: linear-gradient( to bottom, white, rgba( 182, 222, 255, 0.1 ) ); margin-top: 80px;">
-	        <div class="container">
-		        <div class="parent">
+        <div>
+	        <div class="container" style="margin-top: 70px;">
+		        <div class="parent" style="margin-left: 270px">
 			        <div class="first">
 			        	<!-- regdate 순서대로 정렬 -->
-			        	<button class="newlist" style="background-color: transparent; border: none"><div class="scale"><img src = "resources/img/hot.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div><br>
-			        	<h5 style="text-align: center; color:#5D5D5D;">NEW ! 지금 뜨는 코스</h5></button>
-			        	<br><br><br>
+			        	<button class="newlist"><p style= "color:white;">NEW  !  지금 뜨는 코스</p></button>
 			        </div>
 			            <!-- 찜 갯수 순서대로 정렬 -->
 			        <div class="second">
-			        	<button class="bestlist" style="background-color: transparent; border: none"><div class="scale"><img src = "resources/img/sea.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div> <br>
-			        	<h5 style="text-align: center; color:#5D5D5D;">요즘 대세 코스</h5></button>
-			        	<br><br><br>
+			        	<button class="bestlist"><p style= "color:white;">요즘  대세  코스 BEST</p></button>
 			        </div>
 			        <div class="third">
-			        	<button class="mylist" style="background-color: transparent; border: none"><div class="scale"><img src = "resources/img/plane.png" style="width: 110px; height:110px; display: block; margin: 0px auto;"></div> <br>
-			        	<h5 style="text-align: center; color:#5D5D5D;">나에게 딱 맞는 여행지 추천</h5></button>
-			        	<br>
+			        	<button class="mylist"><p style= "color:white;">나에게 딱  맞는  여행지  추천</p></button>
 			        </div>
-			        <div class="forth"><br>
-			        	<div class="tscale"><a href = "coursemaker" style="text-decoration:none"><button style="background: linear-gradient( to left, #FAED7D, #FFCD12 ); color:white; border-radius: 15%; display: block; margin-top: 10px auto; "><h5><img src = "resources/img/check.png" style="width: 20px; height:20px;">&nbsp;여행코스 만들기</h5></button></a></div><br>
-			        	<div class="tscale"><button style="background: linear-gradient( to left, #FAED7D, #FFCD12 ); color:white; border-radius: 15%; display: block; margin-top: 10px auto; " data-toggle="modal" data-target="#myModal"><h5><img src = "resources/img/info.png" style="width: 20px; height:20px;">&nbsp;상세 정보 확인</h5></button></div>
-			        	<!-- Modal -->
-						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-						  <div class="modal-dialog" role="document">
-						    <div class="modal-content">
-						      <div class="modal-header">
-						        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						        <h4 class="modal-title" id="myModalLabel"></h4>
-						      </div>
-						      <div class="modal-body">
-						        <!-- 프로젝트 설명 -->
-						        No One Knows
-						      </div>
-						      <div class="modal-footer">
-						        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-						      </div>
-						    </div>
-						  </div></div>
-						  <!-- Detail Modal -->
+			       
+			    </div>
+			    <style>
+			    #blur{opacity: 0.7}
+			    #blur:hover{opacity: 1.0; transition:1.1s}
+			    </style>
+			     <!-- Detail Modal -->
 						  <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel">
 						  <div class="modal-dialog modal-lg" role="document">
 						    <div class="modal-content">
-						      <div class="modal-header">
+						      <div class="modal-header" style="background: linear-gradient(to right, #efa8b0, #a89cc8, #8cc9f0);">
 						        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						        <h4 class="modal-title" id="detailModalLabel"></h4>
 						      </div>
@@ -335,7 +384,7 @@
 								    </div>
 								</div>
 								<div id="commentlist"> <!-- 댓글 넣기 -->
-								<p style="text-align: center">[ 댓글 모음이 들어갈 자리 ]</p>
+
 								</div>
 						      </div>
 						      <div class="modal-footer">
@@ -344,69 +393,34 @@
 						    </div>
 						  </div></div>
 						  <!-- Detail Modal Finish -->
-			        </div>
-			    </div>
-<<<<<<< HEAD
-	            <div class="row text-center" >
-                <div class="col-lg-3 col-md-6 mb-4" style="margin-top: 30px;">
-                    <a href = "mapdetail">
-                    <div class="card h-100">
-                        <div class="tscale"><img class="card-img-top" src="resources/img/sample.jpeg" alt="..." /></div>
-                        <div class="card-body" style="background-color: white">
-                            <h4 class="card-title">Card title</h4>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
-                        </div>
-                    </div>
-                     </a>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4"  style="margin-top: 30px;">
-                    <div class="card h-100">
-                         <div class="tscale"><img class="card-img-top" src="resources/img/sample.jpeg" alt="..." /></div>
-                        <div class="card-body" style="background-color: white">
-                            <h4 class="card-title">Card title</h4>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo magni sapiente, tempore debitis beatae culpa natus architecto.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4"  style="margin-top: 30px;">
-                    <div class="card h-100">
-                         <div class="tscale"><img class="card-img-top" src="resources/img/sample.jpeg" alt="..." /></div>
-                        <div class="card-body" style="background-color: white">
-                            <h4 class="card-title">Card title</h4>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-4"  style="margin-top: 30px;">
-                    <div class="card h-100">
-                         <div class="tscale"><img class="card-img-top" src="resources/img/sample.jpeg" alt="..." /></div>
-                        <div class="card-body" style="background-color: white">
-                            <h4 class="card-title">Card title</h4>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo magni sapiente, tempore debitis beatae culpa natus architecto.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-=======
-			    <style>
-			    #blur{opacity: 0.6}
-			    #blur:hover{opacity: 1.0; transition:1.1s}
-			    </style>
 		       <div class="row text-center" id = "photoList"> 
                </div>
                <div class="row text-center" id = "photoNewList"> 
                </div>
->>>>>>> yebin
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="margin-top: 50px; width: 730px; margin-left: 210px; background-color: white">
-		       <tr><a name="notice"></a>
-		         <th><h5>공지사항</h5></th>
-		        </tr>
-		        <tr>
-		          <td><p style="text-size: 17px;"><b>공지사항 1 제목</b></p>
-		          <p style="text-size: 15px;">관리자 이름</p>
-		          </td>
-		        </tr>
-		     </table>
+               <div style="text-align: center"><button class="viewMoreButton" style="background-color:white; border-radius: 10px"><p style="color: #868686">더 살펴보기</p></button></div>
+               <section style="margin-top: 60px"><a id="notice"></a>
+										<h3 style="color: white">공지 사항</h3>
+										<div class="table-wrapper">
+											<table>
+												<thead>
+													<tr>
+														<th>번호</th>
+														<th>공지사항 내용</th>
+														<th>게시 날짜</th>
+													</tr>
+												</thead>
+												<tbody><!-- 이 부분 반복 -->
+												<c:forEach items="${noticelist}" var="dto">
+													<tr>
+														<td style="color: white">${dto.notice_no}</td>
+														<td style="color: white">${dto.notice_content}</td>
+														<td style="color: white">${dto.notice_date}</td>
+													</tr>
+												</c:forEach>
+												</tbody>
+											</table>
+										</div>
+									</section>
         </div><br><br><br><br>
 	    </div>
         <!-- Bootstrap core JS-->

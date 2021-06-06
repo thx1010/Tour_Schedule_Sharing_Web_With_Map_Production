@@ -8,9 +8,30 @@
 <title>Insert title here</title>
  <link href="resources/css/styles.css" rel="stylesheet" type="text/css" />
  <link href="resources/css/custom.css" rel="stylesheet" type="text/css" />
- <!-- Custom styles for this template-->
- <link href="resources/css/sb-admin-2.min.css" rel="stylesheet" type="text/css">
-
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<style>
+textarea {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		-ms-appearance: none;
+		appearance: none;
+		border-radius: 8px;
+		border: solid 1px;
+		color: inherit;
+		display: block;
+		outline: 0;
+		padding: 0 1em;
+		text-decoration: none;
+		width: 100%;
+		padding: 0.75em 1em;
+		background-color: rgba(255, 255, 255, 0.075);
+		border-color: rgba(255, 255, 255, 0.35);
+		border-color: #8cc9f0;
+		box-shadow: 0 0 0 1px #8cc9f0;
+	}
+</style>
 <!-- 파이 차트 -->
  <script type="text/javascript">
  window.onload = function () {
@@ -47,26 +68,54 @@
 	 myPieChart.render();
  }
 
+ $(document).ready(function(){
+	 noticeButtonEvent();
+	});
+	
+ 
+ function noticeButtonEvent() {
+		$('.noticebutton').click(function(){
+			let notice = '${pageContext.request.contextPath}/adminmain/notice/'+ $("textarea#noticearea").val();
+			$.ajax({
+				method : 'GET',
+				url : notice
+			}).done(function( data ) {
+				alert('공지사항이 등록되었습니다.');
+				displayNotice(data);
+				$("textarea#noticearea").val('');
+			});
+		});
+	}
+ 
+ function displayNotice(data) {
+		var detailmodal = "";
+	  	$.each( data, function( key, val ) {
+	    	detailmodal += "<tr><td>"+ val['notice_no'] +"</td>";
+	    	detailmodal += "<td>"+ val['notice_content'] +"</td>";
+	    	detailmodal += "<td>"+ val['notice_date'] +"</td></tr>";
+			});
+	 
+		$('#displaynoticearea').html(detailmodal);
+	}
  </script>
  
 </head>
         <nav class="navbar navbar-expand-lg" style="background: white;">
             <div class="container">
-            	<div class="row"><br><br>
-            		<a class="navbar-brand" href="adminmain"><b><h3 style="font-size:25px; color: black;">&nbsp;&nbsp;&nbsp;&nbsp;NO</h3></b></a>
-            		<a class="navbar-brand" href="adminmain"><b><h3 style="font-size:25px;">One</h3></b></a>
-            		<a class="navbar-brand" href="adminmain"><b><h3 style="font-size:25px; color: black;">Knows&nbsp;&nbsp;&nbsp;&nbsp;</h3></b></a>
+            	<div class="row" style="margin-left: 80px; margin-top: 45px"><br><br>
+            		<a class="navbar-brand" href="adminmain"><b><h3 style="font-size:25px; background: linear-gradient( to right, #1a3a83, #C4DEFF ); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">NO ONE KNOWS</h3></b></a>
+            		
 <% 
 	if(session.getAttribute("adminInfo") == null){ 
 %>
 	
-            		<div class="hevent"><a class="navbar-brand" href="login" style="color:#BDBDBD; font-size:13px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그인</a></div>
-            		<div class="hevent"><a class="navbar-brand" href="signup" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;회원가입</a></div>
-					<div class="hevent"><a class="navbar-brand" href="adminlogin" style="color:#6799FF; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;관리자로 로그인</a></div>
+            		<div class="hevent"><a href="login"><h5 style="color:#1a3a83; font-size:13px;">로그인&nbsp;&nbsp;&nbsp;</h5></a></div>
+            		<div class="hevent"><a href="signup"><h5 style="color:#1a3a83; font-size:13px">회원가입&nbsp;&nbsp;&nbsp;</h5></a></div>
+					<div class="hevent"><a href="adminlogin"><h5 style="color:#1a3a83; font-size:13px">관리자로 로그인</h5></a></div>
 <%
 	} else {%>
-					<p class="navbar-brand" style="color:#6799FF; font-size:14px">관리자 ${sessionScope.adminInfo.admin_id} 님 환영합니다!</p>
-                    <div class="hevent"><a class="navbar-brand" href="logout" style="color:#BDBDBD; font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;로그아웃</a></div>
+					<h5 style="color:#1a3a83; font-size:13px">${sessionScope.adminInfo.admin_id} 님 환영합니다!&nbsp;&nbsp;&nbsp;</h5>
+                    <div class="hevent"><a href="logout"><h5 style="color:#1a3a83; font-size:13px">로그아웃</h5></a></div>
 <% } %>
             	</div>
             </div>
@@ -180,7 +229,7 @@
 		                                <!-- Card Header - Dropdown -->
 		                                <div
 		                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="background-color: white;">
-		                                    <h6 class="m-0 font-weight-bold text-primary">날짜별 회원 가입 비율</h6>
+		                                    <h6 class="m-0 font-weight-bold" style="color:#1a3a83;">날짜별 회원 가입 비율</h6>
 		                                    
 		                                </div>
 		                                <!-- Card Body -->
@@ -198,7 +247,7 @@
 		                                <!-- Card Header - Dropdown -->
 		                                <div
 		                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="background-color: white;">
-		                                    <h6 class="m-0 font-weight-bold text-primary">회원 등급 비율</h6>
+		                                    <h6 class="m-0 font-weight-bold" style="color:#1a3a83;">회원 등급 비율</h6>
 		                                </div>
 		                                <!-- Card Body -->
 		                                <div class="card-body" style="height: 300px; background-color: white" >
@@ -230,21 +279,21 @@
 		                            <!-- Project Card Example -->
 		                            <div class="card shadow mb-4" >
 		                                <div class="card-header py-3"  style="background-color: white;">
-		                                    <h6 class="m-0 font-weight-bold text-primary">관리자 공지 사항</h6>
+		                                    <h6 class="m-0 font-weight-bold" style="color:#1a3a83;">관리자 공지 사항</h6>
 		                                </div>
 		                                <div class="card-body" style="height:390px; background-color: white;">
-		                                    -- 작성 버튼
-		                                    -- 리스트
-		                                     <div style="width : 360px;">
-		                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-		                                     	<tr>
-		                                     		<th>리스트 1 제목</th>
-		                                     	</tr>
-		                                     	<tr>
-		                                     		<td>신고 내용</td>
-		                                     	</tr>
-		                                     </table>
-		                                     </div>
+		                                    <div class="col-12">
+													<textarea id="noticearea" placeholder="공지사항을 입력하세요" rows="4"></textarea>
+												</div><br>
+												<div class="col-12">
+													<div style="text-align: center"><button class="noticebutton" style="background-color: white; border-radius: 10px" type="submit" class="primary">확인</button></div><br>
+												</div>
+		                                     <div style="overflow:scroll; height:150px;">
+													<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+													<tbody id="displaynoticearea"></tbody>
+			                         
+			                                     </table>
+											 </div>
 		                                </div>
 		                            </div>
 		                        </div>
@@ -254,20 +303,30 @@
 		                            <!-- Illustrations -->
 		                            <div class="card shadow mb-4">
 		                                <div class="card-header py-3" style="background-color: white;">
-		                                    <h6 class="m-0 font-weight-bold text-danger">게시물 신고 현황</h6>
+		                                    <h6 class="m-0 font-weight-bold" style="color:#1a3a83;">게시물 신고 현황</h6>
 		                                </div>
 		                                <div class="card-body" style="height:390px; background-color: white;">
-		                                    -- 리스트
-		                                     <div style="width : 360px;">
-		                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-		                                     	<tr>
-		                                     		<th>리스트 1 제목</th>
-		                                     	</tr>
-		                                     	<tr>
-		                                     		<td>신고 내용</td>
-		                                     	</tr>
-		                                     </table>
-		                                     </div>
+		                                     <div style="overflow:scroll; height:350px;">
+													<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+													<tbody>
+													<tr>
+													<td>게시물 [10] 부적합 판정 신고</td>
+													</tr>
+													<tr>
+													<td>게시물 [80] 부적합 판정 신고</td>
+													</tr>
+													<tr>
+													<td>게시물 [40] 부적합 판정 신고</td>
+													</tr>
+													<tr>
+													<td>게시물 [45] 부적합 판정 신고</td>
+													</tr>
+													<tr>
+													<td>게시물 [30] 부적합 판정 신고</td>
+													</tr>
+													</tbody>
+			                                     </table>
+											 </div>
 		                                </div>
 		                            </div> 
 		                        </div>

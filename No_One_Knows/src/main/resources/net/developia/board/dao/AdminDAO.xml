@@ -109,12 +109,24 @@
 	where map_status = 0
 	</select>
 	
+	<select id="getPermitMapList" resultType="MapDTO">
+	select map_no, map_title, map_subtitle, map_content, map_photo, map_regdate, map_country, map_city
+	from t_map
+	where map_status = 1
+	</select>
+	
+	<select id="getRejectMapList" resultType="MapDTO">
+	select map_no, map_title, map_subtitle, map_content, map_photo, map_regdate, map_country, map_city
+	from t_map
+	where map_status = 2
+	</select>
+	
 	<select id="getMapDetail" parameterType="MapDTO" resultType="MapDTO">
 	select a.map_no, a.map_title, a.map_subtitle, a.map_content, a.map_photo, a.map_regdate, a.map_country, a.map_city
        ,b.theme_name
 	from t_map a inner join t_theme b
 	on a.theme_no = b.theme_no
-	where a.map_no = #{map_no} 
+	where a.map_no = #{map_no}
 	</select>
 	
 	<select id="getPlaceDetail" parameterType="MapDTO" resultType="PlaceDTO">
@@ -124,4 +136,23 @@
 	where a.map_no = #{map_no} 
 	</select>
 	
+	<update id="updatePermit" parameterType="MapDTO">
+	update t_map set map_status = 1
+	where map_no = #{map_no}
+	</update>
+	
+	<update id="updateReject" parameterType="MapDTO">
+	update t_map set map_status = 2
+	where map_no = #{map_no}
+	</update>
+	
+	<insert id="insertNotice" parameterType="NoticeDTO">
+	Insert into t_notice (notice_no, notice_content) 
+	values (seq_notice.nextval, #{notice_content})
+	</insert>
+	
+	<select id="selectNotice" resultType="NoticeDTO">
+	select * from t_notice
+	order by notice_date desc
+	</select>
 </mapper>

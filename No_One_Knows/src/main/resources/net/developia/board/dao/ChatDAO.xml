@@ -9,8 +9,8 @@ WHERE room_no=#{room_no}
 </select>
 
 <insert id="addMessage" parameterType="ChatMessageDTO">
-INSERT INTO t_chatmessage(chat_no, chat_message, room_no, user_no, user_id, user_name)
-VALUES(seq_chat_message.NEXTVAL, #{chat_message}, #{room_no}, #{user_no}, #{user_id}, #{user_name})
+INSERT INTO t_chatmessage(chat_no, chat_message, room_no, user_no, user_id, user_name, user_photo)
+VALUES(seq_chat_message.NEXTVAL, #{chat_message}, #{room_no}, #{user_no}, #{user_id}, #{user_name}, #{user_photo})
 </insert>
 
 <insert id="addChatRoom" parameterType="MapDTO">
